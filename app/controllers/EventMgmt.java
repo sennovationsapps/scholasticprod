@@ -1027,6 +1027,41 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 				eventForm.get().imgUrl2 = imgUrlFile2.getUrl();
 			}
 		}
+
+		final Http.MultipartFormData.FilePart imgUrlFilePart3 = body
+				.getFile("imgUrl3");
+		S3File imgUrlFile3 = null;
+		if (imgUrlFilePart != null) {
+			if (!ControllerUtil.isImage(imgUrlFilePart3.getFilename())) {
+				eventForm.reject("imgUrl3", ControllerUtil.IMAGE_ERROR_MSG);
+			} else if (ControllerUtil.isFileTooLarge(imgUrlFilePart3.getFile())) {
+				eventForm.reject("imgUrl3", ControllerUtil.IMAGE_SIZE_ERROR_MSG);
+			} else {
+				imgUrlFile3 = new S3File();
+				imgUrlFile3.name = ControllerUtil.decodeFileName(imgUrlFilePart3
+						.getFilename());
+				imgUrlFile3.file = imgUrlFilePart3.getFile();
+				eventForm.get().imgUrl3 = imgUrlFile3.getUrl();
+			}
+		}
+
+		final Http.MultipartFormData.FilePart imgUrlFilePart4 = body
+				.getFile("imgUrl4");
+		S3File imgUrlFile4 = null;
+		if (imgUrlFilePart != null) {
+			if (!ControllerUtil.isImage(imgUrlFilePart4.getFilename())) {
+				eventForm.reject("imgUrl4", ControllerUtil.IMAGE_ERROR_MSG);
+			} else if (ControllerUtil.isFileTooLarge(imgUrlFilePart4.getFile())) {
+				eventForm.reject("imgUrl4", ControllerUtil.IMAGE_SIZE_ERROR_MSG);
+			} else {
+				imgUrlFile4 = new S3File();
+				imgUrlFile4.name = ControllerUtil.decodeFileName(imgUrlFilePart4
+						.getFilename());
+				imgUrlFile4.file = imgUrlFilePart4.getFile();
+				eventForm.get().imgUrl4 = imgUrlFile4.getUrl();
+			}
+		}
+
 		// if(eventForm.get().fundraisingEnd != null) {
 		// eventForm.get().fundraisingEnd =
 		// EventMgmt.setDateToMidnight(eventForm.get().fundraisingEnd);
@@ -1184,6 +1219,40 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 				eventForm.get().imgUrl2 = imgUrlFile2.getUrl();
 			} else {
 				eventForm.reject("imgUrl2", ControllerUtil.IMAGE_ERROR_MSG);
+			}
+		}
+
+		final Http.MultipartFormData.FilePart imgUrlFilePart3 = body
+				.getFile("imgUrl3");
+		S3File imgUrlFile3 = null;
+		if (imgUrlFilePart3 != null) {
+			if (ControllerUtil.isImage(imgUrlFilePart3.getFilename())) {
+				imgUrlFile3 = new S3File();
+				imgUrlFile3.name = ControllerUtil.decodeFileName(imgUrlFilePart3
+						.getFilename());
+				imgUrlFile3.file = imgUrlFilePart3.getFile();
+				Logger.debug("IMAGE FILE SIZE - "
+						+ imgUrlFilePart3.getFile().length());
+				eventForm.get().imgUrl3 = imgUrlFile3.getUrl();
+			} else {
+				eventForm.reject("imgUrl3", ControllerUtil.IMAGE_ERROR_MSG);
+			}
+		}
+
+		final Http.MultipartFormData.FilePart imgUrlFilePart4 = body
+				.getFile("imgUrl4");
+		S3File imgUrlFile4 = null;
+		if (imgUrlFilePart4 != null) {
+			if (ControllerUtil.isImage(imgUrlFilePart4.getFilename())) {
+				imgUrlFile4 = new S3File();
+				imgUrlFile4.name = ControllerUtil.decodeFileName(imgUrlFilePart4
+						.getFilename());
+				imgUrlFile4.file = imgUrlFilePart4.getFile();
+				Logger.debug("IMAGE FILE SIZE - "
+						+ imgUrlFilePart4.getFile().length());
+				eventForm.get().imgUrl4 = imgUrlFile4.getUrl();
+			} else {
+				eventForm.reject("imgUrl4", ControllerUtil.IMAGE_ERROR_MSG);
 			}
 		}
 		// if(eventForm.get().fundraisingEnd != null) {

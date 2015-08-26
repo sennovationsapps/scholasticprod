@@ -56,7 +56,9 @@
 	            @helper.inputFile(eventForm("imgUrl"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
                 @helper.inputFile(eventForm("imgUrl1"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
                 @helper.inputFile(eventForm("imgUrl2"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
-	            @helper.textarea(eventForm("content"), '_label -> "Welcome Message", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
+                @helper.inputFile(eventForm("imgUrl3"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @helper.inputFile(eventForm("imgUrl4"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @helper.textarea(eventForm("content"), '_label -> "Welcome Message", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
 	            
 	            <!-- TODO create a dropdown selection for how many teams to add -->
 	            <!-- TODO create a selection of preconfigured pages to be generated -->

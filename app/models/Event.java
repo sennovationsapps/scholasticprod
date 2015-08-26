@@ -99,6 +99,8 @@ public class Event extends Model implements PathBindable<Event> {
 	public URL imgUrl;
 	public URL imgUrl1;
 	public URL imgUrl2;
+	public URL imgUrl3;
+	public URL imgUrl4;
 
 	@Constraints.Required
 	public String name;
