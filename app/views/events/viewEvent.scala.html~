@@ -485,10 +485,10 @@
                 <img id = "three" src="@event.imgUrl2">
                 }
                 @if(event.imgUrl3 != null) {
-                <img id = "three" src="@event.imgUrl2">
+                <img id = "four" src="@event.imgUrl3">
                 }
                 @if(event.imgUrl4 != null) {
-                <img id = "three" src="@event.imgUrl2">
+                <img id = "five" src="@event.imgUrl4">
                 }
             </div>
             <br />
