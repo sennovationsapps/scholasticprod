@@ -421,18 +421,23 @@ patternMatchForPhone(currentFormId);
 	if(document.getElementById(currentFormId).value.length==afterNumChars) {
 		document.getElementById(nextFormId).focus();
 	}
-
+	//============= 26.08.2015==============start========added========================//
+mergeTotalPhNo();
+mergeTotalPhNo1();
+//============= 26.08.2015==============end========added========================//
 
 }
-
+//============= 26.08.2015==============start========same method replaced with this method========================//
 function mergeTotalPhNo(){
 //alert("within keyup");
 patternMatchForPhone('phoneSuf');
 var totalPhValue;
 
-var length = $("#phoneSuf").val().length;
+var length1 = $("#areaCode").val().length;
+var length2 = $("#phonePre").val().length;
+var length3 = $("#phoneSuf").val().length;
 //alert("length "+length);
-if(length == 4){
+if(length1==3 && length2 ==3 &&length3 == 4){
 totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
 $("#phNo").val(totalPhValue);
 //alert($("#phNo").val());
@@ -442,6 +447,8 @@ $("#phNo").val(totalPhValue);
 
 
 }
+
+//============= 26.08.2015==============end========same method replaced with this method========================//
 
         //============================phno partition validation ====================================24.08.2015==========end========================================//
     </script>
@@ -464,14 +471,18 @@ $("#phoneSuf").onkeyup();
 
 }
 */
-
+//============= 26.08.2015==============start========same method replaced with this method========================//
 function mergeTotalPhNo1(){
 //alert("within keyup");
 patternMatchForPhone('phoneSuf1');
 var totalPhValue;
-var length = $("#phoneSuf1").val().length;
+var length1 = $("#areaCode1").val().length;
+var length2 = $("#phonePre1").val().length;
+var length3 = $("#phoneSuf1").val().length;
 
-if(length == 4){
+
+
+if(length1==3 && length2 ==3 &&length3 == 4){
 totalPhValue = $("#areaCode1").val()+$("#phonePre1").val()+$("#phoneSuf1").val();
 $("#mobileNo").val(totalPhValue);
 //alert($("#phNo").val());
@@ -481,6 +492,8 @@ $("#mobileNo").val(totalPhValue);
 
 
 }
+
+//============= 26.08.2015==============end========same method replaced with this method========================//
 
         //============================phno partition validation ====================================24.08.2015==========end========================================//
     </script>

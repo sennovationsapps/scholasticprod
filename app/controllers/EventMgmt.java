@@ -284,11 +284,13 @@ public class EventMgmt extends Controller {
 
 
 
+//====commented out====use this search option for user not logged in===================26.08.2015==========start==================//
 
-
-	@Restrict({ @Group(SecurityRole.ROOT_ADMIN), @Group(SecurityRole.PFP_ADMIN),
+	/*@Restrict({ @Group(SecurityRole.ROOT_ADMIN), @Group(SecurityRole.PFP_ADMIN),
 			@Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN) })
-	@SubjectPresent
+	@SubjectPresent*/
+
+//====commented out====use this search option for user not logged in===================26.08.2015==========end==================//
 	public static Result profileSearchPfpsEvents(Event event,int page, String sortBy, String order,
 												 String filter, String fieldName) {
 		System.out.println("within profileSearchPfpsEvents");
@@ -297,32 +299,25 @@ public class EventMgmt extends Controller {
 		}
 
 
-
 		//===========================uploadimage=======================20.08.2015======================start==============================//
 		//  List donationList = new ArrayList();
-		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
-		int imgUrl=0;
-		System.out.println("donationList .size :: "+donationList.size());
-		System.out.println("donationList :: "+donationList);
-		for(Donation donation:donationList){
-			if(donation.imgUrl!=null){
+		List<Donation> donationList = (List<Donation>) Donation.findAllByEventId(event.id);
+		int imgUrl = 0;
+		System.out.println("donationList .size :: " + donationList.size());
+		System.out.println("donationList :: " + donationList);
+		for (Donation donation : donationList) {
+			if (donation.imgUrl != null) {
 				imgUrl++;
 			}
 
 		}
 
 
-
-
 //===========================uploadimage=======================20.08.2015======================end==============================//
 
 
-
-
-
-
 		User localUser = ControllerUtil.getLocalUser(session());
-		if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id))) {
+		if (!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id))) {
 			flash(ControllerUtil.FLASH_WARNING_KEY,
 					"This event is not published yet and therefore is not available at this time.");
 			return ok(views.html.index.render());
@@ -345,15 +340,17 @@ public class EventMgmt extends Controller {
 
 
 		//User localUser = ControllerUtil.getLocalUser(session());
-		System.out.println("page1 "+page);
-		System.out.println("sortBy1 "+sortBy);
-		System.out.println("order1 "+order);
-		System.out.println("StringUtils.trimToEmpty(filter)1 "+StringUtils.trimToEmpty(filter));
-		System.out.println("fieldName1 "+fieldName);
-		System.out.println("localUser1 "+localUser);
-		System.out.println("page1 "+page);
-
-		if(localUser.isEventAdmin() || localUser.isPfpAdmin()) {
+		System.out.println("page1 " + page);
+		System.out.println("sortBy1 " + sortBy);
+		System.out.println("order1 " + order);
+		System.out.println("StringUtils.trimToEmpty(filter)1 " + StringUtils.trimToEmpty(filter));
+		System.out.println("fieldName1 " + fieldName);
+		System.out.println("localUser1 " + localUser);
+		System.out.println("page1 " + page);
+		//========use this search option for user not logged in===================26.08.2015==========start==================//
+	if(localUser!=null){
+		//========use this search option for user not logged in===================26.08.2015==========end==================//
+		if (localUser.isEventAdmin() || localUser.isPfpAdmin()) {
 			System.out.println("-------------------__Root Admi------------------");
 
 
@@ -361,16 +358,16 @@ public class EventMgmt extends Controller {
 					isOpen,
 					Event.canParticipate(localUser, isOpen),
 					Event.canManage(localUser, event),
-					(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"),
-					(Map<Long, Donation.DonationsByTeam>)donations.get("team"),
+					(Map<Long, Donation.DonationsByPfp>) donations.get("pfp"),
+					(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
 					Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null),
 					sortBy,
 					order,
-					filter,donationList,imgUrl));
+					filter, donationList, imgUrl));
 			/*return ok(viewEvent.render(
 					Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser), sortBy,
 					order, filter));  */
-		} else if(localUser.isRootAdmin() || localUser.isSysAdmin()) {
+		} else if (localUser.isRootAdmin() || localUser.isSysAdmin()) {
 			System.out.println("-------------------__Root Adminnnnnnnnnnnnnnnnnnnnn------------------");
 
 
@@ -378,11 +375,11 @@ public class EventMgmt extends Controller {
 					isOpen,
 					Event.canParticipate(localUser, isOpen),
 					Event.canManage(localUser, event),
-					(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"),
-					(Map<Long, Donation.DonationsByTeam>)donations.get("team"),
+					(Map<Long, Donation.DonationsByPfp>) donations.get("pfp"),
+					(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
 					Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null),
 					sortBy,
-					order, filter,donationList,imgUrl));
+					order, filter, donationList, imgUrl));
 
 
 
@@ -406,6 +403,20 @@ public class EventMgmt extends Controller {
 					sortBy,
 					order, filter));*/
 		}
+
+		//========use this search option for user not logged in===================26.08.2015==========start==================//
+	}else{
+		return ok(viewEvent.render(event,
+				isOpen,
+				Event.canParticipate(localUser, isOpen),
+				Event.canManage(localUser, event),
+				(Map<Long, Donation.DonationsByPfp>) donations.get("pfp"),
+				(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
+				Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null),
+				sortBy,
+				order, filter, donationList, imgUrl));
+	}
+		//========use this search option for user not logged in===================26.08.2015==========end==================//
 	}
 
 	/******End Code T-260*******************/

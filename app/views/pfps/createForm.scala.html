@@ -334,16 +334,21 @@ patternMatchForPhone(currentFormId);
 		document.getElementById(nextFormId).focus();
 	}
 
+	//============= 26.08.2015==============start========added========================//
 
+mergeTotalPhNo();
+//============= 26.08.2015==============end========added========================//
 }
-
+//============= 26.08.2015==============start========same method replaced with this method========================//
 function mergeTotalPhNo(){
 //alert("within keyup");
 patternMatchForPhone('phoneSuf');
 var totalPhValue;
-var length = $("#phoneSuf").val().length;
+var length1 = $("#areaCode").val().length;
+var length2 = $("#phonePre").val().length;
+var length3 = $("#phoneSuf").val().length;
 
-if(length == 4){
+if(length1==3 && length2 ==3 &&length3 == 4){
 totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
 $("#phNo").val(totalPhValue);
 //alert($("#phNo").val());
@@ -353,7 +358,7 @@ $("#phNo").val(totalPhValue);
 
 
 }
-
+//============= 26.08.2015==============end========same method replaced with this method========================//
         //============================phno partition validation ====================================24.08.2015==========end========================================//
     </script>
 
