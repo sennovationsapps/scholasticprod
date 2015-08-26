@@ -1,0 +1,444 @@
+@(localUser: models.security.User = null, userForm: Form[models.security.User])
+
+@import html5.tags.html._
+@import models.security._
+@import com.feth.play.module.pa.views.html._
+
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+	  @form(routes.Application.saveProfile(localUser.id), 'role -> "form") {
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="thumbnail">
+                <div class="avatar">
+                  <a href="#" class="thumbnail bottom-15">
+                    <img src="@ControllerUtil.getResourceRoute("face1.jpg")" alt="...">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Main profile info -->
+            <div class="col-sm-8">
+              @if(!ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN)) {
+              	@text(userForm("firstName"), '_label -> "nolabel", 'placeholder -> "First Name", 'class -> "form-control")
+	          	@text(userForm("lastName"), '_label -> "nolabel", 'placeholder -> "Last Name", 'class -> "form-control")
+              } else {
+              <h3 class="hl">@localUser.firstName @localUser.lastName</h3>
+              }
+              <hr>
+              <p>
+	              @if(!localUser.emailValidated && localUser.email) {
+					      (<a href="@routes.Account.verifyEmailById(localUser.id)">Account unverified - click to verify</a>)
+					    } else {
+					      (Account has been verified)
+				  }
+			   </p>
+			   <p>
+			   <a href="@routes.Account.link()">Link other accounts to your account.</a>
+			   </p>
+            </div>
+          </div>
+          <!-- About Me -->
+          <!--div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-user"></i> About Me</h4>
+              <p class="bottom-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean tortor nunc, dapibus a est sed, tempus bibendum arcu. Nullam pretium arcu in neque congue tempor. Quisque quis mauris sit amet magna fermentum tincidunt et a enim. Aliquam eu rhoncus libero, a pulvinar metus.</p>
+              <hr>
+            </div>
+          </div-->
+		<!-- Organization Information -->
+		  @if(localUser.organization != null) {
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-info-circle"></i> Organization Information</h4>
+              <table class="table">
+                <tbody>
+                  @if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {
+                  <tr>
+                    <td class="text-muted">Name</td>
+                    <td>@text(userForm("organization.name"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Org Name")</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Taxid</td>
+                    <td>@{localUser.organization.taxId}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Address</td>
+                    <td>@text(userForm("organization.address"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Org Address")</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">City</td>
+                    <td>@text(userForm("organization.city"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Org City")</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">State</td>
+                    <td>@text(userForm("organization.state"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Org Zip (55555 or 55555-4444)")</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Zip</td>
+                    <td>@text(userForm("organization.zip"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Org Phone")</td>
+                  </tr>
+				  <tr>
+                    <td class="text-muted">Phone</td>
+                    <td>@text(userForm("organization.phone"), '_label -> "nolabel",'id -> "orgPhNo", 'class -> "form-control", 'placeholder -> "Phone: 555-555-1212 (only numbers)")</td>
+                  </tr>
+                  } else {
+                  <tr>
+                    <td class="text-muted">Name</td>
+                    <td>@{localUser.organization.name}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Taxid</td>
+                    <td>@{localUser.organization.taxId}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Address</td>
+                    <td>@{localUser.organization.address}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">City</td>
+                    <td>@{localUser.organization.city}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">State</td>
+                    <td>@{localUser.organization.state}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Zip</td>
+                    <td>@{localUser.organization.zip}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Phone</td>
+                    <td>@{localUser.organization.phone}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+              <hr>
+            </div>
+          </div>
+        }
+          <!-- Contact Information -->
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-map-marker"></i> Contact Information</h4>
+              <table class="table">
+                <tbody>
+                  @if(localUser.organization != null && ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT)) {
+                  <tr>
+                    <td class="text-muted">Email</td>
+                    <td>@text(userForm("email"), '_label -> "nolabel", 'placeholder -> "Enter Email", 'class -> "form-control")</td>
+                  </tr>
+                  } else {
+                  <tr>
+                    <td class="text-muted">Email</td>
+                    <td>@{localUser.email}</td>
+                  </tr>
+                  }
+                  <tr>
+                  	<td class="text-muted">Zip Code</td>
+                  	<td>@text(userForm("zip"), '_label -> "nolabel", 'placeholder -> "Zip Code (55555 or 55555-4444)", 'class -> "form-control")</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Phone</td>
+                    <td>@text(userForm("phone"), '_label -> "nolabel",'id ->"phNo", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'class -> "form-control", 'title -> "10 digits (numeric only)")</td>
+                  </tr>
+				  <tr>
+                  	<td class="text-muted">Providers</td>
+                  	<td>@defining(localUser.getProviders()) { providers =>
+			        @if(providers.size() > 0) {
+			        @if(providers.size() ==1) {
+			            @Messages("playauthenticate.profile.providers_one")
+			        } else {
+			            @Messages("playauthenticate.profile.providers_many",providers.size().toString())
+			        }
+			        @for(p <- providers) {
+			            @_providerIcon(p)
+			        }
+			        <br/>
+			        }
+			    }</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr>
+            </div>
+          </div>
+          @if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {
+          	<div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-info-circle"></i> Profile Information</h4>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="text-muted">ID</td>
+                    <td>@localUser.id</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Last Login</td>
+                    <td>@localUser.lastLogin</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Permissions</td>
+                    <td>@for(per <- localUser.permissions) { @per.value }</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Roles</td>
+                    <td>@for(role <- localUser.roles) { @role.roleName }</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr>
+            </div>
+          </div>
+          }
+          <div class="row">
+            <div class="col-sm-12">
+          		<button type="submit" class="btn btn-green">Save Profile</button>
+            	<a href="@routes.Application.profile" class="btn btn-default" type="button">Cancel</a>
+            </div>
+          </div>
+
+
+
+
+  <script>
+
+//=========new add
+
+
+   $( "#phNo" ).keyup(function(){
+   //alert("on keyup")
+
+   var phNo1;
+   //var lastChar;
+   var phNo = document.getElementById("phNo").value;
+   //alert("phNo "+phNo)
+   //previousLength = phNo.length;
+   //alert("phNo "+phNo)
+   currentLength = phNo.length;
+   //alert("currentLength :: "+currentLength);
+   //alert("previousLength :: "+previousLength);
+var length;
+
+if(currentLength == 4 || currentLength == 8){
+//alert("if(currentLength == 4 || currentLength == 8)");
+var lastChar = phNo.charAt(currentLength-1);
+//alert("lastChar "+lastChar);
+if(lastChar!= '-'){
+phNo = phNo.substring(0,currentLength-1);
+phNo =phNo.concat("-");
+phNo = phNo.concat(lastChar);
+
+}
+//phPart1 = phNo;
+previousLength = phNo.length;
+ $('#phNo').val(phNo);
+
+}
+
+
+
+
+else{
+
+   if(currentLength<previousLength){
+//alert("currentLength<previousLength");
+   previousLength = currentLength;
+   if(currentLength> 0){
+   //alert("currentLength ::"+currentLength);
+//alert("phNo "+phNo);
+var lastChar = phNo.charAt(currentLength-1);
+
+//alert("lastChar"+lastChar);
+if(lastChar == '-'){
+phNo = phNo.substring(0,currentLength-1);
+}
+else{
+phNo = phNo.substring(0,currentLength);
+}
+   //alert("if return");
+//phNo = phNo.substring(0,currentLength);
+     $('#phNo').val(phNo);
+
+   }
+
+   phPart1 = null;
+   }
+
+
+else{
+   //alert("else");
+
+      if( phNo.length <8){
+      previousLength = phNo.length;
+      if(phNo.contains("-")){
+     // alert("phNo.contains("-")")
+      length = phNo.length;
+     // alert("length1 "+length)
+        phNo = phNo.substring(phNo.indexOf("-")+1,length);
+        //alert("phNo "+phNo);
+
+      }
+      length = phNo.length;
+
+    //alert("length11 "+length)
+      if(length == 3){
+     // alert("length == 3"+phNo.concat("-"));
+      if(phPart1!=null){
+      phNo1 = phNo.concat("-");
+      //alert("phNo1 :: "+phNo1);
+     // alert("before phPart1 :: "+phPart1);
+      phPart1 = phPart1.concat(phNo1);
+      previousLength = phPart1.length;
+      //alert("after phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }else{
+      phNo = document.getElementById("phNo").value;
+      // alert("before phPart1 :: "+phPart1);
+      phPart1 = phNo.concat("-");
+      previousLength = phPart1.length;
+      //alert("previousLength ")
+      //alert("phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }
+
+
+   // document.getElementById("phNo").innerHTML = phNo.concat("-");
+       // alert("final :: "+document.getElementById("phNo").value);
+      }
+      }else{
+      previousLength = phNo.length;
+      }
+ //aler("previousLength :: "+previousLength);
+      }
+      }
+
+
+   });
+  </script>
+
+
+
+
+
+
+  <script>
+
+//=========new add
+
+
+   $( "#orgPhNo" ).keyup(function(){
+   //alert("on keyup")
+
+   var phNo1;
+   //var lastChar;
+   var phNo = document.getElementById("orgPhNo").value;
+   //alert("phNo "+phNo)
+   //previousLength = phNo.length;
+   //alert("phNo "+phNo)
+   currentLength = phNo.length;
+   //alert("currentLength :: "+currentLength);
+   //alert("previousLength :: "+previousLength);
+var length;
+
+if(currentLength == 4 || currentLength == 8){
+//alert("if(currentLength == 4 || currentLength == 8)");
+var lastChar = phNo.charAt(currentLength-1);
+//alert("lastChar "+lastChar);
+if(lastChar!= '-'){
+phNo = phNo.substring(0,currentLength-1);
+phNo =phNo.concat("-");
+phNo = phNo.concat(lastChar);
+
+}
+//phPart1 = phNo;
+previousLength = phNo.length;
+ $('#orgPhNo').val(phNo);
+
+}
+
+
+
+
+else{
+
+   if(currentLength<previousLength){
+//alert("currentLength<previousLength");
+   previousLength = currentLength;
+   if(currentLength> 0){
+   //alert("currentLength ::"+currentLength);
+//alert("phNo "+phNo);
+var lastChar = phNo.charAt(currentLength-1);
+
+//alert("lastChar"+lastChar);
+if(lastChar == '-'){
+phNo = phNo.substring(0,currentLength-1);
+}
+else{
+phNo = phNo.substring(0,currentLength);
+}
+   //alert("if return");
+//phNo = phNo.substring(0,currentLength);
+     $('#orgPhNo').val(phNo);
+
+   }
+
+   phPart1 = null;
+   }
+
+
+else{
+   //alert("else");
+
+      if( phNo.length <8){
+      previousLength = phNo.length;
+      if(phNo.contains("-")){
+     // alert("phNo.contains("-")")
+      length = phNo.length;
+     // alert("length1 "+length)
+        phNo = phNo.substring(phNo.indexOf("-")+1,length);
+        //alert("phNo "+phNo);
+
+      }
+      length = phNo.length;
+
+    //alert("length11 "+length)
+      if(length == 3){
+     // alert("length == 3"+phNo.concat("-"));
+      if(phPart1!=null){
+      phNo1 = phNo.concat("-");
+      //alert("phNo1 :: "+phNo1);
+     // alert("before phPart1 :: "+phPart1);
+      phPart1 = phPart1.concat(phNo1);
+      previousLength = phPart1.length;
+      //alert("after phPart1 :: "+phPart1)
+         $('#orgPhNo').val(phPart1);
+      }else{
+      phNo = document.getElementById("orgPhNo").value;
+      // alert("before phPart1 :: "+phPart1);
+      phPart1 = phNo.concat("-");
+      previousLength = phPart1.length;
+      //alert("previousLength ")
+      //alert("phPart1 :: "+phPart1)
+         $('#orgPhNo').val(phPart1);
+      }
+
+
+   // document.getElementById("phNo").innerHTML = phNo.concat("-");
+       // alert("final :: "+document.getElementById("phNo").value);
+      }
+      }else{
+      previousLength = phNo.length;
+      }
+ //aler("previousLength :: "+previousLength);
+      }
+      }
+
+
+   });
+  </script>
+
+
+
+}

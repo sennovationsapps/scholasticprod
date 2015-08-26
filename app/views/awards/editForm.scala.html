@@ -1,0 +1,122 @@
+@(event: Event, pageId: Long, pageForm: Form[Awards])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Create Awards") {
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Create Awards Page</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h4>This form will help you create an awards page.</h4>
+          @events.eventWorkflowMenu(event, "awards")
+				<br/>
+          <hr>
+          @general.alerts()
+      @if(pageForm.hasErrors) {
+          <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @Messages("form.has.errors")
+          </div>
+          }
+		  @if(pageForm.hasGlobalErrors) {
+			<div class="info-board info-board-red"> 
+				<span class="label label-important">@pageForm.globalError.message</span>
+			</div>
+		  }
+    @form(routes.AwardsMgmt.update(event, pageId), 'role -> "form", 'id -> "pageForm", 'enctype -> "multipart/form-data") {
+            @text(pageForm("name"), '_label -> "Page Name", 'class -> "form-control", 'placeholder -> "Name (i.e., Prizes to Win)", '_info -> "helpAwardName")
+            @text(pageForm("title"), '_label -> "Page Title", 'class -> "form-control")
+            @helper.inputFile(pageForm("imgUrl"), '_label -> "Page Image", 'class -> "form-control")
+            @helper.textarea(pageForm("content"), '_label -> "Page Content", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
+            
+            <div id="well prizes" class="well">
+            	<legend>Prizes</legend>
+            	@repeat(pageForm("prizes")) { prize =>
+                        <div class="form-inline prize">
+        
+							@text(prize("name"), '_showConstraints -> false, '_label -> "Prize Name", 'class -> "form-control", 'placeholder -> "Enter prize name", '_label_class -> "sr-only")
+							@text(prize("description"), '_showConstraints -> false, '_label -> "Prize Description", 'class -> "form-control", 'placeholder -> "Enter prize description", '_label_class -> "sr-only")
+							<br/><br/>
+					        @helper.textarea(prize("info"), '_showConstraints -> false, '_label -> "Prize Info", 'class -> "form-control", '_label_class -> "sr-only", '_wysiwyg -> true, '_wysiwyg_params -> "nosample")
+					        <a type="button" class="removePrize">Remove</a>
+					        <br/><br/>
+					    </div>
+                }
+                
+                @**
+                 * Keep an hidden block that will be used as template for Javascript copy code
+                 **@
+
+
+                 <div class="form-inline prize_template">
+						@text(pageForm("prizes[x].name"), '_showConstraints -> false, '_label -> "Prize Name", 'class -> "form-control", 'placeholder -> "Enter prize name", '_label_class -> "sr-only")
+						@text(pageForm("prizes[x].description"), '_showConstraints -> false, '_label -> "Prize Description", 'class -> "form-control", 'placeholder -> "Enter prize description", '_label_class -> "sr-only")
+						<br/><br/>
+					    @helper.textarea(pageForm("prizes[x].info"), '_showConstraints -> false, '_label -> "Prize Info", 'class -> "form-control", '_label_class -> "sr-only", '_wysiwyg -> true, '_wysiwyg_params -> "nosample")
+						<a type="button" class="removePrize">Remove</a>
+						<br/><br/>
+				</div>
+                
+                <div class="manage">
+                    <a type="button" class="addPrize btn btn-blue">Add another prize</a>
+                </div>            
+                        </div>
+            <br/>
+            <button type="submit" class="btn btn-green">Save this awards page</button>&nbsp;&nbsp;
+            <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+    }
+</div>
+        <!-- Right column -->
+        <div class="col-sm-4">
+          <h4>Awards Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpAwardName">
+                      Awards Name
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventName" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Name is the name you want to appear on your Page that will be added to your Event.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpContent">
+                      Page Content
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpContent" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    This is the message to all your event attendees.  Please feel free to view the sample on the right copying and pasting all or parts of the message for your use. Remeber, if you do use these messages you will need to personalize them. i.e. your events name, your schools name.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @awards.samples()
+  <script src="@ControllerUtil.getResourceRoute("scAwardsAdmin.min.js")"></script>
+}

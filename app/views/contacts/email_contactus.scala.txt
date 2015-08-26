@@ -1,0 +1,7 @@
+@(contactUs: ContactUs)
+Name:               @contactUs.firstName @contactUs.lastName
+Email:              @contactUs.email
+Phone:              @contactUs.phone
+Event or Org:       @contactUs.group
+Reason for contact: @contactUs.subject
+Question:           @ControllerUtil.sanitizeText(contactUs.message)

@@ -1,0 +1,150 @@
+@import be.objectify.deadbolt.java.views.html._ 
+@import be.objectify.deadbolt.core.utils.TemplateUtils._ 
+@import org.apache.commons.lang3._
+
+<!-- Navbar
+    ============= -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/" style="padding-top:2px;"><img src="@ControllerUtil.getResourceRoute("LogoSmaller.png")" class="img-responsive" alt="" width="150px"/></a>
+		</div>
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				@**
+				<li class="dropdown">
+	              <a href="#" class="dropdown-toggle" data-toggle="dropdown">About Us <b class="caret"></b></a>
+	                <ul class="dropdown-menu">
+	                  <li><a href="/">Corporate Page</a></li>
+	                  <li><a href="/#ourmission">Our Mission</a></li>
+	                </ul>
+	            </li> 
+	            @defining(Event.findByIdWithMin(ControllerUtil.getEventId())) { event =>
+				<li class="visible-md">&nbsp;</li>
+				<li class="hidden-sm visible-lg visible-xs visible-md">
+				@if(event == null) { 
+				<a href="@routes.EventMgmt.list()">Participate</a> 
+				} else { 
+				@if(ControllerUtil.getLocalUser(session()) == null) {
+				<a href="@routes.PfpMgmt.create(event)">Participate</a>
+				}
+				}
+				</li>
+				<li class="visible-md">&nbsp;</li>
+				<li class="dropdown hidden-sm visible-lg visible-xs visible-md"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Donate <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="@routes.EventMgmt.donateList()">Donate to Event</a></li>
+						<li><a href="@routes.PfpMgmt.donateList()">Donate to Person</a></li>
+					</ul></li>
+				<li class="visible-md">&nbsp;</li>
+				<li class="hidden-sm visible-lg visible-xs visible-md">
+				@if(event == null && !Sponsors.existsByEventId(event)) { 
+				<a href="@routes.EventMgmt.list()">Sponsor</a> 
+				} else { 
+				<a href="@routes.SponsorsMgmt.get(event, Sponsors.findByEventIdMin(event.id).id)">Sponsor</a>
+				}
+				</li>
+				<li class="visible-md">&nbsp;</li>
+				<li class="hidden-sm visible-lg visible-xs visible-md">
+				@if(event == null && !Volunteers.existsByEventId(event)) { 
+				<a href="@routes.EventMgmt.list()">Volunteer</a> 
+				} else { 
+				<a href="@routes.VolunteersMgmt.get(event, Volunteers.findByEventIdMin(event.id).id)">Volunteer</a>
+				}
+				</li>
+				<li class="visible-sm">&nbsp;</li>
+				<li class="dropdown visible-sm"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Event Info <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li>@if(event == null) { <a href="@routes.EventMgmt.list()">Participate</a> } else { <a href="@routes.PfpMgmt.create(event)">Participate</a> }
+						</li>
+						<li>@if(event == null) { <a href="@routes.EventMgmt.list()">Sponsor</a> } else { <a href="@routes.EventPagesMgmt.get(event, 2)">Sponsor</a> }
+						</li>
+						<li>@if(event == null) { <a href="@routes.EventMgmt.list()">Volunteer</a> } else { <a href="@routes.EventPagesMgmt.get(event, 1)">Volunteer</a> }
+						</li>
+						<li><a href="@routes.EventMgmt.donateList()">Donate to Event</a></li>
+						<li><a href="@routes.PfpMgmt.donateList()">Donate to Person</a></li>
+					</ul>
+				</li> 
+				}
+				<li class="hidden-xs">&nbsp;</li>
+				@subjectPresent() {
+				<!-- Search Button -->
+				<li id="search" class="hidden-xs"><a href="#" id="search-btn"><i class="fa fa-search" id="search-icon"></i> Search</a>
+					<div class="search-box hidden" id="search-box">
+						<div class="input-group">
+							<input type="text" class="form-control" id="navSearchInput" placeholder="Search"> <span class="input-group-btn">
+								<div class="btn-group">
+									<button type="button" class="btn btn-red dropdown-toggle" data-toggle="dropdown">
+										Search <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a href="#" id="navSearchTeams">Teams</a></li>
+										<li><a href="#" id="navSearchParticipants">Participants</a></li>
+									</ul>
+								</div>
+							</span>
+						</div>
+					</div></li>
+				<li class="hidden-xs">&nbsp;</li>
+				<li class="visible-xs"><a href="@routes.EventMgmt.list()">Search</a></li>
+				}
+				<!--li class="hidden-xs">&nbsp;</li>
+	            <li class="hidden-xs"><a href="#donationsModel" role="button" data-toggle="modal" style="white-space: nowrap"><span class="glyphicon glyphicon-shopping-cart"></span> <span class="simpleCart_quantity"></span> donations</a></li-->
+				<li class="hidden-xs">&nbsp;</li>
+				**@ 
+				@subjectPresent() { 
+				@defining(ControllerUtil.getLocalUser(session())) { user =>
+				<li class="visible-xs"><a href="@routes.Application.profile()">Profile</a></li>
+				<li class="visible-xs"><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">Sign Out</a></li>
+				<!-- Signed in. Profile Menu -->
+				<li id="profile-menu" class="dropdown hidden-xs"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon  glyphicon-user fa-lg"></i> <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li class="account">
+							<div class="avatar"></div>
+							<p>
+								<b>@user.firstName @user.lastName</b><br />@user.email
+							</p>
+							<p>
+								<a href="@routes.Application.profile()">Profile</a> | <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">Sign out</a>
+							</p>
+							<div class="clearfix"></div>
+						</li>
+					</ul>
+				</li> 
+				}} 
+				@subjectNotPresent() {
+				<li class="hidden-xs">&nbsp;</li>
+				<li><a href="@routes.TaxidSignup.loginFromCorp()">Manage Event</a></li>
+				<li class="hidden-xs">&nbsp;</li>
+				<li><a href="@routes.Signup.loginFromCorp()">Sign In</a></li>
+				@**
+				<li class="hidden-xs">&nbsp;</li>
+				<!-- Sign in & Sign up -->
+				<li class="dropdown visible-sm visible-lg visible-xs visible-md"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign In <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="@routes.TaxidSignup.login()">Manage Event</a></li>
+						<li><a href="@routes.Signup.login()">Manage Participant</a></li>
+					</ul>
+				</li>
+				**@
+				}
+			</ul>
+		</div>
+	</div>
+</div>
+@**
+<script>   
+    $('#navSearchTeams').click(function(){
+    	var searchLink = "@routes.TeamMgmt.list(0, "name", "asc", "")" + "?f=" + $('#navSearchInput').val();
+    	$(location).attr('href',searchLink);
+    });
+    
+    $('#navSearchParticipants').click(function(){
+    	var searchLink = "@routes.PfpMgmt.list(0, "name", "asc", "")" + "?f=" + $('#navSearchInput').val();
+    	$(location).attr('href',searchLink);
+    });
+</script>
+**@

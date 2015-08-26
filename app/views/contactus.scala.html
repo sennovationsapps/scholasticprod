@@ -1,0 +1,161 @@
+@(contactUsForm: Form[ContactUs])
+
+    @import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Contact Us") {
+    
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Contact Us</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h2 class="hl top-zero">Contact Us</h2>
+          <hr>
+          <p>We pride ourselves on providing the most helpful and friendly support service possible and we are dedicated to helping you with your fundraising needs.</p>
+          	@form(routes.ContactMgmt.sendMail()) {
+                @helper.inputText(contactUsForm("firstName"), '_label -> "Your first name", 'class -> "form-control", 'placeholder -> "Enter your first name")
+                @helper.inputText(contactUsForm("lastName"), '_label -> "Your last name", 'class -> "form-control", 'placeholder -> "Enter your last name")
+                @helper.inputText(contactUsForm("email"), '_label -> "Your email address", 'class -> "form-control", 'placeholder -> "Enter email address")
+                @******phno format*************24.08.2015***************start*****@
+
+                <div style="display:none;">
+                @helper.inputText(contactUsForm("phone"), '_label -> "Enter Phone Number", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone (ex.123-345-5678) ,just put numbers special character will be automatically appeded", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                </div>
+                <div><b>Enter Phone Number</b></div>
+
+
+
+
+
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                            @helper.inputText(contactUsForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                            </td>
+                            <td> - </td>
+                            <td>
+                            @helper.inputText(contactUsForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                            </td>
+                            <td> - </td>
+                            <td>
+                            @helper.inputText(contactUsForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                @******phno format*************24.08.2015***************end*****@                @helper.inputText(contactUsForm("group"), '_label -> "Your event or organization", 'class -> "form-control", 'placeholder -> "Enter event or organization")
+	            @helper.select(
+                	contactUsForm("subject"), 
+                	options(ContactUs.options()), 
+                    '_label -> "Reason for contact",
+                    'class -> "form-control"
+            	)
+	            @helper.textarea(contactUsForm("message"), '_label -> "Your question", 'class -> "form-control", 'placeholder -> "Enter question")
+                <input name="mobile" id="mobile" style="display: none"/>
+                <input name="mail" id="mail" style="display: none"/>
+	            <button type="submit" class="btn btn-green">Send request</button>
+    		}
+        </div>
+        <!-- Right column -->
+        <div class="col-sm-4">
+          <!-- Out Address -->
+          <h4>Our Address</h4>
+          <hr>
+            <p>
+            300 Tamal Plaza, Suite 250<br />
+            Corte Madera, CA 94925-1170<br /><br />
+            Toll Free: 855.358.2022<br />
+            Local: 415.358.2022<br /><br />
+            Email: <a href="mailto:support@@scholasticchallenge.com">support@@scholasticchallenge.com</a><br />
+            Technical Email: <a href="mailto:info@@scholasticchallenge.com">info@@scholasticchallenge.com.</a><br /><br />
+            Office Hours: 7:30am - 5:00pm PST<br />
+            </p>
+          <div class="google-maps">
+            <img width="300" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps/api/staticmap?markers=300+Tamal Plaza, Suite 250, Corte Madera, CA 94925-1170&size=300x300&sensor=true"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+
+
+  </script>
+
+
+    <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+$(document).ready(function(){
+/*$("#phNo").hide();*/
+
+
+
+
+var phNoValue = $("#phNo").val();
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}
+});
+
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*/
+
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+
+}
+
+function mergeTotalPhNo(){
+//alert("within keyup");
+var totalPhValue;
+var length = $("#phoneSuf").val().length;
+
+if(length == 4){
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+//alert($("#phNo").val());
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+
+}

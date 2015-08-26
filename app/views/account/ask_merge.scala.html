@@ -1,0 +1,57 @@
+@(acceptForm: Form[Account.Accept], aUser: com.feth.play.module.pa.user.AuthUser, bUser: com.feth.play.module.pa.user.AuthUser)
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@label = {
+	@Messages("playauthenticate.merge.accounts.question",aUser,bUser)
+}
+
+@main(Messages("playauthenticate.merge.accounts.title")) {
+<!-- Main body
+================== -->
+
+  <div class="wrapper">
+    <!-- Page Tip -->
+    <div class="page-tip animated slideInDown">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <p>@Messages("playauthenticate.merge.accounts.title")</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Main Form -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <h3 class="hl top-zero">@Messages("playauthenticate.merge.accounts.title")</h3>
+          <hr>
+		  <div>
+			 @form(routes.Account.doMerge) {
+
+	            @if(acceptForm.hasGlobalErrors) { 
+	                <p class="error">
+			            <span class="label label-important">@acceptForm.globalError.message</span>
+			        </p>
+	            }
+		   		<p>@label</p>
+		        <div class="input-group">
+			      <input type="radio" id="accept_true" name="accept" value="true"  >
+			      <label for="accept_true">@Messages("playauthenticate.merge.accounts.true")</label>
+			    </div>
+			    <br/>
+			    <div class="input-group">
+			      <input type="radio" id="accept_false" name="accept" value="false"  >
+			      <label for="accept_false">@Messages("playauthenticate.merge.accounts.false")</label>
+			    </div>
+		        <br/>
+				<button type="submit" class="btn btn-green">@Messages("playauthenticate.merge.accounts.ok")</button>
+			}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

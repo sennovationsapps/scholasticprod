@@ -1,0 +1,43 @@
+@(receipt: String, event: Event, pfp:Pfp)
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("View Receipt") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Donation Receipt</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+           <h4>This is the receipt for your donation (an email copy will be sent to you).</h4>
+           <hr/>
+          @general.alerts()
+          <div class="info-board info-board-blue">Refreshing this page will cause a duplicate receipt (not donation) to be sent.  Please use the links below to return to the Event or Participant.</div>
+          @if(pfp != null) {
+      	<a href="@routes.PfpMgmt.get(event, pfp)" class="btn btn-green" type="button">Return to the (@pfp.name) - Participant Page</a><br/>
+      	<br/>
+      	}
+      	<a href="@routes.EventMgmt.get(event)" class="btn btn-green" type="button">Return to the (@event.name) - Event Page</a><br/><br/><br/>
+      	<hr/>
+          @Html(receipt)     
+    	</div>   
+<!-- Right column -->
+        <div class="col-sm-4">
+        </div>
+      </div>
+    </div>
+  </div>
+}

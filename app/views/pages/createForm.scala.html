@@ -1,0 +1,89 @@
+@(event: Event, pageForm: Form[EventPages])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Create EventPages") {
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Create Event Page</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h4>This form will help you create an event page.</h4>
+          @events.eventWorkflowMenu(event, "eventpages")
+				<br/>
+          <hr>
+          @general.alerts()
+      @if(pageForm.hasErrors) {
+          <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @Messages("form.has.errors")
+          </div>
+          }
+		  @if(pageForm.hasGlobalErrors) {
+			<div class="info-board info-board-red"> 
+				<span class="label label-important">@pageForm.globalError.message</span>
+			</div>
+		  }
+    @form(routes.EventPagesMgmt.save(event), 'role -> "form", 'id -> "pageForm") {
+            @text(pageForm("name"), '_label -> "Page Name", 'class -> "form-control", 'placeholder -> "Name (i.e., How Your Money Works)", '_info -> "helpEventName")
+            @text(pageForm("title"), '_label -> "Page Title", 'class -> "form-control")
+            @helper.textarea(pageForm("content"), '_label -> "Page Content", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
+            <input type="hidden" name="saveAndAdd" value="false" id="saveAndAdd"/>
+            <button type="submit" class="btn btn-green" id="saveBtn">Save Page</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-default" id="saveAndAddBtn">Add Another Page</button>&nbsp;&nbsp;
+            <a href="@routes.EventWorkflowMgmt.update(event)" class="btn btn-default" type="button">Cancel</a>
+    }
+</div>
+        <!-- Right column -->
+        <div class="col-sm-4">
+          <h4>Event Page Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpEventName">
+                      Event Page Name
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventName" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Name is the name you want to appear on your Page that will be added to your Event.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpContent">
+                      Page Content
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpContent" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    This is the message to all your event attendees.  Please feel free to view the sample on the right copying and pasting all or parts of the message for your use. Remeber, if you do use these messages you will need to personalize them. i.e. your events name, your schools name.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @pages.samples()
+<script src="@ControllerUtil.getResourceRoute("scPagesAdmin.min.js")"></script>
+}

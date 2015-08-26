@@ -1,0 +1,306 @@
+@(event: Event, volunteers: Volunteers, isEventOpen: Boolean, canParticipate: Boolean, canManage: Boolean, pfpDonations: Map[Long, Donation.DonationsByPfp], teamDonations: Map[Long, Donation.DonationsByTeam])
+
+@main("View Event") {
+<!-- Main body
+================== -->
+<style>
+.section-header {
+	padding: 15px 0;
+	margin-bottom: 0px;
+}
+#wrap,
+#hp-slider {
+	height: 480px;
+	background: url(@event.heroImgUrl) no-repeat center center;
+	background-size: cover;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='@event.heroImgUrl', sizingMethod='scale');
+	-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='@event.heroImgUrl', sizingMethod='scale')";
+	border-bottom: 1px solid #eee;
+	color: #fff;
+}
+</style>
+  <div class="wrapper">
+      <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>View Volunteers</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+@general.alerts()
+ <div id="wrap">
+      <div class="container" style="margin-left: -15px;">
+        <div class="row" style="margin-left: -15px;">
+          <div class="col-md-6 col-sm-12">
+            <div class="list"  style="margin-left:0px;">
+              <ul>
+              	<li><br/><br/></li>
+				<li class="hidden-sm hidden-xs"><br/><br/><br/><br/></li>
+            	@if(canParticipate) {
+                		<li class="animated slideInLeft fourth visible-sm visible-xs"><span><a class="btn btn-lg btn-green" href="@routes.PfpMgmt.create(event)" role="button">Participate</a></span></li>
+                		<li class="animated slideInLeft fifth visible-sm visible-xs"><span><a class="btn btn-lg btn-red" role="button" href="@routes.DonationMgmt.create(event)">Donate</a></span></li>
+                		<li class="visible-sm visible-xs"><br/><br/></li>
+                }
+            	<div style="background:#E5452F">
+            	<li>
+            		<table style="border:15px solid #E5452F;">
+            			<tr>
+            				<td rowspan="2" style="border-right: 2px solid white;padding-right:15px"><h2>@volunteers.name</h2></td>
+            				<td style="padding-left:15px"><h4>@if(event.eventEnd == null) {@event.eventStart.format("MM/dd/yyyy")}else{@event.eventStart.format("MM/dd") - @event.eventEnd.format("MM/dd/yyyy")}</h4></td>
+            			</tr>
+            			<tr>
+            				<td style="padding-left:15px"><h4>@event.schoolId</h4></td>
+            			</tr>
+            		</table>
+            	</li>
+                </div>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6 visible-md visible-lg">
+          	@if(canParticipate) {
+            <div class="list">
+            	<ul>
+            		<li class="visible-md visible-lg"><br/><br/><br/><br/><br/></li>
+                	<li class="animated slideInLeft fourth visible-md visible-lg"><span><a class="btn btn-lg btn-green pull-right" href="@routes.PfpMgmt.create(event)" role="button">Participate</a></span></li>
+                	<li class="visible-md visible-lg"><br/><br/></li>
+					<li class="animated slideInLeft fifth visible-md visible-lg"><span><a class="btn btn-lg btn-red pull-right" role="button" href="@routes.DonationMgmt.create(event)">Donate</a></span></li>
+                </ul>
+                </div>
+          	}
+          </div>
+        </div>
+      </div>
+    </div>
+	@events.eventSubMenu(event, canManage, null, null, volunteers)
+    <br/>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-sm-6">
+			<h4>@event.title</h4>
+				<h4>@volunteers.title</h4>
+        			@Html(volunteers.content)
+        			<br /><br />
+        							@if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+				ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+				ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+				) {
+				<a href="@routes.VolunteersMgmt.expireVolunteers(event, volunteers.id)" class="btn btn-default pull-right" type="button">Expire Pending Volunteers</a>
+				}
+          <div class="clearfix"></div>
+          @defining(Shift.getSortedShifts(volunteers.shifts)) { shifts =>                 
+                 @for((shift, index) <- shifts.zipWithIndex) {
+                 	<div class="table-responsive">
+  						<table class="table">
+  							@if(index == 0 || shift.date != shifts.get(index - 1).date) {
+  								<tr><th colspan="2">@shift.date.format("E, MMMMM d, yyyy")</th></tr>
+  							}    
+                    		<tr>
+                    			<td width="20%">@shift.startTime.format("h:mm a") - @shift.endTime.format("h:mm a")</td>
+                    			<td>
+                    			<div class="table">
+  									<table class="table table-no-border">
+  										@if(Shift.isShiftFull(shift)) {
+  										<tr><td><span style="color:gray">@shift.name - <i>All volunteer positions are filled.</i></span></td></tr>
+  										} else {
+  										<tr><td><span style="color:blue">@shift.name</span></td></tr>
+  										}
+  										<tr><td>@shift.description</td></tr>
+  										<tr><td>
+  										    <ol>
+  										@for((name, index) <- Shift.getShiftNames(shift).zipWithIndex) {
+				                    		@name match {
+											    case volunteer: Volunteer => {
+											    	@if(volunteer.active) {
+											      	<li class="li-inline">@volunteer.firstName @volunteer.lastName @if(canManage){<a href="@routes.VolunteersMgmt.removeShiftVolunteer(event, shift.id, volunteer.id)">(Remove)</a>}</li>
+											      	} else {
+
+											      	<li class="li-inline">@volunteer.firstName  @volunteer.lastName @if(canManage){
+
+														@if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+																ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+																ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+														){
+															<!------04.08.2015-----start:<T-258>--add function for the admin--------------------------->
+                     										<a id="addXS" onclick="addForm('@routes.VolunteersMgmt.addShiftVolunteer(event, shift.id)')" href="#">Add</a>
+
+															<!-----04.08.2015-----end:<T-258>--add function for the admin------------------------------->
+															&nbsp;
+																<!---------------------------03.08.2015--------start:<T-256>------------------------change the remove button with delete button------------------------------------------------------------>
+														<a id="editXS" onclick="test('@routes.VolunteersMgmt.populateShiftVolunteer(event, shift.id, volunteer.id)')" href="#">Edit
+
+														</a>
+
+															&nbsp;
+															<a href="@routes.VolunteersMgmt.removeShiftVolunteer(event, shift.id, volunteer.id)">Delete</a>
+
+																<!-------------------------03.08.2015----------end:<T-256>------------------------change the remove button with delete button------------------------------------------------------------>
+														}@*else{
+
+																<!------------------------03.08.2015-----------start:<T-256>------------------------change the remove button with delete button------------------------------------------------------------>
+														<a id="editXS" onclick="test('@routes.VolunteersMgmt.populateShiftVolunteer(event, shift.id, volunteer.id)')" href="#">Edit</a>
+
+
+
+															&nbsp;
+														<a href="@routes.VolunteersMgmt.removeShiftVolunteer(event, shift.id, volunteer.id)">Delete</a>
+																<!-----------------------03.08.2015------------end:<T-256>------------------------change the remove button with delete button------------------------------------------------------------>
+
+															}*@
+
+													        }@*else{
+
+														<!------------------------03.08.2015-----------start:<T-256>------------------------change the remove button with delete button------------------------------------------------------------>
+														<a id="editXS" onclick="test('@routes.VolunteersMgmt.populateShiftVolunteer(event, shift.id, volunteer.id)')" href="#">Edit</a>
+
+
+
+															&nbsp;
+														<a href="@routes.VolunteersMgmt.removeShiftVolunteer(event, shift.id, volunteer.id)">Delete</a>
+															<!-----------------------03.08.2015------------end:<T-256>------------------------change the remove button with delete button------------------------------------------------------------>
+
+													}*@
+
+												</li>
+
+											      	}
+											    }
+											    case name: String => {
+											    	<li class="li-inline"><input type="checkbox" name="shift" value="@shift.id" data-toggle="modal" id="volunteerButtonXs"> @name</li>
+											    }
+											  }
+                    					}
+                    					</ol>
+  										</td></tr>
+  									</table>
+  								</div>
+                    		</td>
+                    	</tr>  
+                    	</table>
+                    </div>
+                 }
+                 }
+            </div>
+        <!-- Login Box -->
+        <div class="col-md-4 col-sm-6">	
+          <div class="panel panel-green" align="center">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">@if(isEventOpen) { Fundraising Ends } else {Fundraising Has Ended }</h3>
+                      </div>
+                      <div class="panel-body">
+                        <p>@if(isEventOpen) { <span id="daysUntil"></span> } else { The fundraising period has ended. If you would like to make a donation, please contact the event organizers. }</p>
+                      </div>
+                      <div class="panel-heading">
+                      	@if(isEventOpen) { @event.fundraisingEnd.format("MMMMM d, yyyy") } else { Thank you for your support! }
+                      </div>
+           </div>
+            @defining(Event.getGoalPercentage(event.id, event.goal)) { percent =>
+                <div class="percent-thumbnail"><img src="@ControllerUtil.getResourceRoute("progress/Progress Tree " + percent(2) + ".png")" class="img-responsive" alt="Percent" height="360px"><div class="caption percent-content"><h4>Event Total: $@percent(0)</h4><h5>Event Goal: $@event.goal (@percent(1)% of Goal)</h5></div></div>
+            }
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@event.name Participants</h3>
+                        </div>
+                        <div class="panel-body panel-body-overflow">
+                        <table class="table table-hover">
+					      <thead>
+					        <tr>
+					          <th>Participant</th>
+					          <th>Amount</th>
+					        </tr>
+					      </thead>
+					      <tbody>
+                       @if(pfpDonations.size == 0) {
+                        	<tr>
+					          <td colspan="2">No Participants For This Event</td>
+					        </tr>
+                        }  else {
+                        @for((key, value) <- pfpDonations){
+							<tr>
+					          <td>@if(value.isPrivate && !(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN))) { Private Account } else { <a href="@routes.PfpMgmt.getById(event, key)">@value.name</a> }</td>
+					          <td>@value.amount</td>
+					        </tr>
+                        }
+                        }
+                        </tbody>
+					    </table>
+                        </div>
+                    </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@event.name Teams</h3>
+                        </div>
+                        <div class="panel-body panel-body-overflow">
+                        <table class="table table-hover">
+					      <thead>
+					        <tr>
+					          <th>Team</th>
+					          <th>Amount</th>
+					        </tr>
+					      </thead>
+					      <tbody>
+                        @if(teamDonations.size == 0) {
+                        	<tr>
+					          <td colspan="2">No Teams For This Event</td>
+					        </tr>
+                        }  else {
+                        @for((key, value) <- teamDonations){
+							<tr>
+					          <td><a href="@routes.TeamMgmt.get(event, key)">@value.name</a></td>
+					          <td>@value.amount</td>
+					        </tr>
+                        }
+                        }
+                         </tbody>
+					    </table>
+                        </div>
+                    </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <script>
+	$('#daysUntil').countdown('@Event.getDateToMidnight(event.fundraisingEnd).format("yyyy/MM/dd HH:mm:ss")', function(event) {
+		$(this).html(event.strftime('%D Days %H Hours %M Minutes %S Seconds'));
+	});
+
+//==================start:<T-257>=====================javascript for the functionality of edit volunteers form to open it in a pop-up======================03.08.2015=============================//
+function test(testurl){
+//alert("test");
+
+
+			$('#volunteerModalBody').load(testurl, function() {
+			$('#volunteerModal').modal('show');
+			});
+}
+//==================end:<T-257>=====================javascript for the functionality of edit volunteers form to open it in a pop-up======================03.08.2015=============================//
+//======================start:<T-258>=============javascript for the functionality to open the add volunteer form in pop-up============================04.08.2015===============================//
+function addForm(url){
+//alert("the add url :: "+url)
+$('#volunteerModalBody').load(url, function() {
+			$('#volunteerModal').modal('show');
+			});
+}
+
+//======================end:<T-258>=============javascript for the functionality to open the add volunteer form in pop-up============================04.08.2015===============================//
+
+
+
+  </script>
+  <style>.li-inline {
+    float: left;
+    margin: 0 15px
+}
+</style> 
+  @modalVolunteer(event)
+}

@@ -1,0 +1,68 @@
+
+
+@(event: Event,
+        //  pfp: models.Pfp,donation: models.Donation,
+
+        pfpForm: Form[Pfp], donationForm: Form[Donation]
+        )
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@general.alerts()
+@if(pfpForm.hasErrors) {
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        @Messages("form.has.errors")
+    </div>
+}
+@if(pfpForm.hasGlobalErrors) {
+    <div class="info-board info-board-red">
+        <span class="label label-important">@pfpForm.globalError</span>
+    </div>
+}
+@form(controllers.routes.EventMgmt.updateParticipantsForEvent(event,pfpForm.get.id), 'id -> "pfpForm") {
+
+    @inputText(pfpForm("name"), '_addon -> "glyphicon-user", '_label -> "nolabel", 'placeholder -> "Req:  Name", 'class -> "form-control")
+    @inputText(pfpForm("content"), '_addon -> "glyphicon-user", '_label -> "nolabel", 'placeholder -> "Req: Content", 'class -> "form-control")
+    @inputText(pfpForm("emergencyContact"), '_addon -> "glyphicon-earphone", '_label -> "nolabel", 'placeholder -> "Req: Emergency Contact", 'class -> "form-control", 'title -> "10 digits (numeric only)")
+    @inputText(pfpForm("emergencyContactPhone"), '_addon -> "glyphicon-earphone", '_label -> "nolabel", 'placeholder -> "Emergency Contact Phone: 555-555-1212 (only numbers)", 'class -> "form-control", 'title -> "10 digits (numeric only)")
+    @inputText(pfpForm("title"), '_addon -> "glyphicon-user", '_label -> "nolabel", 'placeholder -> "Title", 'class -> "form-control")
+
+
+    <button type="button" class="btn btn-green" id="checkout" onclick="submitPfpForm();">Save</button>
+    <a href="#" class="btn btn-default" type="button" id="cancelVolunteer">Cancel</a>
+
+}
+<script src="@ControllerUtil.getResourceRoute("scParticipantsView.min.js")"></script>
+
+
+
+    <script>
+
+        $('#cancelVolunteer').click(function(){
+	  $('#closeVolunteer').click();
+});
+
+function submitPfpForm() {
+   // alert('within submit pfp form');
+    $.ajax({
+        url:  jQuery('#pfpForm').attr('action'),
+        type: jQuery('#pfpForm').attr('method'),
+        data: jQuery('#pfpForm').serialize(),
+        dataType : 'html',
+        success: function (response) {
+          $('#volunteerModalBody').empty();
+          $('#volunteerModal').modal('hide');
+          location.reload();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          $('#volunteerModalBody').empty();
+          $('#volunteerModalBody').html(xhr.responseText);
+          $('#volunteerModalBody').scrollTop(0);
+        }
+    });
+}
+
+
+    </script>

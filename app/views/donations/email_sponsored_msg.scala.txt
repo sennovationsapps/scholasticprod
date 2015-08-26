@@ -1,0 +1,9 @@
+@(donation: Donation)
+
+@donation.pfp.name, @if(donation.donorName == null || donation.donorName.isEmpty) {@donation.firstName @donation.lastName}else{@donation.donorName} has made a contribution to your fundraising page in the amount of $@donation.amount. Scholastic Challenge has sent them a thank you note and receipt. If you would like to thank them, you can reach them at @donation.email.
+
+@if(donation.donorMessage != null && !donation.donorMessage.isEmpty) {
+Your supporter included this message:
+
+"@donation.donorMessage"
+}

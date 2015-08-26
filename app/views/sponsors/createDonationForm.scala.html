@@ -1,0 +1,480 @@
+@(event: Event, pfp: Pfp, sponsorItem: SponsorItem, donationForm: Form[Donation])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Create Donation") {
+<!-- Main body
+================== -->
+
+    <style>
+    .input-group-addon:first-child {
+    border-right: 0px none;
+    font-size: 14px;
+    }
+
+
+    /*.input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+    }*/
+
+    </style>
+
+
+
+
+    <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Create Donation</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h2 class="hl top-zero">Donating to @event.name</h2>
+          <h3>A sponsorship of $@sponsorItem.amount for @sponsorItem.title.</h3>
+          <hr>
+      	  @general.alerts()
+		  @if(donationForm.hasErrors) {
+	        <div class="alert alert-dismissable alert-danger">
+	        <button type="button" class="close" data-dismiss="alert">&times;</button>
+	          @Messages("form.has.errors")<br/>
+	          @for(key <- donationForm.errors().keySet()){
+			      @for(error <- donationForm.errors().get(key)){
+			          <br/>@Messages(error.message())
+			      }
+			  }  	
+	        </div>
+          }
+    @form(controllers.routes.DonationMgmt.saveModalWithSponsor(event, pfp, sponsorItem.id), 'id -> "sponsorForm" , 'enctype -> "multipart/form-data" ) {
+    		<input type="hidden" id="event_name" name="event.name" value="@event.name"/>
+			<input type="hidden" name="pfp.id" value="@pfp.id"/>
+			<input type="hidden" name="amount" value="@sponsorItem.amount"/>
+            <div id="well" class="well">
+            	<legend>Your Information</legend>
+            @text(donationForm("donorName"), '_label -> "Sponsor (Organization) Name to appear on sponsor page", 'class -> "form-control")
+            @text(donationForm("firstName"), '_label -> "Your First Name", 'class -> "form-control")
+            @text(donationForm("lastName"), '_label -> "Your Last Name", 'class -> "form-control")
+            @text(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+           @* @text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@
+
+
+                <div style="display:none">
+                @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+
+                </div>
+
+
+                @******phno format*************24.08.2015***************end*****@
+                <div>
+                    <b>Phone(Required)</b>
+                </div>
+
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+
+                                    <input type="text" onkeyup="autoFormAdvance(3,'areaCode','phonePre')" id="areaCode" maxlength="3" size="3"/>
+                            </td>
+                            <td> - </td>
+                            <td><input type="text" onkeyup="autoFormAdvance(3,'phonePre','phoneSuf')" id="phonePre" maxlength="3" size="3" /></td>
+                            <td> - </td>
+                            <td> <input type="text" id="phoneSuf" onkeyup="mergeTotalPhNo()"  maxlength="4" size="4"/></td>
+                        </tr>
+                    </table>
+                </div>
+
+
+                    <br />
+
+
+                 @*  @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+				@helper.inputFile(donationForm("imgUrl"), '_label -> "Add a smaller image next to your fundraising message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+				@text(donationForm("webUrl"), '_label -> "Website url", 'class -> "form-control", 'title -> "(Website url)")
+
+
+            </div>
+            <br/>
+            @*<button type="button" class="btn btn-primary" id="payByCreditCard">Pay By Credit Card</button>&nbsp;&nbsp;*@
+			<button type="button" class="btn btn-primary" id="payByCheck">Pay By Check</button>
+			<br/>
+			<br/>
+			<br/>
+            <div id="payByCreditCardDiv">
+            <div id="well" class="well">
+            	<legend>Credit Card - Payment Information </legend>
+            	@if(!play.Play.isProd()) {            
+            	<p>
+            	<h5>Sample Credit Card</h5>
+            	Card Number = 5000300020003003<br/>
+		    	Cvv = 123<br/>
+		    	Zip = 37920<br/>
+		    	Exp Date = 1225<br/>
+            	</p>
+            	<hr/>
+            	}         
+		            @text(donationForm("ccNum"), '_label -> "Credit Card Num", 'class -> "form-control", 'title -> "Must be between 13-19-Digits.")
+		            @text(donationForm("ccCvvCode"), '_label -> "CVV Num", 'class -> "form-control", 'title -> "Must be 3 or 4-Digits.")
+		            @text(donationForm("ccZip"), '_label -> "Credit Card Zip Code", 'class -> "form-control", 'title -> "5 or 9 digits with dash (11111-1111)")
+			            <div class="form-group ">
+			            <label for="expMM" class=" ">Select Exp Month and Year</label>
+								             <div class="row">
+					        <div class="col-md-4">
+					            <div class="input-group">
+								<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar" style="vertical-align:middle"></span>
+								</span><select name="expMM" id="expMM" class="form-control">
+			            	<option value="01" @if(donationForm("expMM").value == "01"){selected}>01 - January</option>
+			            	<option value="02" @if(donationForm("expMM").value == "02"){selected}>02 - February</option>
+			            	<option value="03" @if(donationForm("expMM").value == "03"){selected}>03 - March</option>
+			            	<option value="04" @if(donationForm("expMM").value == "04"){selected}>04 - April</option>
+			            	<option value="05" @if(donationForm("expMM").value == "05"){selected}>05 - May</option>
+			            	<option value="06" @if(donationForm("expMM").value == "06"){selected}>06 - June</option>
+			            	<option value="07" @if(donationForm("expMM").value == "07"){selected}>07 - July</option>
+			            	<option value="08" @if(donationForm("expMM").value == "08"){selected}>08 - August</option>
+			            	<option value="09" @if(donationForm("expMM").value == "09"){selected}>09 - September</option>
+			            	<option value="10" @if(donationForm("expMM").value == "10"){selected}>10 - October</option>
+			            	<option value="11" @if(donationForm("expMM").value == "11"){selected}>11 - November</option>
+			            	<option value="12" @if(donationForm("expMM").value == "12"){selected}>12 - December</option>
+			            </select></div>
+					        </div>
+					        <div class="col-md-4">
+					             <select name="expYY" id="expYY"  class="form-control">
+			            	<option value="2014" @if(donationForm("expYY").value == "2014"){selected}>2014</option>
+			            	<option value="2015" @if(donationForm("expYY").value == "2015"){selected}>2015</option>
+			            	<option value="2016" @if(donationForm("expYY").value == "2016"){selected}>2016</option>
+			            	<option value="2017" @if(donationForm("expYY").value == "2017"){selected}>2017</option>
+			            	<option value="2018" @if(donationForm("expYY").value == "2018"){selected}>2018</option>
+			            	<option value="2019" @if(donationForm("expYY").value == "2019"){selected}>2019</option>
+			            	<option value="2020" @if(donationForm("expYY").value == "2020"){selected}>2020</option>
+			            	<option value="2021" @if(donationForm("expYY").value == "2021"){selected}>2021</option>
+			            	<option value="2022" @if(donationForm("expYY").value == "2022"){selected}>2022</option>
+			            	<option value="2023" @if(donationForm("expYY").value == "2023"){selected}>2023</option>
+			            	<option value="2024" @if(donationForm("expYY").value == "2024"){selected}>2024</option>
+			            	<option value="2025" @if(donationForm("expYY").value == "2025"){selected}>2025</option>
+			            </select>
+					        </div>
+							</div>
+							</div>
+			            <input type="hidden" name="ccExpDate" id="ccExpDate"/>
+			            @*<button type="submit" class="btn btn-green" id="payByCreditCardButton">Pay Donation by Credit Card</button>&nbsp;&nbsp;*@
+            			<a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+            </div></div>
+            <div id="payByCheckDiv">
+            	<div id="well" class="well">
+            	<legend>Check - Payment Information </legend>
+            	@if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+			ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+			ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+			) {
+			@text(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
+			} else {
+            			@*<h5>PLEASE NOTE: Payment by credit card is our preferred method of payment.</h5>
+						<p>
+							Before you pay by check, please consider the following:
+							<ul>
+								<li>Credit card payments cost us less to process, so more of your money goes to your event.</li>
+								<li>Credit card payments are immediately applied to your participant's fundraising total.</br>
+									Checks can take 1-2 weeks to receive, process, and credit to your participant's total.</li>
+								<li>When you pay by credit card your participant receives immediate notification of your support and you immediately receive a receipt for your donation.</li>
+							</ul>
+							<button type="button" class="btn btn-primary" id="payByCreditCardInstead">Pay By Credit Card</button>
+						</p>*@
+						}
+						<button type="submit" class="btn btn-green" id="payByCheckButton">Pay Donation by Check</button>&nbsp;&nbsp;
+            			<a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+			</div></div>
+            <br/>
+            <input type="hidden" name="payByCheck" value="false"/>
+            <input type="hidden" name="paymentType" value="CREDIT"/>
+    }
+    </div>
+<!-- Right column -->
+		@if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+			ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+			ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+		) {
+        <div class="col-sm-4">
+          <h4>Donation Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
+                      Question #1
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
+                      Question #2
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpTwo" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
+                      Question #3
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  <script>
+  $( document ).ready(function() {
+	 	$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+	     $('#payByCreditCardDiv').hide();
+	     $('#payByCheckDiv').hide();
+	     @if(donationForm.hasErrors) {
+	     	$('#payByCreditCardDiv').show();
+			$('input[name=payByCheck]').val('false');
+			$('input[name=paymentType]').val('CREDIT');	
+	     }	
+	   });
+	   
+	   $('form#sponsorForm').submit(function(){
+	   		$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+		    $('#payByCreditCardButton').attr('disabled', 'disabled');
+		    $('#payByCheckButton').attr('disabled', 'disabled');
+		});
+	  </script>
+<script src="@ControllerUtil.getResourceRoute("scSponsorsView.min.js")"></script>
+
+
+	<script>
+
+//=========new add
+
+
+   $( "#phNo" ).keyup(function(){
+   //alert("on keyup")
+
+   var phNo1;
+   //var lastChar;
+   var phNo = document.getElementById("phNo").value;
+   //alert("phNo "+phNo)
+   //previousLength = phNo.length;
+   //alert("phNo "+phNo)
+   currentLength = phNo.length;
+   //alert("currentLength :: "+currentLength);
+   //alert("previousLength :: "+previousLength);
+var length;
+
+if(currentLength == 4 || currentLength == 8){
+//alert("if(currentLength == 4 || currentLength == 8)");
+var lastChar = phNo.charAt(currentLength-1);
+//alert("lastChar "+lastChar);
+if(lastChar!= '-'){
+phNo = phNo.substring(0,currentLength-1);
+phNo =phNo.concat("-");
+phNo = phNo.concat(lastChar);
+
+}
+//phPart1 = phNo;
+previousLength = phNo.length;
+ $('#phNo').val(phNo);
+
+}
+
+
+
+
+else{
+
+   if(currentLength<previousLength){
+//alert("currentLength<previousLength");
+   previousLength = currentLength;
+   if(currentLength> 0){
+   //alert("currentLength ::"+currentLength);
+//alert("phNo "+phNo);
+var lastChar = phNo.charAt(currentLength-1);
+
+//alert("lastChar"+lastChar);
+if(lastChar == '-'){
+phNo = phNo.substring(0,currentLength-1);
+}
+else{
+phNo = phNo.substring(0,currentLength);
+}
+   //alert("if return");
+//phNo = phNo.substring(0,currentLength);
+     $('#phNo').val(phNo);
+
+   }
+
+   phPart1 = null;
+   }
+
+
+else{
+   //alert("else");
+
+      if( phNo.length <8){
+      previousLength = phNo.length;
+      if(phNo.contains("-")){
+     // alert("phNo.contains("-")")
+      length = phNo.length;
+     // alert("length1 "+length)
+        phNo = phNo.substring(phNo.indexOf("-")+1,length);
+        //alert("phNo "+phNo);
+
+      }
+      length = phNo.length;
+
+    //alert("length11 "+length)
+      if(length == 3){
+     // alert("length == 3"+phNo.concat("-"));
+      if(phPart1!=null){
+      phNo1 = phNo.concat("-");
+      //alert("phNo1 :: "+phNo1);
+     // alert("before phPart1 :: "+phPart1);
+      phPart1 = phPart1.concat(phNo1);
+      previousLength = phPart1.length;
+      //alert("after phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }else{
+      phNo = document.getElementById("phNo").value;
+      // alert("before phPart1 :: "+phPart1);
+      phPart1 = phNo.concat("-");
+      previousLength = phPart1.length;
+      //alert("previousLength ")
+      //alert("phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }
+
+
+   // document.getElementById("phNo").innerHTML = phNo.concat("-");
+       // alert("final :: "+document.getElementById("phNo").value);
+      }
+      }else{
+      previousLength = phNo.length;
+      }
+ //aler("previousLength :: "+previousLength);
+      }
+      }
+
+
+   });
+  </script>
+
+
+
+    <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+$(document).ready(function(){
+/*$("#phNo").hide();*/
+var phNoValue = $("#phNo").val();
+//alert("phNoValue :: "+phNoValue);
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}
+});
+
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*/
+patternMatchForPhone(currentFormId);
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+
+}
+
+function mergeTotalPhNo(){
+//alert("within keyup");
+patternMatchForPhone('phoneSuf');
+var totalPhValue;
+var length = $("#phoneSuf").val().length;
+
+if(length == 4){
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+//alert($("#phNo").val());
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+
+
+
+    <script>
+    function patternMatchForPhone(id){
+
+    var phPattern = /^([0-9])+$/;
+    var phValue =document.getElementById(id).value;
+    //alert(phValue );
+    //alert(phValue.match(phPattern));
+    if(phValue.match(phPattern)==null){
+    //alert("before "+phValue);
+     phValue = phValue.substring(0,phValue.length-1);
+    // alert("after "+phValue);
+     }
+     id = "#"+id;
+     // alert("id :: "+id);
+     $(id).val(phValue);
+
+     //alert(" $(id).val"+ $(id).val);
+    //alert(ph)
+
+     //document.getElementById(id).HTML(phValue);
+
+    }
+</script>
+
+}

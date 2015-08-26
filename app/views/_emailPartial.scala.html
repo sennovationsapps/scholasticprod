@@ -1,0 +1,14 @@
+@(f: Form[_], constraints: Boolean = false)
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@text(
+	f("email"), 
+	'_label -> Messages("playauthenticate.login.email.placeholder"), 
+	'_showConstraints -> constraints,
+	'class -> "form-control", 
+	'placeholder -> "Enter email", 
+	'_label_class -> "sr-only",
+	'_addon -> "@")

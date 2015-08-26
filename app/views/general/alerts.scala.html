@@ -1,0 +1,24 @@
+			  @if(flash.containsKey("alert-success")) {    
+			    <div class="alert alert-dismissable alert-success">
+			        <button type="button" class="close" data-dismiss="alert">&times;</button>
+			         <strong>Saved:</strong> @flash.get("alert-success").
+			    </div>
+			  }
+			  @if(flash.containsKey("alert-info")) {    
+			    <div class="alert alert-dismissable alert-info">
+			        <button type="button" class="close" data-dismiss="alert">&times;</button>
+			        @flash.get("alert-info").
+			    </div>
+			  }
+			  @if(flash.containsKey("alert-warning")) {    
+			  	<div class="alert alert-dismissable alert-warning">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+				    @flash.get("alert-warning").
+				</div>
+			  }
+	          @if(flash.containsKey("alert-danger")) {    
+			  	<div class="alert alert-dismissable alert-danger">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+				    @flash.get("alert-danger").
+				</div>
+			  }

@@ -1,0 +1,9 @@
+@(verificationUrl: String, volunteer: Volunteer)
+Howdy @volunteer.firstName @volunteer.lastName,
+
+
+To activate you as a Volunteer, follow this link:
+@verificationUrl
+
+Cheers,
+The Scholastic Challenge Team

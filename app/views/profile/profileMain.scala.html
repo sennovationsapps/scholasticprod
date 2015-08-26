@@ -1,0 +1,199 @@
+@(localUser: models.security.User = null)
+
+@import helper._
+@import models.security._
+@import com.feth.play.module.pa.views.html._
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    @general.alerts()
+    <div class="container">
+      <div class="row">
+        @profile.menu(localUser)
+        <!-- Avatar & social links -->
+        <div class="col-sm-8 col-md-6">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="thumbnail">
+                <div class="avatar">
+                  <a href="#" class="thumbnail bottom-15">
+                    <img src="@ControllerUtil.getResourceRoute("face1.jpg")" alt="...">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Main profile info -->
+            <div class="col-sm-8">
+              <h3 class="hl">@localUser.firstName @localUser.lastName</h3>
+              <hr>
+              <p>
+	              @if(!localUser.emailValidated && localUser.email) {
+					      (<a href="@routes.Account.verifyEmail">Account unverified - click to verify</a>)
+					    } else {
+					      (Account has been verified)
+				  }
+			   </p>
+			   <p>
+			   <a href="@routes.Account.link()">Link other accounts to your account.</a>
+			   </p>
+            </div>
+          </div>
+          <!-- About Me -->
+          <!--div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-user"></i> About Me</h4>
+              <p class="bottom-15">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean tortor nunc, dapibus a est sed, tempus bibendum arcu. Nullam pretium arcu in neque congue tempor. Quisque quis mauris sit amet magna fermentum tincidunt et a enim. Aliquam eu rhoncus libero, a pulvinar metus.</p>
+              <hr>
+            </div>
+          </div-->
+		<!-- Organization Information -->
+		  @if(localUser.organization != null) {
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-info-circle"></i> Organization Information</h4>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="text-muted">Name</td>
+                    <td>@{localUser.organization.name}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Taxid</td>
+                    <td>@{localUser.organization.taxId}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Address</td>
+                    <td>@{localUser.organization.address}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">City</td>
+                    <td>@{localUser.organization.city}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">State</td>
+                    <td>@{localUser.organization.state}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Zip</td>
+                    <td>@{localUser.organization.zip}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Phone</td>
+                    <td>@{localUser.organization.phone}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr>
+            </div>
+          </div>
+        }
+          <!-- Contact Information -->
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-map-marker"></i> Contact Information</h4>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="text-muted">Email</td>
+                    <td>@{localUser.email}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Zip Code</td>
+                    <td>@{localUser.zip}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Phone</td>
+                    <td>@{localUser.phone}</td>
+                  </tr>
+				  <tr>
+                  	<td class="text-muted">Providers</td>
+                  	<td>@defining(localUser.getProviders()) { providers =>
+			        @if(providers.size() > 0) {
+			        @if(providers.size() ==1) {
+			            @Messages("playauthenticate.profile.providers_one")
+			        } else {
+			            @Messages("playauthenticate.profile.providers_many",providers.size().toString())
+			        }
+			        @for(p <- providers) {
+			            @_providerIcon(p)
+			        }
+			        <br/>
+			        }
+			    }</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr>
+            </div>
+          </div>
+
+        </div>
+        <!-- Stats and Galery -->
+        <div class="col-sm-8 col-sm-offset-4 col-md-3 col-md-offset-0">
+          <div class="block-inverse">
+            <div class="head-inverse">
+              <div class="text-center">
+                <strong class="text-muted">My Donation Totals</strong>
+                @if(ControllerUtil.isUserInPermission(UserPermission.PFP_ROOT_EDIT)) {
+                <h1 class="text-center text-green">@models.Donation.getTotalPfpDonationsByUserId(localUser.id)</h1>
+                } else {
+                <h1 class="text-center text-green">@models.Donation.getTotalEventDonationsByUserId(localUser.id)</h1>
+                }
+              </div>
+            </div>
+            @if(!ControllerUtil.isUserInPermission(UserPermission.PFP_ROOT_EDIT)) {
+            <div class="body-inverse">
+              <p class="text-center">
+                <strong class="text-muted">My Events</strong>
+              </p>
+              <div class="user-gallery text-center">
+              	@for(event <- Event.findAllByUserId(localUser.id)) {
+					<a href="@routes.EventMgmt.get(event)"><img src="@event.imgUrl" alt="..."></a>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    @if(flash.containsKey("alert-info")) {    
+  		<!-- Modal -->
+		<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        Profile Information
+		      </div>
+		      <div class="modal-body">
+				@flash.get("alert-info")
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeMessage">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<script>
+		$(document).ready(function(){
+			$('#profileModal').modal('show');
+		});
+		$('#closeMessage').click(function(){
+			  $('#eventForm').submit();
+		});
+		</script>
+	} 
+}

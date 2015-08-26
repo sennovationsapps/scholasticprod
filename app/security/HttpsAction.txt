@@ -1,0 +1,104 @@
+package security;
+
+import play.Play;
+import play.libs.F.Promise;
+import play.mvc.Http.Context;
+import play.mvc.Http.Request;
+import play.mvc.SimpleResult;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HttpsAction.
+ */
+public class HttpsAction extends play.mvc.Action.Simple {
+
+	/** The https port. */
+	private static String httpsPort;
+	
+	/** The Constant SSL_HEADER. */
+	private static final String SSL_HEADER = "x-forwarded-proto";
+
+	/* (non-Javadoc)
+	 * @see play.mvc.Action#call(play.mvc.Http.Context)
+	 */
+	@Override
+	public Promise<SimpleResult> call(Context ctx) throws Throwable {
+
+		Promise<SimpleResult> ret = null;
+
+		// redirect if it's not secure
+		if (!isHttpsRequest(ctx.request())) {
+			final String url = redirectHostHttps(ctx) + ctx.request().uri();
+			ret = Promise.pure(redirect(url));
+		} else {
+			// Let request proceed.
+			ret = delegate.call(ctx);
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Checks if is https request.
+	 *
+	 * @param request the request
+	 * @return true, if is https request
+	 */
+	public static boolean isHttpsRequest(Request request) {
+		return ((request.getHeader(SSL_HEADER) != null) && request.getHeader(
+				SSL_HEADER).contains("https"))
+				|| isOverHttpsPort(request.host());
+	}
+
+	/**
+	 * Checks if is over https port.
+	 *
+	 * @param host the host
+	 * @return true, if is over https port
+	 */
+	public static boolean isOverHttpsPort(String host) {
+		boolean ret = false;
+		final String[] hostParts = host.split(":");
+
+		if (hostParts.length > 1) {
+			ret = hostParts[1].equalsIgnoreCase(getHttpsPort());
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Redirect host https.
+	 *
+	 * @param ctx the ctx
+	 * @return the string
+	 */
+	public static String redirectHostHttps(Context ctx) {
+
+		final String[] pieces = ctx.request().host().split(":");
+		String ret = "https://" + pieces[0];
+
+		// In Dev mode we want to append the port.
+		// In Prod mode, no need to append the port as we use the standard https
+		// port, 443.
+		if (Play.isDev()) {
+			ret += ":" + getHttpsPort();
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Gets the https port.
+	 *
+	 * @return the https port
+	 */
+	private synchronized static String getHttpsPort() {
+		if (httpsPort == null) {
+			httpsPort = Play.application().configuration()
+					.getString("https.port");
+		}
+
+		return httpsPort;
+	}
+}

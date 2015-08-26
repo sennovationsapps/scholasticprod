@@ -1,0 +1,71 @@
+@(loginForm: Form[_])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main(Messages("playauthenticate.login.title"),"login") {
+<!-- Main body
+================== -->
+
+  <div class="wrapper">
+    <!-- Page tip -->
+    <div class="page-tip animated slideInDown">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <p>Please sign in before you proceed. If you are not a member <a href="@if(ControllerUtil.isEventPage()) {@routes.TaxidSignup.signup() } else { @routes.TaxidSignup.signupFromCorp()}" class="btn btn-red btn-sm" type="button">create an account</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    @general.alerts()
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-sm-6">
+          <h3 class="hl top-zero">Sign in to Scholastic.com</h3>
+          <hr>
+		  @if(loginForm.hasGlobalErrors) {
+			<div class="info-board info-board-red"> 
+				<span class="label label-important">@loginForm.globalError.message</span>
+			</div>
+		  }
+          
+          <p><!--Our site supports several methods to verify your identity. -->Sign in to get instant access to all of our features.</p>
+          <!-- Social icons -->
+          <!--div class="login-social">
+            <ul>
+              @*_providerPartial(skipCurrent=false)*@
+            </ul>
+          </div-->
+          <div class="clearfix"></div>
+        </div>
+        <!-- Login Box -->
+        <div class="col-md-4 col-sm-6">
+          <div class="form-box">
+            <h4>Sign In</h4>
+            <hr>
+            @form(routes.TaxidSignup.doLogin, 'role -> "form") {
+			  @text(loginForm("uniqueId"), 'class -> "form-control", '_showConstraints -> false, 'placeholder -> "Enter taxid", '_label_class -> "sr-only")
+			  @password(loginForm("password"), 'class -> "form-control", '_showConstraints -> false, 'placeholder -> "Password", '_label_class -> "sr-only")
+              <button type="submit" class="btn btn-green">@Messages("playauthenticate.login.now")</button>
+            }
+            <hr>
+            <p>Not registered? <a href="@if(ControllerUtil.isEventPage()) {@routes.TaxidSignup.signup() } else { @routes.TaxidSignup.signupFromCorp()}">Create an Account.</a></p>
+            <!--div class="pwd-lost">
+              <div class="pwd-lost-q show">Lost your password? <a href="#">Click here to recover.</a></div>
+              <div class="pwd-lost-f hidden">
+                <p class="text-muted">Enter your email address and we will send you a link to reset your password.</p>
+                @*form(routes.Signup.doForgotPassword(), 'class -> "form-inline", 'role -> "form") {
+                    @text(loginForm("email"), 'class -> "form-control", '_showConstraints -> false, 'placeholder -> "Enter email", '_label_class -> "sr-only", '_help -> "nohelp")
+                  <button type="submit" class="btn btn-blue">Send</button>
+                }*@
+              </div>
+            </div-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+}

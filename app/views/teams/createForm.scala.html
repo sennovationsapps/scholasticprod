@@ -1,0 +1,140 @@
+@(event: Event, pageForm: Form[Team]) 
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Create Team") {
+<div class="wrapper">
+    <div class="section-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Remove the .animated class if you don't want things to move -->
+                    <h1 class="animated slideInLeft">
+                        <span>Create Team</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <!-- Contact us form -->
+            <div class="col-sm-8">
+                <h4>This form will help you create a team page.</h4>
+                @events.eventWorkflowMenu(event, "teams")
+				<br/>
+                <hr>
+                @general.alerts()
+                        @if(pageForm.hasErrors) {
+        <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+          @Messages("form.has.errors")
+        </div>
+        }
+                @if(pageForm.hasGlobalErrors) {
+                <div class="info-board info-board-red">
+                    <span class="label label-important">@pageForm.globalError.message</span>
+                </div>
+                }
+                @form(routes.TeamMgmt.save(event), 'role -> "form", 'id -> "pageForm", 'enctype -> "multipart/form-data") { 
+                  @text(pageForm("name"), '_label -> "Enter A Team Name", 'class -> "form-control", 'placeholder -> "Team name (i.e. Team Lopez, 3rd graders / Team Lopez / Ms. Jones)", '_info -> "helpTeamName") 
+                  @text(pageForm("goal"), '_label -> "Team Goal", 'class -> "form-control", '_addon -> "$", '_info -> "helpTeamGoal") 
+
+                  @helper.inputFile(pageForm("imgUrl"), '_label -> "Team Image", 'class -> "form-control", '_info -> "helpTeamImage")
+	              @text(pageForm("title"), '_label -> "Team Welcome Header", 'class -> "form-control", '_info -> "helpTeamWelcomeMessage", 'placeholder -> "Welcome to Team \"Name\" fundraising page.")
+                  @helper.textarea(pageForm("content"), '_label -> "Team Message", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpTeamMessage")
+                <input type="hidden" name="saveAndAdd" value="false" id="saveAndAdd"/>
+                <button type="submit" class="btn btn-green" id="saveBtn">Save Team</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-default" id="saveAndAddBtn">Add Another Team</button>&nbsp;&nbsp;
+                <a href="@routes.EventWorkflowMgmt.update(event)" class="btn btn-default" type="button">Cancel</a>
+                }
+            </div>
+            <!-- Right column -->
+            <div class="col-sm-4">
+                <h4>Team Help</h4>
+                <hr>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTeamName">
+                      Team Name
+                    </a>
+                            </h4>
+                        </div>
+                        <div id="helpTeam" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                Typically teams are created by classes or home rooms.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTeamGoal">Team Goal</a>
+                            </h4>
+                        </div>
+                        <div id="helpTeamGoal" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Team goal can be any amount you choose but many organizers like to set the team goals by dividing the Events overall goal by the number of teams giving each team an equal share.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTeamCaptainName">Team Captain Name</a>
+                            </h4>
+                        </div>
+                        <div id="helpTeamCaptainName" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                If you have a room parent or another person that will be helping a specific team you can list them here.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTeamImage">Team Image</a>
+                            </h4>
+                        </div>
+                        <div id="helpTeamImage" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                The team image will appear next to the team message. Most schools use their schools logo for this image.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTeamWelcomeMessage">Team Welcome Header</a>
+                            </h4>
+                        </div>
+                        <div id="helpTeamWelcomeMessage" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                This is just a quick welcome to visitors to the team page and will appear before the team message.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTeam">Team Message</a>
+                            </h4>
+                        </div>
+                        <div id="helpTeamMessage" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                This is a message to your potential donors and/or team.  Please feel free to view one of the sample messages on the right. You are welcome to use all or any portion of these messages but make sure you make the appropriate edits.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@teams.samples() 
+<script src="@ControllerUtil.getResourceRoute("scTeamsAdmin.min.js")"></script>
+}

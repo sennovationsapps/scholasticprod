@@ -1,0 +1,16 @@
+----How to print out a block of errors for all fields
+		  @if(loginForm.hasErrors) {
+		    <div class="info-board info-board-red"> 
+		        <a class="close" data-dismiss="alert">x</a>
+		        @if(loginForm.errors.size() > 0) {
+		            @for((key, value) <- loginForm.errors) {
+		            	<p>
+		                Field @key.toString() : 
+		                    @for(err <- value) {
+		                        @Messages(err.message())
+		                    }
+		                </p>
+		            }
+		        } else {No error returned.}
+		    </div>
+		}

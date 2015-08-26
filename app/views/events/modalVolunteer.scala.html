@@ -1,0 +1,38 @@
+@(event: Event)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+<div class="modal fade" id="volunteerModal" tabindex="-1" role="dialog" aria-labelledby="volunteerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="volunteerModalLabel">Participant</h4>
+      </div>
+      <div class="modal-body" id="volunteerModalBody">
+      	
+	  </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeVolunteer">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+@*<script src="@ControllerUtil.getResourceRoute("scVolunteersView.min.js")"></script>
+<script>
+$('#volunteerButton, #volunteerButtonXs').click(function(){
+	$('#volunteerModalBody').empty();
+	var volunteerLoad = '@routes.VolunteersMgmt.createShiftVolunteer(event, 0)';
+	var volunteerCreateForm = volunteerLoad.substring(0, volunteerLoad.length-1);
+		
+	$('#volunteerModalBody').load(volunteerCreateForm  + $(this).val(), function() {
+       $('#volunteerModal').modal('show');
+	});
+	
+});
+</script>*@
+
+
+

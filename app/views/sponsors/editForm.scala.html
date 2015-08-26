@@ -1,0 +1,177 @@
+@(event: Event, pageId: Long, pageForm: Form[Sponsors])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main("Create Sponsors") {
+
+
+    <style>
+
+
+
+    .input-group-addon {
+    padding: 6px 12px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    color:#FFF;
+    text-align: center;
+    background-color:  #C0D730;
+    border: 1px solid  #C0D730;
+    border-radius: 4px;
+    }
+    .input-group-addon{
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+    }
+    /*#item_amount{
+
+        width : 50% !important;
+    }*/
+
+    </style>
+
+
+    <div class="wrapper">
+        <div class="section-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                            <!-- Remove the .animated class if you don't want things to move -->
+                        <h1 class="animated slideInLeft"><span>Create Sponsors Page</span></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <!-- Contact us form -->
+                <div class="col-sm-8">
+                    <h4>This form will help you create a volunteers page.</h4>
+                    @events.eventWorkflowMenu(event, "sponsors")
+                    <br/>
+                    <hr>
+                    @general.alerts()
+                    @if(pageForm.hasErrors) {
+                        <div class="alert alert-dismissable alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            @Messages("form.has.errors")
+                        </div>
+                    }
+                    @if(pageForm.hasGlobalErrors) {
+                        <div class="info-board info-board-red">
+                            <span class="label label-important">@pageForm.globalError.message</span>
+                        </div>
+                    }
+                    @form(routes.SponsorsMgmt.update(event, pageId), 'role -> "form", 'id -> "pageForm") {
+                        @text(pageForm("name"), '_label -> "Page Name", 'class -> "form-control", 'placeholder -> "Name")
+                        @text(pageForm("title"), '_label -> "Page Title", 'class -> "form-control")
+                        @helper.textarea(pageForm("content"), '_label -> "Page Content", 'class -> "form-control", '_wysiwyg -> true)
+
+                        <div id="well sponsoritems" class="well">
+                            <legend>Sponsor Items</legend>
+                            @repeat(pageForm("sponsoritems")) { sponsoritem =>
+                                <div class="form-inline sponsoritem">
+                                    @if(!sponsoritem("donation.id").value.isEmpty) {
+                                        @sponsoritem("title").value | @sponsoritem("description").value | @sponsoritem("amount").value (Already sponsored, cannot be modified)
+                                        <input type="hidden" name="@sponsoritem("id").name" value="@sponsoritem("id").value"/>
+                                        <br/><br/>
+                                    } else {
+                                        <div class="col-md-3 col-lg-3">@text(sponsoritem("title"), '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
+                                        <div class="col-md-3 col-lg-3">@text(sponsoritem("description"), '_showConstraints -> false, '_label -> "Item Description", 'class -> "form-control", 'placeholder -> "Item description", '_label_class -> "sr-only")</div>
+
+                                        <div class="col-md-5 col-lg-5">@text(sponsoritem("amount"), '_showConstraints -> false, '_label -> "Item Amount ", 'id -> "item_amount",'class -> "form-control", 'placeholder -> "Item amount", '_label_class -> "sr-only", '_addon -> "Sponsorship Amount   $")</div>
+                                        <div class="col-md-1 col-lg-1 text-center"><a type="button" class="removeSponsorItem">Remove</a></div>
+                                        <input type="hidden" name="@sponsoritem("id").name" value="@sponsoritem("id").value"/>
+                                        <br clear="all"/><br clear="all"/>
+                                    }
+                                </div>
+                            }
+
+                            @**
+                            * Keep an hidden block that will be used as template for Javascript copy code
+                            **@
+                            <div class="form-inline sponsoritem_template">
+                                @text(pageForm("sponsoritems[x].title"), '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")
+                                @text(pageForm("sponsoritems[x].description"), '_showConstraints -> false, '_label -> "Item Description", 'class -> "form-control", 'placeholder -> "Item description", '_label_class -> "sr-only")
+
+                                @text(pageForm("sponsoritems[x].amount"), '_showConstraints -> false, '_label -> "Item Amount",  'id -> "item_amount" ,'class -> "form-control", 'placeholder -> "Item amount", '_label_class -> "sr-only", '_addon -> "Sponsorship Amount   $")
+                                <a type="button" class="removeSponsorItem">Remove</a>
+                                <br/><br/>
+                            </div>
+                            <br/>
+                            <div class="manage">
+                                <a type="button" class="addSponsorItem btn btn-blue">Add another sponsored item</a>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-green">Save this sponsors page</button>&nbsp;&nbsp;
+                        <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+                    }
+                </div>
+                    <!-- Right column -->
+                <div class="col-sm-4">
+                    <h4>Sponsors Help</h4>
+                    <hr>
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
+                                        Question #1
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="helpOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
+                                        Question #2
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="helpTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
+                                        Question #3
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="helpThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+ $(document).ready(function(){
+	 if($("#sponsoritems_0__amount").val() == 0) {
+	     $("#sponsoritems_0__amount").val('');
+	     $("#sponsoritems_0__amount").empty();
+	 }
+ });
+ </script>
+    <!-- Extra Hidden Content -->
+    @sponsors.samples()
+    <script src="@ControllerUtil.getResourceRoute("scSponsorsAdmin.min.js")"></script>
+}

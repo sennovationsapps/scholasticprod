@@ -1,0 +1,57 @@
+@(elements: helper.FieldElements)
+
+@**************************************************
+* Generate input according twitter bootsrap rules *
+**************************************************@
+<div class="form-group @if(elements.hasErrors) {has-error}">
+		@if(elements.args.get('_label).getOrElse('_label).toString().startsWith("nolabel") ||
+		   !elements.args.get('_labelSide).isEmpty ||
+        	elements.args.get('_labelSide).getOrElse('_labelSide).toString().startsWith("right")) {
+		} else {
+	    <label for="@elements.id" class=" @if(elements.args.get('_label_class).isEmpty) {} else { @elements.args.get('_label_class)} ">@elements.label @if(!elements.args.get('_info).isEmpty){<i class="fa fa-question-circle" style="color:blue" data-toggle="collapse" data-parent="#accordion" href="#@elements.args.get('_info).getOrElse('_info).toString()">}</i> @if(elements.args.get('_help).getOrElse('_help).toString().startsWith("nohelp")) {} else { @if(!elements.infos.mkString(", ").isEmpty){&nbsp;(} <span class="help-block">@elements.infos.mkString(", ") @if(elements.infos != null && elements.hasErrors){ - }@if(elements.hasErrors){@elements.errors.mkString(", ")}</span>@if(!elements.infos.mkString(", ").isEmpty){)} }</label>
+	    }
+    	@if(! elements.args.get('_addon).isEmpty) {
+	    <div class="input-group">
+	    <span class="input-group-addon">
+	    	@if(elements.args.get('_addon).getOrElse('_addon).toString().startsWith("glyphicon")) {
+	    	<span class="glyphicon  @elements.args.get('_addon)" style="vertical-align:middle"></span>
+	    	} else {
+	        <b>@elements.args.get('_addon)</b>
+	        }
+	    </span>
+	    }
+        @elements.input
+		@if(elements.args.get('_label).getOrElse('_label).toString().startsWith("nolabel") ||
+		    elements.args.get('_labelSide).isEmpty ||
+        	elements.args.get('_labelSide).getOrElse('_labelSide).toString().startsWith("left")) {
+		} else {
+	    <label for="@elements.id" class=" @if(elements.args.get('_label_class).isEmpty) {} else { @elements.args.get('_label_class)} ">@elements.label</label>
+	    }
+        @if(! elements.args.get('_addon).isEmpty) {
+	    </div>
+	    } 
+</div>
+@if(elements.args.get('_wysiwyg).getOrElse('_wysiwyg).equals(true)) {
+          <script>
+          $(document).ready(function() {
+            $('textarea#@elements.id').summernote({
+              height: 300,
+              toolbar: [
+                ['style', ['style']],
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+                //['insert', ['picture', 'link']], // no insert buttons
+                //['table', ['table']], // no table button
+                //['help', ['help']], //no help button
+                @if(!elements.args.get('_wysiwyg_params).getOrElse('_wysiwyg_params).equals("nosample")) {
+                ,['samples', ['samples']]
+                }
+              ]
+            });
+          });
+          
+        </script>	
+}

@@ -1,0 +1,386 @@
+@(event: Event, pfpForm: Form[Pfp])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Create Pfp") {
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Create Fundraising Page</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h4>Complete the following page to complete a Personal Fundraising Page (PFP).</h4>
+          <hr>
+          @general.alerts()
+        @if(pfpForm.hasErrors) {
+        <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+          @Messages("form.has.errors")
+        </div>
+        }
+  		  @if(pfpForm.hasGlobalErrors) {
+  			<div class="info-board info-board-red"> 
+  				<span class="label label-important">@pfpForm.globalError.message</span>
+  			</div>
+  		  }
+    @form(routes.PfpMgmt.save(event), 'role -> "form", 'id -> "pageForm", 'enctype -> "multipart/form-data") {
+    		@if(ControllerUtil.getLocalUser(session()).isRootAdmin()) {
+          			@text(pfpForm("userAdmin.email"), '_label -> "Pfp Admin", 'class -> "form-control")	
+          	}
+            @text(pfpForm("name"), '_label -> "Name for Personal Fundraising Page", 'class -> "form-control", 'placeholder -> "Name (i.e., Jason T., Thomspon Family, Jason Thompson)", '_info -> "helpPfpName")
+            @text(pfpForm("goal"), '_label -> "Fundraising Goal", 'class -> "form-control", '_addon -> "$", 'placeholder -> "250", '_info -> "helpGoal")
+            @text(pfpForm("emergencyContact"), '_label -> "Emergency Contact", 'class -> "form-control", '_addon -> "glyphicon-user", 'placeholder -> "Name")
+
+
+        <div style="display:none">
+        @text(pfpForm("emergencyContactPhone"), '_label -> "Emergency Contact Phone Number(Optional)", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  ")
+
+
+        </div>
+
+
+        @******phno format*************24.08.2015***************end*****@
+        <div>
+            <b>Emergency Contact Phone Number(Optional)</b>
+        </div>
+
+        <div>
+            <table>
+                <tr>
+                    <td><input type="text" onkeyup="autoFormAdvance(3,'areaCode','phonePre')" id="areaCode" maxlength="3" size="3"/></td>
+                    <td> - </td>
+                    <td><input type="text" onkeyup="autoFormAdvance(3,'phonePre','phoneSuf')" id="phonePre" maxlength="3" size="3" /></td>
+                    <td> - </td>
+                    <td> <input type="text" id="phoneSuf" onkeyup="mergeTotalPhNo()"  maxlength="4" size="4"/></td>
+                </tr>
+            </table>
+        </div>
+
+       @* @text(pfpForm("emergencyContactPhone"), '_label -> "Emergency Contact Phone Number(Optional)", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  ")*@
+
+
+           @* @text(pfpForm("emergencyContactPhone"), '_label -> "Emergency Contact Phone Number", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "555-555-1212 (only numbers)", 'title -> "10 digits (numeric only)")*@
+            @helper.inputFile(pfpForm("imgUrl"), '_label -> "Add a smaller image next to your fundraising message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+            @helper.textarea(pfpForm("content"), '_label -> "Your message to appear on fundraising Page", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
+			@select(
+                pfpForm("privateAcct"), 
+                options(Pfp.privateOptions()), 
+                '_label -> "Account Type", 
+                '_showConstraints -> false, 'class -> "form-control",
+                'placeholder -> "Public",
+                '_info -> "helpAcctType"
+            )
+            @select(
+                pfpForm("team.id"), 
+                options(Team.options(event.id)), 
+                '_label -> "Team", '_default -> "-- Choose a Team --",
+                '_showConstraints -> false, 'class -> "form-control",
+                'placeholder -> "Choose your Team"
+            )
+            <input type="hidden" name="saveAndAdd" value="false" id="saveAndAdd"/>
+            <button type="submit" class="btn btn-green" id="saveBtn">Save PFP</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-default" id="saveAndAddBtn">Add Another PFP</button>&nbsp;&nbsp;
+            <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+    }
+</div>
+        <!-- Right column -->
+        <div class="col-sm-4">
+          <h4>PFP Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpPfpName">
+                      PFP Name
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpPfpName" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Personal Fundraising Page (PFP) Name is the name you want to appear on your PFP.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpGoal">
+                      Fundraising Goal
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpGoal" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Fundraising Goal Choose a goal that is challenging yet attainable.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpImgUrl">
+                      Page Image
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpImgUrl" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Page Image This image will appear next to your personal message on your PFP.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpContent">
+                      Page Content
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpContent" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Personal Plea Letter This is the message to all your potential donors.  Please feel free to view the sample on the right copying and pasting all or parts of the message for your use. Remeber, if you do use these messages you will need to personalize them. i.e. your name, your events name, your schools name.
+                  </div>
+                </div>
+              </div>
+			  <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpAcctType">
+                      Account Type
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpAcctType" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Private (Private accounts are not listed in a search and the only way for your donors to view your page is to send them a link. Typically this type of an account has a more difficult time raising funds)" Maybe make this a pop up if they choose this option.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+	$('input[name=goal]').change(function() {
+		var pfpMsg = '@Pfp.getDefaultPfpMessage';
+		var pfpMsg1 = pfpMsg.replace('event_name', '@event.name');
+		var pfpMsg2 = pfpMsg1.replace('pfp_name', $('#name').val());
+		var pfpMsg3 = pfpMsg2.replace('pfp_goal', $('#goal').val());
+    	$('textarea#content').code(pfpMsg3);
+});
+  </script>
+  @pfps.samples()
+<script src="@ControllerUtil.getResourceRoute("scPfpAdmin.min.js")"></script>
+
+
+    <script>
+
+//=========new add
+
+
+   $( "#phNo" ).keyup(function(){
+   //alert("on keyup")
+
+   var phNo1;
+   //var lastChar;
+   var phNo = document.getElementById("phNo").value;
+   //alert("phNo "+phNo)
+   //previousLength = phNo.length;
+   //alert("phNo "+phNo)
+   currentLength = phNo.length;
+   //alert("currentLength :: "+currentLength);
+   //alert("previousLength :: "+previousLength);
+var length;
+
+if(currentLength == 4 || currentLength == 8){
+//alert("if(currentLength == 4 || currentLength == 8)");
+var lastChar = phNo.charAt(currentLength-1);
+//alert("lastChar "+lastChar);
+if(lastChar!= '-'){
+phNo = phNo.substring(0,currentLength-1);
+phNo =phNo.concat("-");
+phNo = phNo.concat(lastChar);
+
+}
+//phPart1 = phNo;
+previousLength = phNo.length;
+ $('#phNo').val(phNo);
+
+}
+
+
+
+
+else{
+
+   if(currentLength<previousLength){
+//alert("currentLength<previousLength");
+   previousLength = currentLength;
+   if(currentLength> 0){
+   //alert("currentLength ::"+currentLength);
+//alert("phNo "+phNo);
+var lastChar = phNo.charAt(currentLength-1);
+
+//alert("lastChar"+lastChar);
+if(lastChar == '-'){
+phNo = phNo.substring(0,currentLength-1);
+}
+else{
+phNo = phNo.substring(0,currentLength);
+}
+   //alert("if return");
+//phNo = phNo.substring(0,currentLength);
+     $('#phNo').val(phNo);
+
+   }
+
+   phPart1 = null;
+   }
+
+
+else{
+   //alert("else");
+
+      if( phNo.length <8){
+      previousLength = phNo.length;
+      if(phNo.contains("-")){
+     // alert("phNo.contains("-")")
+      length = phNo.length;
+     // alert("length1 "+length)
+        phNo = phNo.substring(phNo.indexOf("-")+1,length);
+        //alert("phNo "+phNo);
+
+      }
+      length = phNo.length;
+
+    //alert("length11 "+length)
+      if(length == 3){
+     // alert("length == 3"+phNo.concat("-"));
+      if(phPart1!=null){
+      phNo1 = phNo.concat("-");
+      //alert("phNo1 :: "+phNo1);
+     // alert("before phPart1 :: "+phPart1);
+      phPart1 = phPart1.concat(phNo1);
+      previousLength = phPart1.length;
+      //alert("after phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }else{
+      phNo = document.getElementById("phNo").value;
+      // alert("before phPart1 :: "+phPart1);
+      phPart1 = phNo.concat("-");
+      previousLength = phPart1.length;
+      //alert("previousLength ")
+      //alert("phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }
+
+
+   // document.getElementById("phNo").innerHTML = phNo.concat("-");
+       // alert("final :: "+document.getElementById("phNo").value);
+      }
+      }else{
+      previousLength = phNo.length;
+      }
+ //aler("previousLength :: "+previousLength);
+      }
+      }
+
+
+   });
+  </script>
+
+
+    <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+$(document).ready(function(){
+/*$("#phNo").hide();*/
+var phNoValue = $("#phNo").val();
+//alert("phNoValue :: "+phNoValue);
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}
+});
+
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*/
+patternMatchForPhone(currentFormId);
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+
+}
+
+function mergeTotalPhNo(){
+//alert("within keyup");
+patternMatchForPhone('phoneSuf');
+var totalPhValue;
+var length = $("#phoneSuf").val().length;
+
+if(length == 4){
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+//alert($("#phNo").val());
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+
+    <script>
+    function patternMatchForPhone(id){
+
+    var phPattern = /^([0-9])+$/;
+    var phValue =document.getElementById(id).value;
+    //alert(phValue );
+    //alert(phValue.match(phPattern));
+    if(phValue.match(phPattern)==null){
+    //alert("before "+phValue);
+     phValue = phValue.substring(0,phValue.length-1);
+    // alert("after "+phValue);
+     }
+     id = "#"+id;
+     // alert("id :: "+id);
+     $(id).val(phValue);
+
+     //alert(" $(id).val"+ $(id).val);
+    //alert(ph)
+
+     //document.getElementById(id).HTML(phValue);
+
+    }
+</script>
+
+
+}

@@ -1,0 +1,137 @@
+@(event: Event, pageForm: Form[Volunteers])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Create Volunteers") {
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Create Volunteers Page</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h4>This form will help you create a volunteers page.</h4>
+          @events.eventWorkflowMenu(event, "volunteers")
+				<br/>
+          <hr>
+          @general.alerts()
+      @if(pageForm.hasErrors) {
+          <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @Messages("form.has.errors")
+          </div>
+          }
+		  @if(pageForm.hasGlobalErrors) {
+			<div class="info-board info-board-red"> 
+				<span class="label label-important">@pageForm.globalError.message</span>
+			</div>
+		  }
+    @form(routes.VolunteersMgmt.save(event), 'role -> "form", 'id -> "pageForm") {
+            @text(pageForm("name"), '_label -> "Page Name", 'class -> "form-control", 'placeholder -> "Name")
+            @text(pageForm("title"), '_label -> "Page Title", 'class -> "form-control")
+            @helper.textarea(pageForm("content"), '_label -> "Page Content", 'class -> "form-control", '_wysiwyg -> true)
+            
+            <div id="well shifts" class="well">
+            	<legend>Shifts</legend>
+            	@repeat(pageForm("shifts")) { shift =>
+                        <div class="form-inline shift">
+        
+							@text(shift("name"), '_showConstraints -> false, '_label -> "Shift Name", 'class -> "form-control", 'placeholder -> "Shift name", '_label_class -> "sr-only")
+							@text(shift("description"), '_showConstraints -> false, '_label -> "Shift Description", 'class -> "form-control", 'placeholder -> "Shift description", '_label_class -> "sr-only")
+							@text(shift("date"), '_showConstraints -> false, '_label -> "Shift Date", 'class -> "form-control", 'placeholder -> "Shift date", '_label_class -> "sr-only")
+							@text(shift("startTime"), '_showConstraints -> false, '_label -> "Shift Start", 'class -> "form-control", 'placeholder -> "Shift start", '_label_class -> "sr-only")
+							@text(shift("endTime"), '_showConstraints -> false, '_label -> "Shift End", 'class -> "form-control", 'placeholder -> "Shift end", '_label_class -> "sr-only")
+							@text(shift("volunteerCount"), '_showConstraints -> false, '_label -> "# of Volunteers", 'class -> "form-control", 'placeholder -> "# of Volunteers", '_label_class -> "sr-only")
+							<br/><br/>
+					    </div>
+                }
+                
+                @**
+                 * Keep an hidden block that will be used as template for Javascript copy code
+                 **@
+                 <div class="form-inline shift_template">
+                 		@text(pageForm("shifts[x].name"), '_showConstraints -> false, '_label -> "Shift Name", 'class -> "form-control", 'placeholder -> "Shift name", '_label_class -> "sr-only")
+                 		@text(pageForm("shifts[x].description"), '_showConstraints -> false, '_label -> "Shift Description", 'class -> "form-control", 'placeholder -> "Shift description", '_label_class -> "sr-only")
+                 		@text(pageForm("shifts[x].date"), '_showConstraints -> false, '_label -> "Shift Date", 'class -> "form-control", 'placeholder -> "Shift date", '_label_class -> "sr-only")
+						@text(pageForm("shifts[x].startTime"), '_showConstraints -> false, '_label -> "Shift Start", 'class -> "form-control", 'placeholder -> "Shift start", '_label_class -> "sr-only")
+						@text(pageForm("shifts[x].endTime"), '_showConstraints -> false, '_label -> "Shift End", 'class -> "form-control", 'placeholder -> "Shift end", '_label_class -> "sr-only")
+						@text(pageForm("shifts[x].volunteerCount"), '_showConstraints -> false, '_label -> "# of Volunteers", 'class -> "form-control", 'placeholder -> "# of Volunteers", '_label_class -> "sr-only")
+						<a type="button" class="removeShift">Remove</a>
+						<br/><br/>
+				</div>
+                
+                <div class="manage">
+                    <a type="button" class="addShift btn btn-blue">Add another shift</a>
+                </div>            
+            </div>
+            <button type="submit" class="btn btn-green">Create this volunteers page</button>&nbsp;&nbsp;
+            <a href="@routes.EventWorkflowMgmt.update(event)" class="btn btn-default" type="button">Cancel</a>
+    }
+</div>
+        <!-- Right column -->
+        <div class="col-sm-4">
+          <h4>Volunteers Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
+                      Question #1
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
+                      Question #2
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpTwo" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
+                      Question #3
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Extra Hidden Content -->
+  @volunteers.samples()
+<script src="@ControllerUtil.getResourceRoute("scVolunteersAdmin.min.js")"></script>
+}

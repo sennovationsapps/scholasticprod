@@ -1,0 +1,62 @@
+@(localUser: models.security.User = null, userForm: Form[models.security.User])
+
+@import html5.tags.html._
+@import models.security._
+@import com.feth.play.module.pa.views.html._
+
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Edit Profiles</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    @general.alerts()
+    <div class="container">
+      <div class="row">
+        @profile.menu(localUser)
+        <div class="col-sm-8 col-md-6">
+        @profile.profileEditForm(localUser, userForm)
+        </div>
+        <div class="col-sm-8 col-sm-offset-4 col-md-3 col-md-offset-0">
+        </div>
+      </div>
+    </div>
+  </div>
+    @if(flash.containsKey("alert-info")) {    
+  		<!-- Modal -->
+		<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        Profile Information
+		      </div>
+		      <div class="modal-body">
+				@flash.get("alert-info")
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeMessage">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<script>
+		$(document).ready(function(){
+			$('#profileModal').modal('show');
+		});
+		$('#closeMessage').click(function(){
+			  $('#eventForm').submit();
+		});
+		</script>
+	} 
+}

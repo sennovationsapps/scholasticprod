@@ -1,0 +1,296 @@
+@(event: Event, pfp: Pfp, donationId: Long, donationForm: Form[Donation])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Edit Donation") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Edit Donation</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h2 class="hl top-zero">Edit Donation</h2>
+          <hr>
+          @general.alerts()
+          @if(donationForm.hasErrors) {
+          <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @Messages("form.has.errors")
+          </div>
+          }
+		  @if(donationForm.hasGlobalErrors) {
+			<div class="info-board info-board-red"> 
+				<span class="label label-important">@donationForm.globalError.message</span>
+			</div>
+		  }
+          <p>This form will help you edit a donation.</p>
+    @form(routes.DonationMgmt.update(event, pfp, donationId)) {    			
+    		<div class="form-group ">
+	    		<label for="event_name" class="  ">Event </i>  &nbsp;( <span class="help-block">Required </span>) </label>
+    			<input type="text" id="event_name" name="event.name" value="@event.name" class="form-control" disabled="disabled"/>
+			</div>
+			<div id="well" class="well">
+            	<legend>Donation</legend>
+    		@select(
+                donationForm("pfp.id"), 
+                options(Pfp.findByEventIdMapWithPrivate(event)), 
+                '_label -> "PFP", 
+                '_showConstraints -> false, 'class -> "form-control", 'readonly -> "readonly"
+            )
+            @text(donationForm("amount"), '_label -> "Amount", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+            </div>
+            <br/>
+            <div id="well" class="well">
+            	<legend>Information</legend>
+            @text(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+            @text(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+            @text(donationForm("zipCode"), '_label -> "Zip Code", 'class -> "form-control", 'title -> "5 or 9 digits with dash (11111-1111)")
+            @text(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+                @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+            </div>
+            <br/>
+			@select(
+                donationForm("paymentType"), 
+                options(Donation.PaymentType.VALUES), 
+                '_label -> "Payment Type", 
+                '_showConstraints -> false, 'class -> "form-control", 'readonly -> "readonly"
+            )
+            <br/>
+            <!--div id="well" class="well">
+            	<legend>Credit Card</legend-->
+            @*text(donationForm("ccName"), '_label -> "Name on Card", 'class -> "form-control")*@
+            @*text(donationForm("ccNum"), '_label -> "Credit Card Num", 'class -> "form-control", 'title -> "Must be between 13-19-Digits.", 'readonly -> "readonly")*@
+            @*text(donationForm("ccCvvCode"), '_label -> "CVV Num", 'class -> "form-control", 'title -> "Must be 3 or 4-Digits.", 'readonly -> "readonly")*@
+            @*text(donationForm("ccExpDate"), '_label -> "Exp Date", 'class -> "form-control", 'readonly -> "readonly")*@
+            @*text(donationForm("ccZip"), '_label -> "Credit Card Zip Code", 'class -> "form-control", 'title -> "5 or 9 digits with dash (11111-1111)", 'readonly -> "readonly")*@
+            <!--/div-->
+            <br/>
+            <div id="well" class="well">
+            	<legend>Check</legend>
+            @checkbox(donationForm("payByCheck"), '_label -> "Pay By Check", 'class -> "form-control", 'readonly -> "readonly")
+            @text(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
+                        </div>
+            <br/>
+            <div id="well" class="well">
+            	<legend>Message</legend>
+            @text(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control")          
+            @text(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
+                        </div>
+            <br/>
+            <div id="well" class="well">
+            	<legend>Transaction Information</legend>
+            @text(donationForm("dateCreated"), '_label -> "Date Created", 'class -> "form-control", 'readonly -> "readonly")
+            @text(donationForm("datePaid"), '_label -> "Date Paid", 'class -> "form-control")
+            @text(donationForm("transactionNumber"), '_label -> "Transaction Number", 'class -> "form-control", 'readonly -> "readonly")
+            @select(
+                donationForm("status"), 
+                options(Donation.PaymentStatus.VALUES), 
+                '_label -> "Payment Status", 
+                '_showConstraints -> false, 'class -> "form-control"
+            )
+       		</div>
+            <br/>
+			<button type="submit" class="btn btn-green" id="@routes.DonationMgmt.update(event, pfp, donationId)">Save this Donation</button>&nbsp;&nbsp;
+            <a href="@routes.Application.profileSearchDonations()" class="btn btn-default" type="button">Cancel</a>
+        
+    }
+    </div>   
+<!-- Right column -->
+        <div class="col-sm-4">
+          <h4>Donation Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
+                      Question #1
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
+                      Question #2
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpTwo" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
+                      Question #3
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  $( document ).ready(function() {
+	 	$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+	     $('#payByCreditCardDiv').hide();
+	     $('#payByCheckDiv').hide();
+	     $('#payByCashDiv').hide();
+	     $('#submitButtons').hide();
+	     @if(donationForm.hasErrors) {
+	     	$('#payByCreditCardDiv').show();	
+	     }	
+	   });
+  </script>
+<script src="@ControllerUtil.getResourceRoute("scDonationsView.min.js")"></script>
+
+
+    <script>
+
+//=========new add
+
+
+   $( "#phNo" ).keyup(function(){
+   //alert("on keyup")
+
+   var phNo1;
+   //var lastChar;
+   var phNo = document.getElementById("phNo").value;
+   //alert("phNo "+phNo)
+   //previousLength = phNo.length;
+   //alert("phNo "+phNo)
+   currentLength = phNo.length;
+   //alert("currentLength :: "+currentLength);
+   //alert("previousLength :: "+previousLength);
+var length;
+
+if(currentLength == 4 || currentLength == 8){
+//alert("if(currentLength == 4 || currentLength == 8)");
+var lastChar = phNo.charAt(currentLength-1);
+//alert("lastChar "+lastChar);
+if(lastChar!= '-'){
+phNo = phNo.substring(0,currentLength-1);
+phNo =phNo.concat("-");
+phNo = phNo.concat(lastChar);
+
+}
+//phPart1 = phNo;
+previousLength = phNo.length;
+ $('#phNo').val(phNo);
+
+}
+
+
+
+
+else{
+
+   if(currentLength<previousLength){
+//alert("currentLength<previousLength");
+   previousLength = currentLength;
+   if(currentLength> 0){
+   //alert("currentLength ::"+currentLength);
+//alert("phNo "+phNo);
+var lastChar = phNo.charAt(currentLength-1);
+
+//alert("lastChar"+lastChar);
+if(lastChar == '-'){
+phNo = phNo.substring(0,currentLength-1);
+}
+else{
+phNo = phNo.substring(0,currentLength);
+}
+   //alert("if return");
+//phNo = phNo.substring(0,currentLength);
+     $('#phNo').val(phNo);
+
+   }
+
+   phPart1 = null;
+   }
+
+
+else{
+   //alert("else");
+
+      if( phNo.length <8){
+      previousLength = phNo.length;
+      if(phNo.contains("-")){
+     // alert("phNo.contains("-")")
+      length = phNo.length;
+     // alert("length1 "+length)
+        phNo = phNo.substring(phNo.indexOf("-")+1,length);
+        //alert("phNo "+phNo);
+
+      }
+      length = phNo.length;
+
+    //alert("length11 "+length)
+      if(length == 3){
+     // alert("length == 3"+phNo.concat("-"));
+      if(phPart1!=null){
+      phNo1 = phNo.concat("-");
+      //alert("phNo1 :: "+phNo1);
+     // alert("before phPart1 :: "+phPart1);
+      phPart1 = phPart1.concat(phNo1);
+      previousLength = phPart1.length;
+      //alert("after phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }else{
+      phNo = document.getElementById("phNo").value;
+      // alert("before phPart1 :: "+phPart1);
+      phPart1 = phNo.concat("-");
+      previousLength = phPart1.length;
+      //alert("previousLength ")
+      //alert("phPart1 :: "+phPart1)
+         $('#phNo').val(phPart1);
+      }
+
+
+   // document.getElementById("phNo").innerHTML = phNo.concat("-");
+       // alert("final :: "+document.getElementById("phNo").value);
+      }
+      }else{
+      previousLength = phNo.length;
+      }
+ //aler("previousLength :: "+previousLength);
+      }
+      }
+
+
+   });
+  </script>
+
+
+
+}

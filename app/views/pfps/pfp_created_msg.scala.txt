@@ -1,0 +1,16 @@
+@(pfp: Pfp, url: String)
+
+@pfp.name,
+
+Congratulations on creating a Personal Fundraising Page (PFP). 
+Now that you have created your PFP we recommend you start your fundraising effort by sending an email or multiple emails to your family and friends asking them to visit your fundraising page and to make a donation. We also suggest that you post the link to your PFP on the social networking site you use, letting them know what and why to are participating in the event and why it is important to you to raise money for your school.
+
+Below is a copy of the link to your PFP that you can copy and paste into emails and social networking sites.
+
+@url
+
+We wish you the best of luck in your fundraising efforts and hope you have a great time at your event.
+
+Sincerely,
+
+Scholastic Challenge

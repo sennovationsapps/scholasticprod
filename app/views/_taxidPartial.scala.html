@@ -1,0 +1,15 @@
+@(f: Form[_], constraints: Boolean = false)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@helper.inputText(
+	f("uniqueId"),
+	'_label -> Messages("playauthenticate.login.email.placeholder"),
+	'_showConstraints -> constraints,
+	'class -> "form-control",
+	'placeholder -> "Enter Non-Profit Tax ID #",
+	'_label_class -> "sr-only",
+	'_addon -> "glyphicon-briefcase"
+	, 'title -> "9 digits (numeric only)")

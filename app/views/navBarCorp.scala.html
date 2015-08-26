@@ -1,0 +1,79 @@
+@import be.objectify.deadbolt.java.views.html._ 
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+<!-- Navbar
+    ============= -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/" style="padding-top:2px;"><img src="@ControllerUtil.getResourceRoute("LogoSmaller.png")" class="img-responsive" alt="" width="150px"/></a>
+		</div>
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="hidden-xs">&nbsp;</li>
+				@*<li><a href="@routes.TaxidSignup.signupFromCorp()">Create Event</a></li>*@
+				<li><a href="@routes.ContactMgmt.contactusToStartEvent()">Create Event</a></li>
+				<li class="hidden-xs">&nbsp;</li>
+				<li><a href="@routes.ContactMgmt.contactus()">Contact Us</a></li>
+				<li class="hidden-xs">&nbsp;</li>
+				<li class="hidden-xs">&nbsp;</li>
+				@**
+				<!-- Search Button -->
+				<!--li id="search" class="hidden-xs"><a href="#" id="search-btn"><i class="fa fa-search" id="search-icon"></i> Search</a>
+					<div class="search-box hidden" id="search-box">
+						<div class="input-group">
+							<input type="text" class="form-control" id="navSearchInput" placeholder="Search"> <span class="input-group-btn">
+								<div class="btn-group">
+									<button type="button" class="btn btn-red dropdown-toggle" data-toggle="dropdown">
+										Search <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a href="#" id="navSearchEvents">Events</a></li>
+										<li><a href="#" id="navSearchTeams">Teams</a></li>
+										<li><a href="#" id="navSearchParticipants">Participants</a></li>
+									</ul>
+								</div>
+							</span>
+						</div>
+					</div></li>
+				<li class="visible-xs"><a href="@routes.EventMgmt.list()">Search</a></li>
+				<li class="hidden-xs">&nbsp;</li-->
+				**@
+				<!-- Sign in & Sign up -->
+				<li class="hidden-xs">&nbsp;</li>
+				<li><a href="@routes.TaxidSignup.loginFromCorp()">Manage Event</a></li>
+				<li class="hidden-xs">&nbsp;</li>
+				<li><a href="@routes.Signup.loginFromCorp()">Sign In</a></li>
+				@**
+				<li class="dropdown visible-sm visible-lg visible-xs visible-md"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign In <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="@routes.TaxidSignup.loginFromCorp()">Manage Event</a></li>
+						<li><a href="@routes.Signup.loginFromCorp()">Manage Participant</a></li>
+					</ul>
+				</li>
+				**@
+			</ul>
+		</div>
+	</div>
+</div>
+@**
+<script>
+    $('#navSearchEvents').click(function(){
+    	var searchLink = "@routes.EventMgmt.list(0, "name", "asc", "")" + "?f=" + $('#navSearchInput').val();
+    	$(location).attr('href',searchLink);
+    });
+    
+    $('#navSearchTeams').click(function(){
+    	var searchLink = "@routes.TeamMgmt.list(0, "name", "asc", "")" + "?f=" + $('#navSearchInput').val();
+    	$(location).attr('href',searchLink);
+    });
+    
+    $('#navSearchParticipants').click(function(){
+    	var searchLink = "@routes.PfpMgmt.list(0, "name", "asc", "")" + "?f=" + $('#navSearchInput').val();
+    	$(location).attr('href',searchLink);
+    });
+</script>
+**@

@@ -1,0 +1,254 @@
+@import helper._ 
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Index Page") {
+<!-- This wrapper is temporary until I figure out how to show messages on the home page - this info is from the reset password -->
+<div class="wrapper">
+	@general.alerts()
+	
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+	  @defining(ControllerUtil.getLocalUser(session())) { localUser =>
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="@ControllerUtil.getResourceRoute("Banner1.png")" alt="First slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2 class="hidden-xs">With only a handful of volunteers<br/>you can serve hundreds.</h2>
+              <h2 style="color:gray">START YOUR EVENT TODAY</h2>
+              <a class="btn btn-lg btn-green" href="@routes.ContactMgmt.contactusToStartEvent()" role="button">Create Event</a>
+			  @*if(localUser != null) {
+			  <a class="btn btn-lg btn-green" href="@routes.EventWorkflowMgmt.create()" role="button">Create Event</a>
+  			  } else {
+			  <a class="btn btn-lg btn-green" href="@routes.TaxidSignup.signupFromCorp()" role="button">Create Event</a>
+			  }*@
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="@ControllerUtil.getResourceRoute("Banner2.png")" alt="Second slide" class="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2 class="hidden-xs">All schools and every student across America should be able to raise the money they need.</h2>
+              <h2 style="color:gray">START YOUR EVENT TODAY</h2>
+              <a class="btn btn-lg btn-green" href="@routes.ContactMgmt.contactusToStartEvent()" role="button">Create Event</a>
+			  @*if(localUser != null) {
+			  <a class="btn btn-lg btn-green" href="@routes.EventWorkflowMgmt.create()" role="button">Create Event</a>
+  			  } else {
+			  <a class="btn btn-lg btn-green" href="@routes.TaxidSignup.signupFromCorp()" role="button">Create Event</a>
+			  }*@
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="@ControllerUtil.getResourceRoute("Banner3.png")" alt="Third slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2 class="hidden-xs">They are our future leaders.<br/>Help provide the funds they need.</h2>
+              <h2 style="color:gray">START YOUR EVENT TODAY</h2>
+              <a class="btn btn-lg btn-green" href="@routes.ContactMgmt.contactusToStartEvent()" role="button">Create Event</a>
+			  @*if(localUser != null) {
+			  <a class="btn btn-lg btn-green" href="@routes.EventWorkflowMgmt.create()" role="button">Create Event</a>
+  			  } else {
+			  <a class="btn btn-lg btn-green" href="@routes.TaxidSignup.signupFromCorp()" role="button">Create Event</a>
+			  }*@
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+      }
+    </div><!-- /.carousel -->
+	<br />
+	<div class="container">
+		<!-- Services
+        ================ -->
+		<div class="row center">
+			<div class="col-md-12">
+				<div class="services">
+					<ul>
+					
+                <!--li id="recenteventsPill">
+                  <i class="fa fa-calendar fa-3x"></i>
+                  <p><span class="hidden-sm">LATEST </span>NEWS<br /><a href="#recentevents"  id="recenteventsLink"><span class="hidden-sm">Learn </span>more...</a></p>
+                </li-->
+                <li id="aboutusPill">
+                  <i class="fa fa-info fa-3x"></i>
+                  <p>ABOUT<span class="hidden-sm"> US</span><br /><a href="#aboutus" id="aboutusLink"><span class="hidden-sm">Learn </span>more...</a></p>
+                </li>
+                <li id="ourmissionPill">
+                  <i class="fa fa-heart fa-3x"></i>
+                  <p><span class="hidden-sm">OUR </span>MISSION<br /><a href="#ourmission" id="ourmissionLink"><span class="hidden-sm">Learn </span>more...</a></p>
+                </li>
+                <li id="ourstoryPill">
+                  <i class="fa fa-comments fa-3x"></i>
+                  <p><span class="hidden-sm">OUR </span>STORY<br /><a href="#ourstory" id="ourstoryLink"><span class="hidden-sm">Learn </span>more...</a></p>
+                </li>
+                <li id="ourservicesPill">
+                  <i class="fa fa-wrench fa-3x"></i>
+                  <p><span class="hidden-sm">OUR </span>SERVICES<br /><a href="#ourservices" id="ourservicesLink"><span class="hidden-sm">Learn </span>more...</a></p>
+                </li>
+                <li id="helpcenterPill">
+                  <i class="fa fa-question fa-3x"></i>
+                  <p><span class="hidden-sm">HELP </span>CENTER<br /><a href="#helpcenter" id="helpcenterLink"><span class="hidden-sm">Learn </span>more...</a></p>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br/><br/><br/>
+	<!--div class="container" id="recentevents">
+		<div class="row">
+			<div class="col-md-12 block-header">
+				<h2>
+					<span class="title">Latest News </span><span class="decoration"></span><span class="decoration"></span><span class="decoration"></span>
+				</h2>
+			</div>
+		</div>
+		<div class="row">
+		    @*
+			@defining(Event.findRandomCurrentEvents()) { events => @if(events.size() == 0) {
+			<div class="col-md-12">
+				<p>No events occurring at this time.</p>
+			</div>
+			} else { @for(event <- events) {
+			<div class="col-md-3 col-sm-6">
+				<div class="thumbnail">
+					<img src="@event.imgUrl" class="img-circle">
+					<div class="visit">
+						<a href="@routes.EventMgmt.get(event)"><i class="fa fa-question-circle"></i> Event details...</a>
+					</div>
+					<div class="caption pull-middle">
+						<p><b>@event.name | <span style="color:#C5D800">@event.eventStart.format("MM/dd/yyyy")</span></b></p>
+					</div>
+				</div>
+			</div>
+			} } }*@
+		</div>
+	</div-->
+	<!--div class="container marketing"-->
+		<!-- START THE FEATURETTES -->
+	<div class="bg-corp-red">
+	<div class="container">		
+		@general.aboutus() 
+	</div>
+	</div>
+	<div class="container">
+		<br/><br/>
+	</div>
+	<div class="bg-corp-gray">	
+	<div class="container">
+		@general.ourmission()
+	</div>
+	</div>
+	<div class="container">
+		<br/><br/>
+	</div>
+	<div class="bg-corp-red">
+	<div class="container">		 
+		@general.ourstory()
+	</div>
+	</div>
+	<div class="container">
+		<br/><br/>
+	</div>
+	<div class="bg-corp-gray">
+	<div class="container">  
+		@general.ourservices()
+	</div>
+	</div>		
+	<div class="container">
+		<br/>
+	</div>	
+	<!-- div-->
+</div>
+<style>
+.bg-corp-red {
+	background-color: #e5452f; /* Older Browsers */
+	border-top-color: #cccbd6;
+	border-bottom-color: #cccbd6;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	color: white;
+	padding-bottom:1em !important;
+	width: 100%;
+}
+.bg-corp-gray {
+	background-color: #EFEFED; /* Older Browsers */
+	border-top-color: #cccbd6;
+	border-bottom-color: #cccbd6;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	padding-bottom:1em !important;
+	width: 100%;	
+}
+.iconBorder {
+	-webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+
+    background: #fff;
+    border: 4px solid #C5D800;
+    color: #C5D800;
+    /**text-align: center;
+
+    font: 32px Arial, sans-serif;*/
+}
+.iconBorderWhite {
+	-webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+	font-size: 16em;
+    border: 8px solid #fff;
+        text-align: center;
+    vertical-align: middle;
+    padding-top: 27px;
+}
+.iconBorderGreen {
+	-webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+	font-size: 16em;
+    border: 8px solid #C5D800;
+    color:#C5D800;
+    text-align: center;
+    vertical-align: middle;
+}
+</style>
+<script>
+$('#recenteventsPill').click(function(e) {
+	$('#recenteventsLink').click();
+});
+$('#aboutusPill').click(function(e) {
+	$('#aboutusLink').click();
+});
+$('#ourmissionPill').click(function(e) {
+	$('#ourmissionLink').click();
+});
+$('#ourstoryPill').click(function(e) {
+	$('#ourstoryLink').click();
+});
+$('#ourservicesPill').click(function(e) {
+	$('#ourservicesLink').click();
+});
+$('#helpcenterPill').click(function(e) {
+	$('#helpcenterLink').click();
+});
+</script>
+}

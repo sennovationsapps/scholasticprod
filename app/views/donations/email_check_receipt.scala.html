@@ -1,0 +1,41 @@
+@(donation: Donation)
+<div>
+<p>Check Payment Instructions</p>
+
+<p>To Pay by Check</p>
+
+<ol>
+<li><a href="" onclick="window.print();">Print this page.</a></li>
+<li>Make your check, in the amount of $@donation.amount, payable to "@donation.event.userAdmin.organization.name".</li>
+<li>Note your participant's name @donation.pfp.name on your check.</li>
+<li>Mail your check and this printed page to:<br/>
+		@donation.event.userAdmin.organization.name<br/>
+		@donation.event.userAdmin.organization.address<br/>
+		@donation.event.userAdmin.organization.city, @donation.event.userAdmin.organization.state @donation.event.userAdmin.organization.zip
+</li>
+</ol>
+
+<p>We'll email you a receipt for your donation when we receive your check.</p>
+
+<p>Donation Information</p>
+
+<p>This information must accompany your check.</p>
+
+<p>
+Non-Profit Information:<br/>
+Non-Profit Name: @donation.event.userAdmin.organization.name<br/>
+Non-Profit Address: @donation.event.userAdmin.organization.address, @donation.event.userAdmin.organization.city, @donation.event.userAdmin.organization.state, @donation.event.userAdmin.organization.zip<br/>
+Non-Profit Tax ID #: @donation.event.userAdmin.organization.taxId<br/>
+</p>
+
+<p>
+Payment Information:<br/>
+Donor: @donation.firstName @donation.lastName (ID: @donation.id)<br/>
+Participant: @donation.pfp.name (ID: @donation.pfp.id)<br/>
+Donation Amount: $@donation.amount<br/>
+Transaction ID: @donation.transactionNumber<br/>
+Time Submitted: @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")<br/>
+</p>
+
+<p>If you have questions about your donation, please email us at donations@@scholasticchallenge.com or call us at 855-358-2022.</p>
+</div>

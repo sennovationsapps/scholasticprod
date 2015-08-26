@@ -1,0 +1,23 @@
+@(donation: Donation)
+
+Thank you for your generous contribution to the @donation.event.userAdmin.organization.name as part of the annual @donation.event.name fundraiser. The funds raised by the @donation.event.name will directly serve the students and families of our school. 
+ 
+Please save this information as a receipt for donation to be used as your tax deductible donation. 
+ 
+
+Non-Profit Information:
+Non-Profit Name: @donation.event.userAdmin.organization.name
+Non-Profit Address: @donation.event.userAdmin.organization.address, @donation.event.userAdmin.organization.city, @donation.event.userAdmin.organization.state, @donation.event.userAdmin.organization.zip
+Non-Profit Tax ID #: @donation.event.userAdmin.organization.taxId
+
+Payment Information:
+Donor: @donation.firstName @donation.lastName (ID: @donation.id)
+Participant: @donation.pfp.name (ID: @donation.pfp.id)
+Donation Amount: $@donation.amount
+Check Number: @donation.checkNum
+Transaction ID: @donation.transactionNumber
+Time Submitted: @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
+
+If you have questions about your donation, please email us at donations@@scholasticchallenge.com or call us at 855-358-2022.
+
+Disclaimer: All information has been provided from sources believed by Scholastic Challenge to accurate and reliable. Please consult with your tax advisor for specific tax advice.

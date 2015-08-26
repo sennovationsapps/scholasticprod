@@ -1,0 +1,63 @@
+@(localUser: models.security.User = null, reconcileForm: Form[Donation.DonationReconciliation])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    @general.alerts()
+    <div class="container">
+      <div class="row">
+		@profile.menu(localUser)
+        <!-- Avatar & social links -->
+        <div class="col-sm-8 col-md-9">
+        <!-- EVENTS -->
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-map-marker"></i> Credit Card Reconcile Donations</h4>
+              <hr>
+               @general.alerts()
+	     	  @if(reconcileForm.hasErrors) {
+	          <div class="alert alert-dismissable alert-danger">
+	          <button type="button" class="close" data-dismiss="alert">&times;</button>
+	            @Messages("form.has.errors")
+	          </div>
+	          }
+			  @if(reconcileForm.hasGlobalErrors) {
+				<div class="info-board info-board-red"> 
+					<span class="label label-important">@reconcileForm.globalError.message</span>
+				</div>
+			  }
+          	@form(routes.DonationMgmt.profileDonationsReconcile, 'role -> "form") {
+	            @text(reconcileForm("reconcileFrom"), '_label -> "Reconcile From Date", 'class -> "form-control")
+	            @text(reconcileForm("reconcileTo"), '_label -> "Reconcile To Date", 'class -> "form-control")
+
+               <button type="submit" class="btn btn-green">Process Reconciliations</button>
+               <a href="@routes.Application.profileDonationsReconcile" class="btn btn-default" type="button">Cancel</a>
+            }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>             
+  <script>
+  $( document ).ready(function() {
+$('#reconcileFrom').datetimepicker({format: 'mm/dd/yyyy', minView: 2, autoclose: true, todayHighlight: true, todayBtn: true});
+$('#reconcileTo').datetimepicker({format: 'mm/dd/yyyy', minView: 2, autoclose: true, todayHighlight: true, todayBtn: true});
+  });
+  </script>
+}

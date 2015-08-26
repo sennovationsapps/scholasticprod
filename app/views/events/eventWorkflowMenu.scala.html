@@ -1,0 +1,177 @@
+@(event: Event, active: String = "")
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+	
+	<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Collect the nav links, forms, and other content for toggling -->
+     <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sub-navbar-collapse">
+          <span><i class="fa fa-arrow-down fa-fw"></i> Event Workflow Details</span>
+        </button>
+      </div>
+    <div class="navbar-collapse collapse sub-navbar-collapse">
+      <ul class="nav navbar-nav">
+	
+	
+			<div class="btn-group">
+			  @if(event != null) {
+			  <a type="button" class="btn navbar-btn btn-default" href="@routes.EventWorkflowMgmt.update(event)">Event Workflow</a>
+			  } else {
+			  <a type="button" class="btn navbar-btn btn-danger" disabled="disabled">Event Workflow</a>
+			  }
+			</div>
+			&nbsp;&nbsp;
+			<div class="btn-group">
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("event")) {btn-default} else { @if(event != null) {btn-default}else{btn-danger} }" @if(!active.isEmpty() && !active.equals("event")) {disabled="disabled"}>Event</button>
+			  @if(!active.isEmpty() && !active.equals("event")) { } else {
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("event")) {btn-default} else { @if(event != null) {btn-default}else{btn-danger} } dropdown-toggle" data-toggle="dropdown" @if(!active.isEmpty() && !active.equals("event")) {disabled="disabled"}>
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  }
+			  <ul class="dropdown-menu" role="menu">
+			  	@if(event == null) {
+			  	<li><a href="@routes.EventMgmt.create()">Create Event</a></li>	
+			  	} else {
+			    <li><a href="@routes.EventMgmt.edit(event)">Edit Event</a></li>
+			    <li class="divider"></li>
+			  	<li><a href="@routes.EventMgmt.get(event)">View Event</a></li>
+			    }
+			  </ul>
+			</div>
+			&nbsp;&nbsp;			
+			<div class="btn-group">
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("teams")) {btn-default} else { @if(event != null && Event.hasTeams(event.id)) {btn-default}else{btn-danger} }" @if(event == null  || (!active.isEmpty() && !active.equals("teams"))) {disabled="disabled"}>Teams</button>
+			  @if(!active.isEmpty() && !active.equals("teams")) {} else {
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("teams")) {btn-default} else { @if(event != null && Event.hasTeams(event.id)) {btn-default}else{btn-danger} } dropdown-toggle" data-toggle="dropdown" @if(event == null || (!active.isEmpty() && !active.equals("teams"))) {disabled="disabled"}>
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  }
+			  <ul class="dropdown-menu" role="menu">
+			    @if(event != null) {
+				<li><a href="@routes.TeamMgmt.create(event)">Add Teams</a></li>
+				@if(Event.hasTeams(event.id)) {
+			    <li class="divider"></li>
+			    @defining(Team.findByEventIdMinSorted(event.id)) { teams =>
+			    	@for(team <- teams) {
+			        	<li><a href="@routes.TeamMgmt.edit(event, team.id)">Edit @team.name</a></li>
+			    	}
+			    	<li class="divider"></li>
+			    	@for(team <- teams) {
+			        	<li><a href="@routes.TeamMgmt.get(event, team.id)">View @team.name</a></li>
+			    	}
+			    }	
+			    }
+			    }
+			  </ul>
+			</div>
+			&nbsp;&nbsp;
+			<div class="btn-group">
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("eventpages")) {btn-default} else { @if(event != null && Event.hasEventPages(event.id)) {btn-default}else{btn-danger} }" @if(event == null || (!active.isEmpty() && !active.equals("eventpages"))) {disabled="disabled"}>Event Pages</button>
+			  @if(!active.isEmpty() && !active.equals("eventpages")) {} else {
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("eventpages")) {btn-default} else { @if(event != null && Event.hasEventPages(event.id)) {btn-default}else{btn-danger} } dropdown-toggle" data-toggle="dropdown" @if(event == null || (!active.isEmpty() && !active.equals("eventpages"))) {disabled="disabled"}>
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  }
+			  <ul class="dropdown-menu" role="menu">
+			    @if(event != null) { 
+			    <li><a href="@routes.EventPagesMgmt.create(event)">Add Event Pages</a></li>
+			    @if(Event.hasEventPages(event.id)) {
+			    <li class="divider"></li>
+			    @defining(EventPages.findByEventIdMinSorted(event.id)) { EventPages =>
+			    	@for(eventPage <- EventPages) {
+			        	<li><a href="@routes.EventPagesMgmt.edit(event, eventPage.id)">Edit @eventPage.name</a></li>
+			    	}
+			    	<li class="divider"></li>
+			    	@for(eventPage <- EventPages) {
+			        	<li><a href="@routes.EventPagesMgmt.get(event, eventPage.id)">View @eventPage.name</a></li>
+			    	}
+			    }	
+			    }
+			    }
+			  </ul>
+			</div>
+			&nbsp;&nbsp;
+			<div class="btn-group">
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("awards")) {btn-default} else { @if(event != null && Event.hasAwards(event.id)) {btn-default}else{btn-danger} }" @if(event == null || (!active.isEmpty() && !active.equals("awards"))) {disabled="disabled"}>Awards</button>
+			  @if(!active.isEmpty() && !active.equals("awards")) {} else {
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("awards")) {btn-default} else { @if(event != null && Event.hasAwards(event.id)) {btn-default}else{btn-danger} } dropdown-toggle" data-toggle="dropdown" @if(event == null || (!active.isEmpty() && !active.equals("awards"))) {disabled="disabled"}>
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  }
+			  <ul class="dropdown-menu" role="menu">
+			  	@if(event != null) {
+			  	@if(!Event.hasAwards(event.id)) {
+			    <li><a href="@routes.AwardsMgmt.create(event)">Create Awards</a></li>
+			    } else {
+			    @defining(Awards.findByEventIdMin(event.id)) { awards =>
+			    @if(awards != null) {
+			    <li><a href="@routes.AwardsMgmt.edit(event, awards.id)">Edit Awards</a></li>
+			  	<li class="divider"></li>
+				<li><a href="@routes.AwardsMgmt.get(event, awards.id)">View Awards</a></li>
+			    }
+			    }
+			    }
+			    }
+			  </ul>
+			</div>
+			&nbsp;&nbsp;
+			<div class="btn-group">
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("volunteers")) {btn-default} else { @if(event != null && Event.hasVolunteers(event.id)) {btn-default}else{btn-danger} }" @if(event == null || (!active.isEmpty() && !active.equals("volunteers"))) {disabled="disabled"}>Volunteers</button>
+			  @if(!active.isEmpty() && !active.equals("volunteers")) {} else {
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("volunteers")) {btn-default} else { @if(event != null && Event.hasVolunteers(event.id)) {btn-default}else{btn-danger} } dropdown-toggle" data-toggle="dropdown" @if(event == null || (!active.isEmpty() && !active.equals("eventpages"))) {disabled="disabled"}>
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  }
+			  <ul class="dropdown-menu" role="menu">
+			    @if(event != null) {
+			    @if(!Event.hasVolunteers(event.id)) {
+			    <li><a href="@routes.VolunteersMgmt.create(event)">Create Volunteers</a></li>
+			    } else {
+			    @defining(Volunteers.findByEventIdMin(event.id)) { volunteers =>
+				@if(volunteers != null) {
+			    <li><a href="@routes.VolunteersMgmt.edit(event, volunteers.id)">Edit Volunteers</a></li>
+			  	<li class="divider"></li>
+				<li><a href="@routes.VolunteersMgmt.get(event, volunteers.id)">View Volunteers</a></li>
+			    }
+			    }
+			    }
+			    }
+			  </ul>
+			</div>
+			&nbsp;&nbsp;
+			<div class="btn-group">
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("sponsors")) {btn-default} else { @if(event != null && Event.hasSponsors(event.id)) {btn-default}else{btn-danger} }" @if(event == null || (!active.isEmpty() && !active.equals("sponsors"))) {disabled="disabled"}>Sponsors</button>
+			  @if(!active.isEmpty() && !active.equals("sponsors")) {} else {
+			  <button type="button" class="btn navbar-btn @if(!active.isEmpty() && !active.equals("sponsors")) {btn-default} else { @if(event != null && Event.hasSponsors(event.id)) {btn-default}else{btn-danger} } dropdown-toggle" data-toggle="dropdown" @if(event == null || (!active.isEmpty() && !active.equals("sponsors"))) {disabled="disabled"}>
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  }
+			  <ul class="dropdown-menu" role="menu">
+			    @if(event != null) { 
+			    @if(!Event.hasSponsors(event.id)) {
+			    <li><a href="@routes.SponsorsMgmt.create(event)">Create Sponsors</a></li>
+			    } else {
+			    @defining(Sponsors.findByEventIdMin(event.id)) { sponsors =>
+			    @if(sponsors != null) {
+			    <li><a href="@routes.SponsorsMgmt.edit(event, sponsors.id)">Edit Sponsors</a></li>
+			  	<li class="divider"></li>
+			    <li><a href="@routes.SponsorsMgmt.get(event, sponsors.id)">View Sponsors</a></li>
+			    }
+			    }
+			    }
+			    }
+			  </ul>
+			</div>
+			      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav> 

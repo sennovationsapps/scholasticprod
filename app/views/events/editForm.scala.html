@@ -1,0 +1,227 @@
+@(event: Event, eventForm: Form[Event])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Edit Events") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Edit Event</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h4>This form will help you edit an event.</h4>
+          @eventWorkflowMenu(event, "event")
+				<br/>
+          <hr>
+          @general.alerts()
+      @if(eventForm.hasErrors) {
+          <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @Messages("form.has.errors")
+          </div>
+          }
+		  @if(eventForm.hasGlobalErrors) {
+			<div class="info-board info-board-red"> 
+				<span class="label label-important">@eventForm.globalError.message</span>
+			</div>
+		  }
+          	@form(routes.EventMgmt.update(event), 'role -> "form", 'enctype -> "multipart/form-data") {
+	 			@text(eventForm("name"), '_label -> "Event Name", 'class -> "form-control", 'placeholder -> "Name (i.e., Spring Spell-a-thon, Harvest Run)", '_info -> "helpEventName")
+	            @text(eventForm("schoolId"), '_label -> "School", 'class -> "form-control", 'placeholder -> "School Name")
+	            @text(eventForm("eventStart"), '_label -> "Event Start Date", 'class -> "form-control", '_info -> "helpEventStart")
+	            @text(eventForm("eventEnd"), '_label -> "Event End Date", 'class -> "form-control", '_info -> "helpEventEnd")
+	            @if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {
+	            @text(eventForm("fundraisingStart"), '_label -> "Fundraising Start Date", 'class -> "form-control", '_info -> "helpEventFundStart")
+	            @text(eventForm("fundraisingEnd"), '_label -> "Fundraising End Date", 'class -> "form-control", '_info -> "helpEventFundEnd")
+	            } else {
+	            @text(eventForm("fundraisingStart"), '_label -> "Fundraising Start Date", 'class -> "form-control", '_info -> "helpEventFundStart", 'readonly -> "readonly")
+	            @text(eventForm("fundraisingEnd"), '_label -> "Fundraising End Date", 'class -> "form-control", '_info -> "helpEventFundEnd", 'readonly -> "readonly")
+	            }
+	            @text(eventForm("goal"), '_label -> "Fundraising Goal", 'class -> "form-control", '_addon -> "$", 'placeholder -> "5000", '_info -> "helpGoal")
+	            @text(eventForm("title"), '_label -> "Page Title", 'class -> "form-control")
+	            @select(eventForm("state"), options(ControllerUtil.STATE_MAP), '_label -> "State", 'class -> "form-control")
+	            @text(eventForm("city"), '_label -> "City", 'class -> "form-control")
+	            @text(eventForm("zipCode"), '_label -> "Zip Code", 'class -> "form-control", 'placeholder -> "Zip Code (55555 or 55555-4444)", '_info -> "helpHeroImgUrl")
+	            @helper.inputFile(eventForm("heroImgUrl"), '_label -> "Add a picture to the top of you event page (Optional)", 'class -> "form-control", '_info -> "helpHeroImgUrl")
+	            @helper.inputFile(eventForm("imgUrl"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @helper.inputFile(eventForm("imgUrl1"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @helper.inputFile(eventForm("imgUrl2"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @helper.textarea(eventForm("content"), '_label -> "Welcome Message", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
+	            
+	
+	            @if(Team.findByEventId(event.id).isEmpty()) { 
+	            	             @select(
+                eventForm("status"), 
+                options(Event.PublishStatus.VALUES), 
+                
+                '_label -> "Status", '_default -> "-- Choose a Status --",
+                '_showConstraints -> false, 'class -> "form-control", 'readonly -> "readonly"
+            	)
+            	} else {
+            		             @select(
+                eventForm("status"), 
+                options(Event.PublishStatus.VALUES), 
+                
+                '_label -> "Status", '_default -> "-- Choose a Status --",
+                '_showConstraints -> false, 'class -> "form-control"
+            	)
+            	}
+
+               <button type="submit" class="btn btn-green">Save this event</button>&nbsp;&nbsp;
+               <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+            }
+        </div>
+        <!-- Right column -->
+<div class="col-sm-4">
+          <h4>Event Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpEventName">
+                      Event Name
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventName" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Event Name is the name you want to appear on your Event.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpEventStart">
+                      Event Start
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventStart" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Event Start is the date your event will occur.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpEventEnd">
+                      Event End
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventEnd" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    If your event goes multiple days, you can add an Event End date.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpEventFundStart">
+                      Fundraising Start Date
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventFundStart" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    This is the date at which your event can start taking donations.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpEventFundStart">
+                      Fundraising End Date
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpEventFundStart" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    This is the date at which your event close taking donations.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpGoal">
+                      Fundraising Goal
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpGoal" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Fundraising Goal Choose a goal that is challenging yet attainable.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpHeroImgUrl">
+                      Hero Image
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpHeroImgUrl" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Event Hero Image This image will at the top of the your Event (a default image will be used if you do not upload your own).
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpImgUrl">
+                      Page Image
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpImgUrl" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Page Image This image will appear next to your personal message on your Event.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpContent">
+                      Page Content
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpContent" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    This is the message to all your event attendees.  Please feel free to view the sample on the right copying and pasting all or parts of the message for your use. Remeber, if you do use these messages you will need to personalize them. i.e. your events name, your schools name.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+   <!-- Extra Hidden Content -->
+  @events.samples()
+<script src="@ControllerUtil.getResourceRoute("scEventAdmin.min.js")"></script>
+}

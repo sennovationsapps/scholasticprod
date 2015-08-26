@@ -1,0 +1,260 @@
+@(signupForm: Form[_])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main(Messages("playauthenticate.signup.title"),"signup") {
+    <!-- Main body
+================== -->
+
+    <div class="wrapper">
+            <!-- Page Tip -->
+        <div class="page-tip animated slideInDown">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Fill out the form below to sign up.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @general.alerts()
+            <!-- Main Form -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 signup">
+                    <h3 class="hl top-zero">Create Organization Account</h3>
+                    <hr>
+                    @if(signupForm.hasGlobalErrors) {
+                        <div class="info-board info-board-red">
+                            <span class="label label-important">@signupForm.globalError.message</span>
+                        </div>
+                    }
+                    @form(routes.TaxidSignup.doSignup) {
+                        <b>Organization Information (<span style="font-size: 75%;color: #737373">All Fields Required</span>)</b>
+                        <hr/>
+                        <div>
+                           <b>Organization Tax ID Number</b>
+                            <br />
+                        </div>
+
+                        @_taxidPartial(signupForm)
+                      @*  @helper.inputText(signupForm("orgTaxIdNo"), '_label -> "Organization Tax ID Number", 'class -> "form-control", '_addon -> "glyphicon-home", 'placeholder -> "Enter only the 9 digit Tax ID number, no symbols or characters")*@
+
+
+
+                        @helper.inputText(signupForm("orgName"), '_label -> "Enter Name", 'class -> "form-control", '_addon -> "glyphicon-user", 'placeholder -> "Org Name")
+                        @helper.inputText(signupForm("orgAddress"), '_label -> "Enter Address", 'class -> "form-control", '_addon -> "glyphicon-user", 'placeholder -> "Org Address")
+                        @helper.inputText(signupForm("orgCity"), '_label -> "Enter City", 'class -> "form-control", '_addon -> "glyphicon-home", 'placeholder -> "Org City")
+                        @select(signupForm("orgState"), options(ControllerUtil.STATE_MAP), '_showConstraints -> false,'_label -> "Enter State(Required)", 'class -> "form-control", '_addon -> "glyphicon-home", 'placeholder -> "Org State")
+                        @helper.inputText(signupForm("orgZip"), '_showConstraints -> false, '_label -> "Enter Zip(Required)", 'class -> "form-control", '_addon -> "glyphicon-home", 'placeholder -> "Org Zip (55555 or 55555-4444)", 'title -> "5 or 9 digits with dash (11111-1111)")
+
+
+                        @******phno format*************24.08.2015***************start*****@
+                        <div style="display:none;">
+                        @helper.inputText(signupForm("orgPhone"), '_label -> "Enter Phone Number", 'id -> "orgPhNo",'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Org Phone")
+
+                        </div>
+                        <div><b>Enter Phone Number</b></div>
+
+
+
+
+
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>
+                                    @helper.inputText(signupForm("orgPhPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode1','phonePre1')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode1", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                    </td>
+                                    <td> - </td>
+                                    <td>
+                                    @helper.inputText(signupForm("orgPhPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre1','phoneSuf1')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre1", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                    </td>
+                                    <td> - </td>
+                                    <td>
+                                    @helper.inputText(signupForm("orgPhPart3"), '_label -> "nolabel",'_type -> "hidden",'onchange -> "mergeTotalPhNo1()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf1", 'class -> "form-control", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        @******phno format*************24.08.2015***************end*****@
+                        <br /><br /><br /><br />
+                        <b>Event Manager Information (<span style="font-size: 75%;color: #737373">All Fields Required</span>)</b>
+                        <hr/>
+                        @helper.inputText(signupForm("firstName"), '_label -> "Enter First Name", 'class -> "form-control", '_addon -> "glyphicon-user", 'placeholder -> "First Name")
+                        @helper.inputText(signupForm("lastName"), '_label -> "Enter Last Name", 'class -> "form-control", '_addon -> "glyphicon-user", 'placeholder -> "Last Name")
+                        @******phno format*************24.08.2015***************start*****@
+
+                        <div style="display:none;">
+                        @helper.inputText(signupForm("phone"), '_label -> "Enter Phone Number", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone (ex.123-345-5678) ,just put numbers special character will be automatically appeded", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                        </div>
+                        <div><b>Enter Phone Number</b></div>
+
+
+
+
+
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>
+                                    @helper.inputText(signupForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone",'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                    </td>
+                                    <td> - </td>
+                                    <td>
+                                    @helper.inputText(signupForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",  'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                    </td>
+                                    <td> - </td>
+                                    <td>
+                                    @helper.inputText(signupForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        @******phno format*************24.08.2015***************end******@
+                        @helper.inputText(signupForm("zip"),'_showConstraints -> false, '_label -> "Enter Zip Code", 'class -> "form-control", '_addon -> "glyphicon-home", 'placeholder -> "Zip Code (55555 or 55555-4444)", 'title -> "5 or 9 digits with dash (11111-1111)")
+                        @helper.inputText(signupForm("email"), '_label -> "Email (a valid email is requred)", 'class -> "form-control", '_addon -> "@",  'placeholder -> "Enter email")
+                        @_passwordPartial(signupForm)
+                       @helper.checkbox(signupForm("agreeToPolicy"), '_label -> Html(Messages("accept.terms")), '_labelSide -> "right")
+
+                      @*  <input id="agreeToPolicy" name="agreeToPolicy" value="" type="checkbox"> *@
+                        <input name="mobile" id="mobile" style="display: none"/>
+                        <input name="mail" id="mail" style="display: none"/>
+                        <button type="submit" class="btn btn-green" id="submitSignUp" disabled="disabled">@Messages("playauthenticate.signup.now")</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+	$('#agreeToPolicy').change(function() {
+		if($('#agreeToPolicy').is(':checked')) {
+			$('#submitSignUp').prop('disabled', false);
+		} else {
+			$('#submitSignUp').prop('disabled', true);
+		}
+	});
+  </script>
+
+    <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+$(document).ready(function(){
+//===========chekbox refresh=================25.08.2015===============start=================================//
+if($('#agreeToPolicy').is(':checked')) {
+document.getElementById("agreeToPolicy").checked = false;
+//$('#agreeToPolicy').prop('checked', "unchecked");
+}
+
+//===========chekbox refresh=================25.08.2015===============end=================================//
+/*$("#phNo").hide();*/
+var phNoValue = $("#phNo").val();
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}
+
+
+var orgphNoValue = $("#orgPhNo").val();
+/*var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;*/
+
+if(orgphNoValue!= null){
+phNoValuePart1  = orgphNoValue.substring(0,3);
+$("#areaCode1").val(phNoValuePart1);
+phNoValuePart2 = orgphNoValue.substring(3,6);
+$("#phonePre1").val(phNoValuePart2);
+phNoValuePart3 = orgphNoValue.substring(6,10);
+$("#phoneSuf1").val(phNoValuePart3);
+}
+});
+
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*/
+
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+
+}
+
+function mergeTotalPhNo(){
+//alert("within keyup");
+var totalPhValue;
+var length = $("#phoneSuf").val().length;
+
+if(length == 4){
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+//alert($("#phNo").val());
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+    <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+
+
+/*
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/!*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*!/
+
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+
+}
+*/
+
+function mergeTotalPhNo1(){
+//alert("within keyup");
+var totalPhValue;
+var length = $("#phoneSuf1").val().length;
+
+if(length == 4){
+totalPhValue = $("#areaCode1").val()+$("#phonePre1").val()+$("#phoneSuf1").val();
+$("#orgPhNo").val(totalPhValue);
+//alert($("#phNo").val());
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+
+
+
+}

@@ -1,0 +1,54 @@
+@(pfps: List[Pfp])
+
+@import helper._
+
+@import com.feth.play.module.pa.views.html._
+  <div class="table-responsive">
+  <table class="table">
+    <tbody>
+     
+            @if(pfps == null) {
+                @if(ControllerUtil.isUserInRole(models.security.SecurityRole.PFP_ADMIN)) {
+                <tr><td>No Participants Created For This User</td></tr>
+                } else {
+                <tr><td>No Participants Created For This Event</td></tr>
+                }
+            }  else {
+            <tr><td>Name</td><td>Type</td><td>Team</td><td>Goal</td><td></td></tr>
+            @for(pfp <- pfps) {
+            	<tr>
+            	@if(models.Event.daysUntilEvent(pfp.event.eventStart) >= 0) {
+                	@form(routes.PfpMgmt.updateInline(pfp.event, pfp), 'role -> "form", 'class -> "form-inline") {
+                		<td><a href="@routes.PfpMgmt.get(pfp.event, pfp)">@pfp.name</a></td>
+		 				<td>@if(pfp.pfpType == Pfp.PfpType.PFP){<select id="private" name="private" class="form-control">
+		 						<option value="true" @if(pfp.privateAcct == true){ selected}>Private</option>
+		 						<option value="false" @if(pfp.privateAcct == false){ selected}>Public</option>
+		 					</select>}
+		 				</td>
+		 				<td>@if(pfp.team != null) {
+		 					<select  id="team_id" name="team.id" class="form-control">
+		 					 @for((key, value) <- Team.options(pfp.event.id)){
+		 					 	<option value="@key" @if(pfp.team.id == key.toLong){ selected}>@value</option>
+                        		}
+		 					</select>
+		 					}
+		 				</td>
+		 				<td><input type="text" id="goal" name="goal" value="@pfp.goal" class="form-control"></td> 
+		 				<td><button class="btn btn-default" type="submit">Save</button>@if(!Donation.existsByPfpId(pfp.id)) {&nbsp;<a href="@routes.PfpMgmt.remove(pfp.event, pfp)" class="btn btn-default" type="button">Remove</a>}</td>
+					}
+				} else {
+					<td><a href="@routes.PfpMgmt.get(pfp.event, pfp)">@pfp.name</a></td>
+					<td>@pfp.privateAcct</td>
+					@if(pfp.team == null) {
+						<td></td>	
+					} else {
+						<td>@pfp.team.name</td>
+					}
+					<td>@pfp.goal</td>
+					<td></td>
+				}
+			}
+	</tr>
+	}
+    </tbody>
+  </table>

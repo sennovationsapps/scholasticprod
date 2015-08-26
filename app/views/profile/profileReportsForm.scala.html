@@ -1,0 +1,356 @@
+@(event: Event)
+
+@import helper._
+
+@import com.feth.play.module.pa.views.html._
+
+<br/>
+<hr/>
+<ul class="nav nav-tabs">
+			    <li class="active"><a href="#tab1" data-toggle="tab" id="tab1Link">Donations</a></li>
+			    <li><a href="#tab2" data-toggle="tab" id="tab2Link">Volunteers</a></li>
+			    <li><a href="#tab3" data-toggle="tab" id="tab3Link">Pfps</a></li>
+	            <li><a href="#tab6" data-toggle="tab" id="tab6Link">One Click Report</a></li>
+			    <!--li><a href="#tab5" data-toggle="tab" id="tab5Link">Prebuilt</a></li-->
+			</ul>
+			<div class="tab-content">
+			    <div class="tab-pane active" id="tab1">
+			    	@form(routes.ReportMgmt.adminDonationsReport(event), 'role -> "form", 'id -> "adminDonationsForm") {
+			    	<div class="form-group ">
+						<label for="fromDate" class=" ">From Date  &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+						<input type="text" id="fromDate" name="fromDate" class="form-control">
+					</div>
+					<div class="form-group ">
+						<label for="toDate" class=" ">To Date &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+						<input type="text" id="toDate" name="toDate" value="" class="form-control">
+					</div>
+					<div class="form-group ">
+ 							<label for="paymentType" class=" ">Payment Type</label>
+						<select id="paymentType" name="paymentType" class="form-control">
+							<option value="">All</option> 
+							<option value="1">Credit</option>
+							<option value="2">Check</option>
+							<option value="3">Cash</option>
+						</select>
+					</div>
+					<div class="form-group ">
+						<label for="status" class=" ">Payment Status</label>
+						<select id="status" name="status" class="form-control">
+							<option value="">All</option>            
+							<option value="0">Approved</option>
+							<option value="1">Pending</option>
+							<option value="2">Cleared</option>
+							<option value="3">Refunded</option>
+						</select>
+					</div>
+					<div class="form-group ">
+						<label for="totalByPfp" class=" ">Total by Participant</label>
+						<select id="totalByPfp" name="totalByPfp" class="form-control">
+							<option value="false">No</option>            
+							<option value="true">Yes</option>
+						</select>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green">Run Report</button>
+            			<a href="@routes.Application.profileReports" class="btn btn-default" type="button">Cancel</a>
+					</div>
+					}
+			    </div>
+			    <div class="tab-pane" id="tab2">
+			    	@form(routes.ReportMgmt.adminVolunteersReport(event), 'role -> "form", 'id -> "adminDonationsForm") {
+					<div class="form-group ">
+						<label for="fromDate" class=" ">From Date  &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+						<input type="text" id="fromDate" name="fromDate" class="form-control">
+					</div>
+					<div class="form-group ">
+						<label for="toDate" class=" ">To Date &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+						<input type="text" id="toDate" name="toDate" value="" class="form-control">
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green">Run Report</button>
+            			<a href="@routes.Application.profileReports" class="btn btn-default" type="button">Cancel</a>
+					</div>
+					}
+			    </div>
+			    <div class="tab-pane" id="tab3">
+			    	@form(routes.ReportMgmt.adminPfpsReport(event), 'role -> "form", 'id -> "adminPfpsForm") {
+					<div class="form-group ">
+						<label for="fromDate" class=" ">From Date  &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+						<input type="text" id="fromDate" name="fromDate" class="form-control">
+					</div>
+					<div class="form-group ">
+						<label for="toDate" class=" ">To Date &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+						<input type="text" id="toDate" name="toDate" value="" class="form-control">
+					</div>
+					<div class="form-group ">
+						<label for="pfpType" class=" ">PFP Type</label>
+						<select id="pfpType" name="pfpType" class="form-control">
+							<option value="">All</option> 
+							<option value="2">General</option>
+							<option value="1">Pfp</option>
+							<option value="3">Sponsor</option>
+						</select>
+					</div>
+					<div>
+						<button type="submit" class="btn btn-green">Run Report</button>
+            			<a href="@routes.Application.profileReports" class="btn btn-default" type="button">Cancel</a>
+					</div>
+					}
+			      </div>
+			      @**
+				 <!--div class="tab-pane" id="tab5">
+				 	
+				  	<table class="table table-no-border">
+						<tbody>
+							<tr>
+								<td><a href="@routes.ReportMgmt.allDonationsReport(event)" id="allDonations">All Donations</a></td>
+								<td><a href="@routes.ReportMgmt.allDonationsReport(event)?paymentType=3" id="cashDonations">All Cash Donation</a></td>
+							</tr>
+							<tr>
+								<td><a href="@routes.ReportMgmt.allDonationsReport(event)?paymentType=2" id="checkDonations">All Check Donations</a></td>
+								<td><a href="@routes.ReportMgmt.allDonationsReport(event)?paymentType=1" id="creditDonations">All Credit Donations</a></td>
+							</tr>
+							<tr><td colspan="2"><hr/></td></tr>
+							<tr>
+								<td><a href="@routes.ReportMgmt.clearedDonationsReport(event)" id="allDonations">All Cleared Donations</a></td>
+								<td><a href="@routes.ReportMgmt.clearedDonationsReport(event)?paymentType=3" id="cashDonations">All Cleared Cash Donation</a></td>
+							</tr>
+							<tr>
+								<td><a href="@routes.ReportMgmt.clearedDonationsReport(event)?paymentType=2" id="checkDonations">All Cleared Check Donations</a></td>
+								<td><a href="@routes.ReportMgmt.clearedDonationsReport(event)?paymentType=1" id="creditDonations">All Cleared Credit Donations</a></td>
+							</tr>
+							<tr><td colspan="2"><hr/></td></tr>
+							<tr>
+								<td><a href="@routes.ReportMgmt.lastWeekReport(event)" id="allDonations">All Donations In The Last Week</a></td>
+								<td><a href="@routes.ReportMgmt.lastWeekReport(event)?paymentType=3" id="cashDonations">Cash Donation In The Last Week</a></td>
+							</tr>
+							<tr>
+								<td><a href="@routes.ReportMgmt.lastWeekReport(event)?paymentType=2" id="checkDonations">Check Donations In The Last Week</a></td>
+								<td><a href="@routes.ReportMgmt.lastWeekReport(event)?paymentType=1" id="creditDonations">Credit Donations In The Last Week</a></td>
+							</tr>
+						</tbody>
+					</table>
+			    </div-->
+			    **@
+				<!--New One Click Report added by suvadeep-->
+				<div class="tab-pane" id="tab6">
+				<div class="list-group">
+					<a href="#PreviewModal" class="list-group-item" data-toggle="modal" id="participantReport">
+						<h4 class="list-group-item-heading">Participant Report</h4>
+						<p class="list-group-item-text">A list of all Participants who have signed up (complete with all the there info including money raised</p>
+					</a>
+					<a href="#PreviewModal" class="list-group-item" data-toggle="modal" id="donationReport">
+						<h4 class="list-group-item-heading">Donation Report</h4>
+						<p class="list-group-item-text">A list of all “cleared” donations (Team, Participant, Donor, Amount, Date, Type (CC or Check))</p>
+					</a>
+					<a href="#PreviewModal" class="list-group-item" data-toggle="modal" id="volunteersReport">
+						<h4 class="list-group-item-heading" >Volunteer Report</h4>
+						<p class="list-group-item-text">A list of all Volunteers listed in order by Date and time of job (complete with name, and contact info)</p>
+					</a>
+					<a href="#PreviewModal" class="list-group-item" data-toggle="modal" id="sponsorReport">
+						<h4 class="list-group-item-heading" >Sponsor Report</h4>
+						<p class="list-group-item-text">A list of all Sponsors listed from Highest to lowest and the date paid</p>
+					</a>
+					<a href="#PreviewModal" class="list-group-item" data-toggle="modal" id="donorReport">
+						<h4 class="list-group-item-heading" >Donor Report</h4>
+						<p class="list-group-item-text">A list of all donations made based on the Donor Name</p>
+					</a>
+					<a href="#PreviewModal" class="list-group-item" data-toggle="modal" id="teamReport">
+						<h4 class="list-group-item-heading" >Team Report</h4>
+						<p class="list-group-item-text">A list of each Team with participants and amounts raised</p>
+					</a>
+				</div>
+               </div>
+			</div>
+             <!--Modal Window added by suvadeep-->
+				<div id="PreviewModal" class="modal fade">
+				<div class="modal-dialog {width: 60 %}">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title">Confirmation</h4>
+						</div>
+						<div class="modal-body ">
+							<h4 id="resultstatus">Loading...</h4>
+							<table border="1" class="table table-bordered" cellpadding="10" id="reportPreviewTable">
+							</table>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" id ="close">Close</button>
+							<button type="button" class="btn btn-primary" id="downloadreport">Download the Report</button>
+						</div>
+					</div>
+				</div>
+				</div>
+
+
+
+<script src="@ControllerUtil.getResourceRoute("jquery.table2excel.js")"></script>
+<script>
+$( document ).ready(function() {
+	jQuery('input[name=fromDate]').datetimepicker({
+    	  timepicker:false,
+    	  format:'m/d/Y',
+    	  formatDate:'m/d/Y',
+    	  closeOnDateSelect:true,
+    	  lazyInit:true
+    	});
+    jQuery('input[name=toDate]').datetimepicker({
+    	  timepicker:false,
+    	  format:'m/d/Y',
+    	  formatDate:'m/d/Y',
+    	  closeOnDateSelect:true,
+    	  lazyInit:true
+    	});
+
+
+
+
+
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+
+       return results[1] || 0;
+
+    }
+}
+
+
+function addAllColumnHeaders(myList) {
+    var columnSet = [];
+    var headerTr$ = $('<tr/>');
+
+    for (var i = 0; i < myList.length; i++) {
+        var rowHash = myList[i];
+        for (var key in rowHash) {
+            if ($.inArray(key, columnSet) == -1) {
+                columnSet.push(key);
+                headerTr$.append($('<th/>').html(key));
+            }
+        }
+    }
+    $("#reportPreviewTable").append(headerTr$);
+
+    return columnSet;
+}
+
+// modal function  which pops when clicked on oneclick report
+var reportName=null; // resolve duplication of report name
+
+$("#PreviewModal").on('show.bs.modal', function(event){
+
+        <!--$(document).ajaxStart(function () {-->
+          <!--}).ajaxStop(function () {-->
+          <!--$("#loadin").hide();-->
+         <!--});-->
+
+        $("#reportPreviewTable").empty(); // **flush the entire content before appending , if users clicks the report button more than once
+        var link = $(event.relatedTarget.id);  // html object that triggered the modal
+        var linkData = link.selector; // Extract value from selector -* attributes e.g. report name
+        var linkDatamodified = linkData.replace(/Report/i, ' Report');// include a space in the string before word "REPORT"
+        $(this).find('.modal-title').text(linkDatamodified.toUpperCase() + " Preview ");
+
+        var convertcsvdata=null;
+        reportName=null;         // resolve duplication of report name
+        reportName=linkData;    // resolve duplication of report name
+
+$.getJSON('/reports/admin/'+linkData+'/'+$.urlParam('id'), function (data) {
+
+    var columns = addAllColumnHeaders(data);
+    convertcsvdata=data;
+
+
+    for (var i = 0; i < data.length; i++) {
+        var row$ = $('<tr style="white-space: nowrap"/>');
+
+        for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+            var cellValue = data[i][columns[colIndex]];
+
+            if (cellValue == null) { cellValue = ""; } // if Json value is null
+
+            else if (cellValue instanceof Array) // if Json value is an array then create internal tables
+                {
+                  var internalTable$=$('<table class="table table-bordered" />');
+                  var internalTableHeaderTr$ = $('<tr class= "excludeFromDownload"/>');// internal table header intiated,'excludeFromDownload' is used to exclude row from table2excel download copy
+                  getInternalArray=cellValue;
+                  var columnSety = [];
+
+                  // internal table header loop
+
+                  for (var y=0 ; y<getInternalArray.length ;y++){
+
+						var headerHash = getInternalArray[y];
+						// inserting the header value
+						for (var key in headerHash) {
+							if ($.inArray(key, columnSety) == -1) {
+								columnSety.push(key);
+								internalTableHeaderTr$.append($('<th/>').html(key));//populating the header
+
+							}
+						}
+                  }
+
+                  cellValue=internalTable$.append(internalTableHeaderTr$);
+
+                  // internal table row insert loop
+
+                  for (var z=0 ; z<getInternalArray.length ;z++)
+                     {
+                     var internalTableTr$=$('<tr  class= "excludeFromDownload"/>'); // internal table row intiated
+                     var rowHash = getInternalArray[z];
+                       for (var key in rowHash){
+
+                               internalTableTr$.append($('<td/>').html(rowHash[key]));//populating the row
+
+                        }
+                        cellValue=internalTable$.append(internalTableTr$);
+				     }
+
+                }
+
+            row$.append($('<td/>').html(cellValue));
+        }
+        $("#reportPreviewTable").append(row$);
+
+    }
+
+     $("#resultstatus").text('Loading.....');
+
+     if ($("#reportPreviewTable").find('td').length < 1)
+     {
+     $("#downloadreport").hide();
+     $("#resultstatus").text('No data found');
+     $("#resultstatus").show();
+     }
+     else{
+
+     $("#resultstatus").hide();
+     $("#downloadreport").show();
+     }
+});
+
+
+});
+
+
+
+
+
+// download report functionality
+
+$("#downloadreport").click(function(event){
+$("#reportPreviewTable").table2excel({
+    exclude: ".excludeFromDownload",//do not include extension
+    name: reportName,
+    filename: reportName
+});
+
+});// end of modal function
+
+});// end of jquery function
+</script>
+

@@ -1,0 +1,178 @@
+@(currentPage: com.avaje.ebean.Page[Event], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@import models.security._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Application.profileSearchEvents(newPage, sortBy, order, currentFilter)
+    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, key)&n=@ctx()._requestHeader().getQueryString("n")">@title</a>
+    </th>
+}
+
+
+@import helper._
+
+@import com.feth.play.module.pa.views.html._
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    @general.alerts()
+    <div class="container">
+      <div class="row">
+	  @profile.menu(ControllerUtil.getLocalUser(session()))
+        <!-- Avatar & social links -->
+        <div class="col-sm-8 col-md-9">
+        <!-- EVENTS -->
+          <div class="row">
+            <div class="col-sm-12">
+             <div class="info-board info-board-blue">
+		    <form action="@link(0, "name")" method="GET" class="bs-example form-horizontal" id="searchForm">        
+		            <legend>@Messages("events.list.title", currentPage.getTotalRowCount)</legend>
+		            <div class="form-group">
+		                <div class="col-lg-12">
+		                    <div class="input-group">
+		                        <input type="search" class="form-control" id="searchbox"  name="f" value="@currentFilter" placeholder="Filter by..."> <span class="input-group-btn">
+								<div class="btn-group">
+									<button type="button" class="btn btn-blue dropdown-toggle" data-toggle="dropdown">
+										Filter By <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a href="#" class="navSearch" value="name">Name</a></li>
+										<li><a href="#" class="navSearch" value="schoolId">School</a></li>
+										<li><a href="#" class="navSearch" value="status">Event Status</a></li>
+										<li><a href="#" class="navSearch" value="userAdmin">Taxid</a></li>
+									</ul>
+								</div>
+							</span>
+		                    </div>
+		                </div>
+		            </div>
+		            <div class="form-group">
+		                <div class="col-lg-12">
+		                    <input type="hidden" name="n" value="name" id="searchField"/>
+		                    <a href="@routes.Application.profileSearchEvents()" class="btn btn-default" type="button">Remove Filter</a>
+		                </div>
+		            </div>
+		    </form>
+		    </div>
+
+
+    @if(currentPage.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No results based on search criteria</em>
+        </div>
+        
+    } else {
+
+        <div class="table-responsive">
+              <table class="table table-striped table-hover ">
+                <thead>
+                  <tr>
+                    @header("eventName", "Event name")
+                    @header("status", "Status")
+                    @header("eventStart", "Event Start")
+                    @header("goal", "Goal")
+                    <th class="actions header">Actions</th>
+                    @**
+                    @header("total", "Donation Total")
+                    <th class="percentage header ">Percentage</th>
+                    **@
+                  </tr>
+                </thead>
+				<tbody>
+                @for(event <- currentPage.getList) {
+                	<tr>
+                	@if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT) || models.Event.daysUntilEvent(event.fundraisingEnd) >= 0) {
+                        	@form(routes.EventMgmt.updateInline(event), 'role -> "form", 'class -> "form-inline") {
+                        		<td><a href="@routes.EventWorkflowMgmt.update(event)">@event.name</a></td>
+                        		@if(Team.findByEventId(event.id).isEmpty()) {
+								<td>@event.status.value</td>
+								} else {
+                        		<td><select id="status" name="status" class="form-control">            
+	           							<option value="NEW" @if(event.status == Event.PublishStatus.NEW){ selected}>New</option>
+            							<option value="PRIVATE" @if(event.status == Event.PublishStatus.PRIVATE){ selected}>Private</option>
+            							<option value="LIVE" @if(event.status == Event.PublishStatus.LIVE){ selected}>Live</option>
+            							<option value="LOCKED" @if(event.status == Event.PublishStatus.LOCKED){ selected}>Locked</option>
+            					</select></td>
+            					}
+	 			 				<td><input type="text" id="eventStart" name="eventStart" value="@event.eventStart.format("MM/dd/yyyy")" class="form-control" readonly="readonly"></td>
+	 			 				<td><input type="text" id="goal" name="goal" value="@event.goal" class="form-control"></td> 
+	 			 				<td><button class="btn btn-default" type="submit">Save</button><a class="btn btn-default" href="@routes.DonationMgmt.create(event)">Donate</a>@**if(!Donation.existsByEventId(event.id)) {&nbsp;<a href="@routes.EventMgmt.remove(event)" class="btn btn-default" type="button">Remove</a>}**@</td>
+				}
+				} else {
+					<td><a href="@routes.EventMgmt.get(event)">@event.name</a></td>
+					<td>@event.status.value</td>
+					<td>@event.eventStart.format("MM/dd/yyyy")</td>
+					<td>@event.goal</td>
+					<td></td>
+				}
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        </div>
+        <div id="pagination">
+            <ul class="pager">
+                <li class="previous@if(!currentPage.hasPrev) { disabled}"><a href="@if(currentPage.hasPrev) {@link(currentPage.getPageIndex - 1, null)}">&larr; Previous</a></li>
+                <li class="next@if(!currentPage.hasNext) { disabled}"><a href="@if(currentPage.hasNext) {@link(currentPage.getPageIndex + 1, null)}">Next &rarr;</a></li>
+            </ul>
+        </div>
+        
+    }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>             
+   <script>
+   $('.navSearch').on('click',function(){
+	    $("#searchField").val($(this).attr("value"));
+	    $( "#searchForm" ).submit();
+	});
+   </script>
+}
+
+            

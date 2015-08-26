@@ -1,0 +1,26 @@
+<div class="modal fade" id="policySecurityModal" tabindex="-1" role="dialog" aria-labelledby="policySecurityModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="policySecurityModalLabel">Security</h4>
+      </div>
+      <div class="modal-body">
+		  <p>Scholastic Challenge does not collect, store, or transmit any credit card information. To provide you with secure transactions, we have partnered with Authorize.net for secure commerce transactions.</p>
+          <p>Your credit card information is collected by Authorize.net for transmittal to your credit card issuing bank for approval. Authorize.net encrypts all of your personal information including
+          credit card number, name, and address, so that it cannot be read as the information travels over the Internet. Authorize.net does not permanently store your credit card or personal information.</p>
+          <h4>Are Credit Card Transactions Secure?</h4>
+          <p>Authorize.net uses 128-bit SSL (secure socket layer) encryption and HTTPS security protocol to communicate with your browser. This method is the industry standard security protocol, which makes it virtually impossible for someone to intercept your credit card information. Companies we work with to process your credit card transactions also use high grade encryption and security protocols.</p>
+          <p>For additional information about the collection and use of your personal information, please see our <a href="#policyPrivacyModal" role="button" data-toggle="modal" id="privacyPolicyRef">Privacy Policy</a>.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $('#privacyPolicyRef').click(function(){
+    $('#policySecurityModal').modal('hide')
+  });
+</script>

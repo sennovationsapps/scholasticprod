@@ -1,0 +1,118 @@
+@(localUser: models.security.User = null)
+
+@import models.security._
+
+  <!-- Profile Menu -->
+<div class="col-sm-4 col-md-3">
+  <div class="user-menu bottom-15">
+    <ul>
+      <li>
+        <a href="@routes.Application.profile">
+          <i class="sign fa fa-user bg-green"></i> My Profile <i class="fa fa-chevron-right pull-right"></i>
+        </a>
+      </li>
+      <li>
+        <a href="@routes.Application.editProfile(localUser.id)">
+          <i class="sign fa fa-edit bg-green"></i> Edit Profile <i class="fa fa-chevron-right pull-right"></i>
+        </a>
+      </li>
+      @if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT)) {
+          <!--  <li>
+                <a href="@routes.Application.profileEditProfiles">
+        <i class="sign fa fa-edit bg-green"></i> Manage Profiles <i class="fa fa-chevron-right pull-right"></i>
+        </a>
+        </li>	-->
+      }
+
+
+      <!--Start Code T-264-->
+
+
+      @if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT)) {
+        <li>
+          <a href="@routes.Application.organizationalSearch()">
+            <i class="sign fa fa-search bg-green"></i> User Admin Search <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      }
+
+
+
+        <!--End Code T-264-->
+
+
+
+
+
+      @if(ControllerUtil.isUserInPermission(UserPermission.EVENT_ROOT_EDIT)) {
+        <li>
+          @**<a href="@routes.Application.profileEvents">**@
+          <a href="@routes.Application.profileSearchEvents()">
+            <i class="sign fa fa-calendar bg-green"></i> Events <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+        <li>
+          <a href="@routes.EventWorkflowMgmt.create()">
+            <i class="sign fa fa-calendar bg-green"></i> Create Event <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+        <li>
+          <a href="@routes.Application.profileReports">
+            <i class="sign fa fa-file-text-o bg-green"></i> Reports <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+        <li>
+          @**<a href="@routes.Application.profileDonations">**@
+          <a href="@routes.Application.profileSearchDonations()">
+            <i class="sign fa fa-dollar bg-green"></i> Donations <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+        <li>
+          <a href="@routes.Application.profileDonationsCreate()">
+            <i class="sign fa fa-dollar bg-green"></i> Create Donation <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      }
+      @if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT)) {
+        <li>
+          <a href="@routes.Application.profileDonationsReconcile">
+            <i class="sign fa fa-dollar bg-green"></i> Reconcile<i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      }
+      @if(ControllerUtil.isUserInPermission(UserPermission.PFP_ROOT_EDIT) || ControllerUtil.isUserInPermission(UserPermission.EVENT_ROOT_EDIT)) {
+        <li>
+          @**<a href="@routes.Application.profilePfps">**@
+          <a href="@routes.Application.profileSearchPfps()">
+            <i class="sign fa fa-users bg-green"></i> PFPs <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      }
+      @if(ControllerUtil.isUserInPermission(UserPermission.PFP_ROOT_EDIT)) {
+        <li>
+          <a href="@routes.EventMgmt.list()">
+            <i class="sign fa fa-users bg-green"></i> Create PFP <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      }
+      @if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT)) {
+        <li>
+          <a href="@routes.Application.profilePassword">
+            <i class="sign fa fa-lock bg-green"></i> Change Password <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      } else {
+        <li>
+          <a href="@routes.Account.changePassword">
+            <i class="sign fa fa-lock bg-green"></i> Change Password <i class="fa fa-chevron-right pull-right"></i>
+          </a>
+        </li>
+      }
+      <li>
+        <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">
+          <i class="sign fa fa-sign-out bg-green"></i> Sign Out <i class="fa fa-chevron-right pull-right"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

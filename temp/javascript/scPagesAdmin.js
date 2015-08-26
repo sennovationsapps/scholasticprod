@@ -1,0 +1,40 @@
+$('#saveAndAddBtn').click(function(){
+	  $('#saveAndAdd').val('true');
+	  $('form[id=pageForm]').submit();
+	});
+
+
+
+$(document).ready(function(){
+	$('#sampleTwo').collapse('hide');
+	$('#sampleThree').collapse('hide');
+	$('#sampleOne').collapse('hide');
+	$('#sampleOne').collapse('show');
+});
+$('#modalAccordion1').click(function(){
+	$('#sampleTwo').collapse('hide');
+	$('#sampleThree').collapse('hide');
+	$('#sampleOne').collapse('show');
+});
+$('#modalAccordion2').click(function(){
+	$('#sampleOne').collapse('hide');
+	$('#sampleThree').collapse('hide');
+	$('#sampleTwo').collapse('show');
+});
+$('#modalAccordion3').click(function(){
+	$('#sampleOne').collapse('hide');
+	$('#sampleTwo').collapse('hide');
+	$('#sampleThree').collapse('show');
+});
+$('#sample1').click(function(){
+	  $('textarea#content').code($('div#sampleOne>div.panel-body').html());
+	  $('#closeSample').click();
+});
+$('#sample2').click(function(){
+	  $('textarea#content').code($('div#sampleTwo>div.panel-body').html());
+	  $('#closeSample').click();
+});
+$('#sample3').click(function(){
+	  $('textarea#content').code($('div#sampleThree>div.panel-body').html());
+	  $('#closeSample').click();
+});

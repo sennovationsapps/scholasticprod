@@ -1,0 +1,776 @@
+@(contactUsForm: Form[ContactUs])
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Index Page") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>FAQs</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <!-- Help Center -->
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="hl top-zero">Help Center</h2>
+          <hr>
+          <!--form class="form-inline" role="form">
+            <div class="row">
+              <div class="col-md-6 col-sm-9">
+                <div class="input-group">
+                  <label class="sr-only" for="search3">Search</label>
+                  <input type="text" class="form-control " id="search3" placeholder="Enter your question here">
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-blue">Search</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form><br /-->
+        </div>
+      </div>
+      <div class="row">
+        <!-- FAQs accordion -->
+		<div class="col-md-6 col-sm-9" id="faqsEvents">
+          <h4 class="hl">Frequently Asked Questions About Events</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                     What is a Scholastic Challenge Event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    A Scholastic Challenge Event is an event designed to bring schools (parents, children, and administrators) and communities together with the common goal of raising funds for education. Our events incorporate proprietary software allowing participants to create a personal fundraising page which allows them to easily reach out to family, friends, and associates to raise money from potential donors.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                      What types of events does Scholastic Challenge support?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Scholastic Challenge supports a variety of events like, but not limited to: Bicycle Rides/Tours, Walks, Runs, Bowling, Swimming, Golfing, Indoor Athletic Events, Virtual Events, Jog-A-Thons, and Obstacle Courses.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                      Who manages the event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Some schools have the resources and expertise to organize and run their own events, but in other cases schools need support. Scholastic Challenge can work with your existing team or we can provide complete event management services.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+                      Where can I find information about the financial results of the event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    You can find the total funds raised for your event by visiting the event home page. A school, team or individual participant's fundraising can be found on their page. We also encourage and support a school's ability to post information on their pages on how they have spent the funds raised, so be sure to check back in the months following the event to see how our children benefited from all your gracious work.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">
+                      Why am I not able to find my school's fundraising page?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse5" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Scholastic Challenge works with school districts and/or individual schools. If you are unable to find your school there is a possibility that the school you are looking for has not yet registered for the event. If you wish to register your school or you feel there is a mistake, please contact us at <a href="#">support@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">
+                      Can I register my school to fundraise?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse6" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    If you are interested in creating your own fundraising event, please contact us at <a href="#">info@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">
+                      Does Scholastic Challenge only work with public schools?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse7" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    At Scholastic Challenge we work with all schools, school districts, and non-profit organizations that support education. We are committed to creating highly efficient fundraising solutions that benefit primary (K-12) education.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">
+                      I have a question about events that is not answered above. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse8" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Please send us an email at <a href="#">info@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+        </div>
+        <div class="col-md-6 col-sm-9" id="faqsParticipation">
+          <h4 class="hl">Frequently Asked Questions About Participating</h4>
+          <hr>
+            <div class="panel-group" id="accordion2">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse9">
+                     What should I know prior to registering for an event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse9" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    <ul>
+                    	<li>Some events may have a minimum age for participants.</li>
+						<li>All individuals under the age of 18 must have a parent or legal guardian sign a minor consent form.</li>
+						<li>Some events may have a minimum fundraising requirement (specified in the registration) to be met by a predetermined date. If you haven't raised the minimum requirement by the predetermined date, you can make a donation to your own fundraising account or you can choose not to participate in the event.</li>
+						<li>If there is a minimum fundraising requirement, then you are responsible for your own fundraising commitment. You cannot share or split donations with other participants.</li>
+						<li>Registration fees and donations are non-refundable and non-transferable.</li>
+						<li>Scholastic Challenge reserves the right, in its sole discretion, to refuse registration and/or participation to anyone at any time before or during the event.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse10">
+                      Who can register for an event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse10" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Scholastic Challenge works with the event organizer to identify the type of event and determine a participation capacity and who can participate. Restrictions on who can participate will be specified on the Registration form.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
+                      Is there a minimum age requirement to participate?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse11" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    The Event Organizers may set a minimum age for participants in their event. The registration page will clearly indicate a minimum age if this is the case.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
+                      How do I register?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse12" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    From an Event's home page, click the "Register" button. You will be guided through the registration process. Upon completion, you will receive a confirmation email confirming your registration.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse13">
+                      I'm having problems registering. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse13" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    For questions or problems with registration, please contact us at <a href="#">support@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
+                      Is my event registration fee tax-deductible?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse14" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    No. Some events require a registration fee to help offset the cost of running the event. This fee is not tax deductible. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse15">
+                      Can I support more than one school?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse15" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Yes. If multiple schools are participating in the event you will have the ability to fundraise for up to three schools.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse16">
+                      What if I can't attend or finish the event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse16" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  We know that many things can happen to prevent participants from attending the event and/or completing the event they started. In this case, be assured that your fundraising is not lost. All of your fundraising dollars will still go to the schools or foundation you specified upon registration. Donations are non-refundable. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#collapse17">
+                      Do I need permission from my doctor or sign a liability and image release form?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse17" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  Each event reserves the right to require a confidential medical form be signed and submitted (this will be indicated in the registration process). All events require a release of liability and image release before participating. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse18">
+                      Will the event be held in bad weather?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse18" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  Weather can be a factor in postponing or canceling an event. In this case, the event organizers will be in contact with its participants and volunteers via email so be sure to provide a valid email and view emails regarding the event. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse19">
+                      I have a question about participating that is not answered above. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse19" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  Please send us an email at <a href="#">support@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse20">
+                      How do I start or join a team?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse20" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  Some events have the ability for participants to fundraise as a team. If teams are available, you will have the opportunity to start or join a team during the registration process. You can also start or join a team after you register by clicking the Team Management button on your account home page. Note that joining a team does not change how your funds are allocated; you as the participant determine where your donations go. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse21">
+                      Can donations be made to a team?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse21" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  No. Donations can be made only to a participant, not directly to a team. A team accumulates funds based on the fundraising efforts of its members. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse22">
+                      How many participants can be on a team?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse22" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  We encourage everyone to join a team. We believe that teams make the fundraising experience more rewarding and help participants reach their goals: financial and/or physical. For this reason we do not put a limit on team size. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse23">
+                      How many teams can I be on?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse23" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  You can only be a member, or team captain, of one team. When you start a team, you are its captain and first member. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse24">
+                      Is there a registration fee for a team or its members?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse24" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  There are no fees associated with starting or joining a team. Although some events may require a registration fee for participants, there is no additional charge for starting or joining a team. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse25">
+                      I have a question about teams that is not answered above. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse25" class="panel-collapse collapse">
+                  <div class="panel-body">
+                   	  Please send us an email at <a href="#">support@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+        </div>
+		<div class="col-md-6 col-sm-9" id="faqsDonate">
+          <h4 class="hl">Frequently Asked Questions About Donating</h4>
+          <hr>
+            <div class="panel-group" id="accordion3">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse26">
+                     How do I find a participant's personal fundraising page?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse26" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Click the Donate button at the top of any event page and search for the participant by entering their name in the search box.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse27">
+                      Why is search not finding a participant that I know has registered?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse27" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Try entering just a portion of the participant's name. Many participants register themselves under a different fundraising name than their real name. For example, 'Bob Smith' may have registered himself as 'The Smith Family' for fundraising purposes.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse28">
+                      Can I donate by check? If so, how?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse28" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    At the end of the donation process you will be given the opportunity to choose to pay by credit card or check. If you choose to pay by check, you will see payment instructions that are specific to your event. You must print the payment instructions and include them with your check. Your check must be made payable to 'Scholastic Challenge'. IMPORTANT: DO NOT send your check without the printed payment instructions. The payment instructions ensure our ability to post your donation to the proper event and participant. Checks received without the printed payment instructions will not be processed and will not be returned.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse29">
+                      I'm paying by check. Where do I mail my check?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse29" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    The address is listed on the payment instructions page. You MUST print the payment instructions page and include it with your payment. We specifically do not list the address here to prevent donors from sending checks without the printed payment instructions.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse30">
+                      I'm having a problem donating. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse30" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    For questions or problems with donations, please contact us at <a href="#">donations@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse31">
+                      Where does my money go?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse31" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    The event organizers use the net proceeds to meet specifics needs for our children's education. Each school and/or foundation will have different needs. They will identify those needs that will best serve their students and spend the money accordingly. Scholastic Challenge encourages all schools and foundations to keep the event site updated after the event to inform their participants and donors of when and how they have spent your generous contributions and the benefits the children receive. Please check back to the event site home page and/or school site for updates. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse32">
+                      Can I make a donation to a team?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse32" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    No. Donations can be made only to a participant, not directly to a team. A team accumulates funds based on the fundraising efforts of its members.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse33">
+                      Is my donation tax-deductible?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse33" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Yes. Scholastic Challenge only works with non-profit schools and/or foundations with tax exempt status. After you make a donation you will be emailed a receipt for your tax-deductible donation that you can use for tax purposes. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse34">
+                      Are donations refundable?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse34" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Donations are non-refundable and non-transferable. Once a donation is posted to a participant's account it cannot be moved to another participant's account for any reason, regardless of whether or not they are able to participate in the event. Additionally, donations cannot be refunded. Physical items purchased from the event organizer that are faulty or defective can be exchanged for up to 60 days after the date of purchase. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse35">
+                      Will I receive a receipt for my donation?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse35" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Yes. Your reciept will be sent to the email address you provided during the donation process. You can print this email for your personal records and for tax purposes. If you pay by credit card, you will receive your receipt immediately. If you pay by check, you will receive your receipt after we receive your payment. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse36">
+                      What is a matching gift and how do I apply for one?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse36" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Many companies offer their employees a matching gift program which may be equal to the donation you are making. We highly recommend that you take advantage of this program if it is available to you. Your employer will have a process for applying for the matching funds. Scholastic Challenge will work with your company to confirm your donation. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse37">
+                      Can I make my donation anonymously?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse37" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Your donation can be anonymous to your participant and the public, but not to Scholastic Challenge. When making your donation you will be asked to enter your name as you would like it to appear on the website. If you wish to remain anonymous, you can leave the Donor Name and/or Message box empty. Your name and personal information will not appear on the website or be shared with the participant you are supporting. It is not possible for your donation to be anonymous to Scholastic Challenge because we are processing your payment, which requires knowing who you are. See our Privacy Policy. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion3" href="#collapse38">
+                      I have a question about donating that is not answered above. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse38" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Please send us an email at <a href="#">donations@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+        </div>
+		<div class="col-md-6 col-sm-9" id="faqsVolunteer">
+          <h4 class="hl">Frequently Asked Questions About Volunteering</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                     What is a Scholastic Challenge Event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    A Scholastic Challenge Event is an event designed to bring schools (parents, children, and administrators) and communities together with the common goal of raising funds for education. Our events incorporate proprietary software allowing participants to create a personal fundraising page which allows them to easily reach out to family, friends, and associates to raise money from potential donors.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                      What types of events does Scholastic Challenge support?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Scholastic Challenge supports a variety of events like, but not limited to: Bicycle Rides/Tours, Walks, Runs, Bowling, Swimming, Golfing, Indoor Athletic Events, Virtual Events, Jog-A-Thons, and Obstacle Courses.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                      Who manages the event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Some schools have the resources and expertise to organize and run their own events, but in other cases schools need support. Scholastic Challenge can work with your existing team or we can provide complete event management services.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                      Where can I find information about the financial results of the event?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    You can find the total funds raised for your event by visiting the event home page. A school, team or individual participant's fundraising can be found on their page. We also encourage and support a school's ability to post information on their pages on how they have spent the funds raised, so be sure to check back in the months following the event to see how our children benefited from all your gracious work.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                      Why am I not able to find my school's fundraising page?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Scholastic Challenge works with school districts and/or individual schools. If you are unable to find your school there is a possibility that the school you are looking for has not yet registered for the event. If you wish to register your school or you feel there is a mistake, please contact us at <a href="#">support@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                      Can I register my school to fundraise?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    If you are interested in creating your own fundraising event, please contact us at <a href="#">info@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                      Does Scholastic Challenge only work with public schools?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    At Scholastic Challenge we work with all schools, school districts, and non-profit organizations that support education. We are committed to creating highly efficient fundraising solutions that benefit primary (K-12) education.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                      I have a question about events that is not answered above. Who do I contact?
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Please send us an email at <a href="#">info@@scholasticchallenge.com</a>. 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+        </div>
+
+        <!-- FAQs categories -->
+        <div class="col-md-6 col-sm-3">
+          <div class="row faq-cats">
+                    <h4 class="hl">FAQ Categories</h4>
+          <hr>
+            <div class="col-md-6">
+              <ul>
+                <li><i class="fa fa-calendar fa-2x"></i> <a href="#faqsEvents" class="faqCategory">Events</a></li>
+                <li><i class="fa fa-video-camera fa-2x"></i> <a href="#faqsParticipation" class="faqCategory">Participating</a></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul>
+                <li><i class="fa fa-briefcase fa-2x"></i> <a href="#faqsDonate" class="faqCategory">Donating</a></li>
+                <li><i class="fa fa-music fa-2x"></i> <a href="#faqsVolunteer" class="faqCategory">Voluteering</a></li>
+              </ul>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+          <h4 class="hl">Submit Question</h4>
+          <hr>
+          	<div class="alert alert-info alert-dismissable" id="submitQuestionInfo">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  Please fill out and submit your question.  We will respond to you within 48 hours.
+            </div>
+          	<div class="col-md-12">
+			@form(routes.ContactMgmt.sendMail()) {
+          		@text(contactUsForm("firstName"), '_label -> "Your first name", 'class -> "form-control", 'placeholder -> "Enter your first name")
+          		@text(contactUsForm("lastName"), '_label -> "Your last name", 'class -> "form-control", 'placeholder -> "Enter your last name")
+          		@text(contactUsForm("email"), '_label -> "Your email address", 'class -> "form-control", 'placeholder -> "Enter email address")
+          		@text(contactUsForm("phone"), '_label -> "Your phone number", 'class -> "form-control", 'placeholder -> "555-555-1212 (only numbers)", 'title -> "10 digits (numeric only)")
+          		@text(contactUsForm("group"), '_label -> "Your event or organization", 'class -> "form-control", 'placeholder -> "Enter event or organization")
+	            @select(
+                	contactUsForm("subject"), 
+                	options(ContactUs.options()), 
+                    '_label -> "Reason for contact",
+                    'class -> "form-control"
+            	)
+	            @textarea(contactUsForm("message"), '_label -> "Your question", 'class -> "form-control", 'placeholder -> "Enter question")
+                <input name="mobile" id="mobile" style="display: none"/>
+                <input name="mail" id="mail" style="display: none"/>
+	            <button type="submit" class="btn btn-green">Send request</button>
+    		}
+          	</div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="@ControllerUtil.getResourceRoute("scHelpCenter.min.js")"></script>
+}

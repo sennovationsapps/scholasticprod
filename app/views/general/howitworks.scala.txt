@@ -1,0 +1,17 @@
+	  <hr class="featurette-divider" id="howitworks">
+      <div class="featurette">
+        <img class="featurette-image pull-right img-circle" src="@routes.Assets.at("images/emptyswingset.jpg")" alt="Generic placeholder image" width="500" height="500">
+        <h2 class="featurette-heading">How It Works</span></h2>
+        <h3 class="text-muted">Event Management</span></h3>
+        <p class="lead">
+            Our fundraising model allows schools to raise a greater amount of money per individual participant by tapping a broader community of supporters. Rather than being limited to friends and family who live close enough to purchase wrapping paper or attend an event, Scholastic Challenge creates fundraising opportunities that encourage donations from loved ones, friends and acquaintances around the globe.
+            <br/> 
+			<ol>
+				<li><strong>Select An Event</strong> - Together we will develop an event tailored to the interests of your population base to maximize community participation and meet your fundraising goals.</li>
+				<li><strong>Identify Participating Schools</strong> - Your event can include as many schools as want to be involved.  Individual participants will be able to choose which school(s) they want to raise money for.</li>
+				<li><strong>Gather Individual Participants</strong> - We'll provide you with tailored tools to create excitement and support in your local community, driving event participation, donations, and sponsorships.</li>
+				<li><strong>Raise Funds</strong> - Event participants are given customized resources to make fundraising simple and easy.  We will handle all corporate sponsorship solicitations.</li>
+				<li><strong>Enjoy Success</strong> - We provide all logitstical support, creating flawlessly executed events that foster long-term community partnerships.  With high participant involvement you can meet - and most likely exceed - your annual fundraising goal in a single event.</li>
+			</ol>        	
+         </p>
+      </div>

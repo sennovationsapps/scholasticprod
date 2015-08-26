@@ -1,0 +1,24 @@
+<!-- Modal -->
+<div class="modal fade" id="messagesModal" tabindex="-1" role="dialog" aria-labelledby="messagesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        Event Creation
+      </div>
+      <div class="modal-body">
+		The event is being created.  Your next steps are to create teams.  You also have the capability to additional pages.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeMessage">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$('#eventForm').on('submit', function(e){
+	$('#messagesModal').modal('show');
+});
+$('#closeMessage').click(function(){
+	  $('#eventForm').submit();
+});
+</script>

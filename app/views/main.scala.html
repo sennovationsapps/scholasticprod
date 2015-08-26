@@ -1,0 +1,141 @@
+@(title: String = "", nav: String = "")(content: Html)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Scholastic Challenge</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("fonts.googleapis.com.min.css")?family=Lato:100,300,400">
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("font-awesome.min.css")">
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("animate.min.css")">
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("elements.min.css")">
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("summernote.min.css")"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("jquery.datetimepicker.min.css")"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("font-awesome-4.0.3/css/font-awesome.min.css")">
+    @*<link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("bootstrap-datetimepicker.min.css")">*@
+    <link rel="stylesheet" type="text/css" media="screen" href="@ControllerUtil.getResourceRoute("custom.min.css")">
+    <link rel="shortcut icon" type="image/png" href="@ControllerUtil.getResourceRoute("favicon.jpg")">
+    
+    <script src="@ControllerUtil.getResourceRoute("jquery-2.1.4.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("jquery.countdown.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("jquery.inputmask.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("jquery.table2excel.js")"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+    </head>
+
+  <body>
+          @if(ControllerUtil.isEventPage()) {
+          	@navBarEvent()
+          } else {
+          	@navBarCorp()
+          }
+    
+    <!-- START - I ADDED THIS AS THE CONTENT AREA -->
+    @content
+    <!-- END - I ADDED THIS AS THE CONTENT AREA -->
+    
+<!-- Foooter
+================== -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <!-- Contact Us 
+        =================  -->
+        <div class="col-sm-4">
+          <div class="headline"><h3>Contact us</h3></div>
+          <div class="content">
+            <p>
+            300 Tamal Plaza, Suite 250<br />
+            Corte Madera, CA 94925-1170<br />
+            Toll Free: 855.358.2022<br />
+            Local: 415.358.2022<br />
+            Email: <a href="mailto:support@@scholasticchallenge.com" style="color:#E5452F">support@@scholasticchallenge.com</a><br />
+            Technical Email: <a href="mailto:info@@scholasticchallenge.com" style="color:#E5452F">info@@scholasticchallenge.com.</a><br />
+            Office Hours: 7:30am - 5:00pm PST
+            </p>
+          </div>
+        </div>
+        <!-- Social icons 
+        ===================== -->
+        <div class="col-sm-4">
+          <!--div class="headline"><h3>Go Social</h3></div>
+          <div class="content social">
+            <p>Stay in touch with us:</p>
+            <ul>
+                <li><a href="#"><i class="fa fa-twitter"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-pinterest"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-youtube"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-github"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-vk"></i></a>
+                </li>
+                <li><a href="#"><i class="fa fa-google-plus"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div-->
+        </div>
+        <!-- Subscribe 
+        =============== -->
+        <div class="col-sm-4" id="helpcenter">
+          <div class="headline"><h3>Help Center</h3></div>
+          <div class="content">
+            <p>Our <a href="@if(ControllerUtil.isEventPage()) { @routes.Application.faqsEvents() } else { @routes.Application.faqs() }" style="color:#E5452F">Help Center</a> can answer all your questions about how to create an event, how to participate in an event, how to sponsor or volunteer an event.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Legal 
+  ============= -->
+  <div class="legal">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+         <p>&copy; Scholastic Challenge 2014. <a href="#policyPrivacyModal" role="button" data-toggle="modal" style="color:#E5452F">Privacy Policy</a> | <a href="#policyTermsOfServiceModal" role="button" data-toggle="modal" style="color:#E5452F">Terms of Service</a> | <a href="@if(ControllerUtil.isEventPage()) { @routes.ContactMgmt.contactusEvents() } else { @routes.ContactMgmt.contactus() }" style="color:#E5452F">Contact Us</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="@ControllerUtil.getResourceRoute("modernizr.custom.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("custom.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("scrolltopcontrol.min.js")"></script><!-- Scroll to top javascript -->
+    <script src="@ControllerUtil.getResourceRoute("summernote.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("simpleCart.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("jquery.datetimepicker.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("moment.min.js")"></script>
+    @*<script src="@ControllerUtil.getResourceRoute("bootstrap-datetimepicker.min.js")"></script>*@
+    @general.termsofservice()
+    @general.privacy()
+    @general.security()
+    @general.refunds()
+  </body>
+</html>

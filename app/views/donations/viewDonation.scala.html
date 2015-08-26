@@ -1,0 +1,152 @@
+@(donation: Donation)
+
+@main("View Donation") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>View Donation</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <h2 class="hl top-zero">View Donation</h2>
+          <hr>
+          @general.alerts()
+           <div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><td>Event</td><td>@donation.event.name</td></tr>
+    				<tr><td>Pfp</td><td>@donation.pfp.name</td></tr>
+    				<tr><td>Amount</td><td>@donation.amount</td></tr>
+    			</tbody>
+    			</table>
+    		</div>
+    		<div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><th colspan="2">Donation Information</th></tr>	
+    				<tr><td>Donation - First Name</td><td>@donation.firstName</td></tr>
+    				<tr><td>Donation - Last Name</td><td>@donation.lastName</td></tr>
+    				<tr><td>Donation - Zip Code</td><td>@donation.zipCode</td></tr>
+    				<tr><td>Donation - Email</td><td>@donation.email</td></tr>
+    				<tr><td>Donation - Phone</td><td>@donation.phone</td></tr>
+    				<tr><td>Payment Type</td><td>@donation.paymentType.value</td></tr>
+    			</tbody>
+    		</table>
+    		</div>
+    		@if(donation.paymentType == Donation.PaymentType.CREDIT) {
+    		<div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><th colspan="2">Credit Card Information</th></tr>	
+    				<tr><td>Name on Card</td><td>@donation.ccName</td></tr>
+    				<tr><td>Last 4 Credit Card Digits</td><td>@donation.ccDigits</td></tr>
+    				<tr><td>CVV Code</td><td>@donation.ccCvvCode</td></tr>
+    				<tr><td>CC Exp Date</td><td>@donation.ccExpDate</td></tr>
+    				<tr><td>CC Zip</td><td>@donation.ccZip</td></tr>
+    			</tbody>
+    		</table>
+    		</div>
+    		}
+    		@if(donation.paymentType == Donation.PaymentType.CHECK) {
+    		<div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><th colspan="2">Check Information</th></tr>	
+    				<tr><td>Check Number</td><td>@donation.checkNum</td></tr>
+    			</tbody>
+    		</table>
+    		</div>
+    		}
+            <div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><th colspan="2">Donor Information</th></tr>	
+    				<tr><td>Donor Name</td><td>@donation.donorName</td></tr>
+    				<tr><td>Donor Message</td><td>@donation.donorMessage</td></tr>
+    			</tbody>
+    		</table>
+    		</div>
+    		<div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><th colspan="2">Donor Message</th></tr>	
+    				<tr><td>Donor Name</td><td>@donation.donorName</td></tr>
+    				<tr><td>Donor Message</td><td>@donation.donorMessage</td></tr>
+    			</tbody>
+    		</table>
+    		</div>
+    		<div class="table-responsive">
+  			<table class="table">
+    			<tbody>
+    				<tr><th colspan="2">Transaction Information</th></tr>	
+    				<tr><td>Date Created</td><td>@donation.dateCreated</td></tr>
+    				<tr><td>Date Paid</td><td>@donation.datePaid</td></tr>
+    				<tr><td>Transaction Number</td><td>@donation.transactionNumber</td></tr>
+    				<tr><td>Status</td><td>@donation.status.value</td></tr>
+    			</tbody>
+    		</table>
+    		</div>        
+    </div>   
+<!-- Right column -->
+        <div class="col-sm-4">
+          <h4>Donation Help</h4>
+          <hr>
+            <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
+                      Question #1
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpOne" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
+                      Question #2
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpTwo" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
+                      Question #3
+                    </a>
+                  </h4>
+                </div>
+                <div id="helpThree" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

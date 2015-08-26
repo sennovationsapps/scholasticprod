@@ -1,0 +1,43 @@
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Donations") {
+<script type="text/javascript">
+$(document).ready(function(){
+
+    $(".step2").click(function(){
+        $('#li.1').removeClass('active').addClass('disabled');
+        $('#li.2').removeClass('disabled').addClass('active');
+        $('#li.3').removeClass('active').addClass('disabled');
+        $('#n.2').click();
+    });
+    $(".step3").click(function(){
+        //$('#li.1').removeClass('active').addClass('disabled');
+        $('#li.2').removeClass('active').addClass('disabled');
+        $('#li.3').removeClass('disabled').addClass('active');
+        $('#n.3').click();
+    });
+}
+</script>
+<div class="tabbable columns">
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active" id="li.1"><a id="n.1" href="#donationinfo" data-toggle="tab">(1) Donation Information</a></li>
+        <li class="disabled" id="li.2"><a id="n.2" href="#payment" data-toggle="tab">(2) Payment</a></li>
+        <li class="disabled" id="li.3"> <a id="n.3" href="#message" data-toggle="tab">(3) Message to Participant</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="donationinfo">
+            <p>Pick Your Donation</p>
+           <input type="button" onclick="document.getElementById('n.2').click()" value="Next" id="step2" class="btn btn-default"/>
+        </div>
+        <div class="tab-pane fade" id="payment">
+            <p>Enter Payment Details</p>
+            <input type="button" onclick="document.getElementById('n.3').click()" value="Next" id="step3" class="btn btn-default"/>
+        </div>
+        <div class="tab-pane fade" id="message">
+            <p>Submit Payment and Confirmation</p>
+        </div>
+    </div>
+</div>
+}

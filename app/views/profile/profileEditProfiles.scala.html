@@ -1,0 +1,67 @@
+@(localUser: models.security.User = null, mgdUser: models.security.User = null, userForm: Form[models.security.User])
+
+@import helper._
+
+@import com.feth.play.module.pa.views.html._
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    @general.alerts()
+    <div class="container">
+      <div class="row">
+		@profile.menu(localUser)
+        <!-- Avatar & social links -->
+        <div class="col-sm-8 col-md-6">
+        <!-- EVENTS -->
+          <div class="row">
+            <div class="col-sm-12">
+              <h4 class="hl"><i class="fa fa-map-marker"></i> Profiles</h4>
+              <hr>
+              <div class="form-group">
+	    			<label for="userId" class="  ">PFP's Email</i></label>
+    				<input type="text" id="email" name="email" value="" class="form-control" placeholder="Enter PFP Admin's Email">
+			  </div>
+              <div class="form-group">
+	    			<label for="taxId" class="  ">Event's Taxid</i></label>
+    				<input type="text" id="taxId" name="taxId" value="" class="form-control" placeholder="Enter Event Admin's Taxid">
+			  </div>
+              <br/>
+              <a class="btn btn-primary" href="#" id="searchUsers" role="button">Search For User</a>
+            </div>
+          </div>
+          <hr/>
+          <div class="row">
+	      	@if(mgdUser != null) {
+	        	@profile.profileEditForm(mgdUser, userForm)
+	        }
+      		</div>
+        </div>
+        <div class="col-sm-8 col-sm-offset-4 col-md-3 col-md-offset-0">
+        </div>
+      </div>
+    </div>
+  </div>             
+  <script>
+  $('#searchUsers').click(function(){
+  	var donationLoad = '@routes.Application.profileEditProfiles';
+  	if($('#email').val()) {
+  		window.location.href = donationLoad + "?type=email&id=" + $('#email').val();
+  	}
+  	if($('#taxId').val()) {
+  		window.location.href = donationLoad + "?type=taxid&id=" + $('#taxId').val();
+  	}
+  });
+  </script>
+}

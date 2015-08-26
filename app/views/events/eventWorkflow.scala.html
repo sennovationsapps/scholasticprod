@@ -1,0 +1,80 @@
+@(event: Event)
+
+@import html5.tags.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
+
+@main("Edit Events") {
+<!-- Main body
+================== -->
+  <div class="wrapper">
+    <div class="section-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Remove the .animated class if you don't want things to move -->
+            <h1 class="animated slideInLeft"><span>Create Event</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-md-12">			    
+			@eventWorkflowMenu(event)
+			<br/><br/>@general.alerts()
+			<div class="info-board info-board-blue">Above you will see your work flow menu. In order for your event to go live you will have to complete this process. The menu items will turn from red to green as you complete a step, helping you to track your progress.</div>
+			<div class="panel panel-success">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Event</h3>
+			  </div>
+			  <div class="panel-body">
+			    This is the area where we can create and edit the main contents of the event, like a hero banner image or the overall goal of the event, or the date and time of the event.
+			  </div>
+			</div>
+			<div class="panel panel-@if(event != null && Event.hasTeams(event.id)) {success}else{danger}">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Teams</h3>
+			  </div>
+			  <div class="panel-body">
+			    This is the area where we can create and edit the teams.  Events must have teams that participants can be added to.  These teams can have their own custom logo and message as well as goals.
+			  </div>
+			</div>
+			<div class="panel panel-@if(event != null && Event.hasEventPages(event.id)) {success}else{danger}">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Event Pages</h3>
+			  </div>
+			  <div class="panel-body">
+			    This is the area where we can create and edit the event pages.  Event pages allows us to create additional pages of information about the event like contacts or where do the donation funds go.
+			  </div>
+			</div>
+			<div class="panel panel-@if(event != null && Event.hasVolunteers(event.id)) {success}else{danger}">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Volunteers</h3>
+			  </div>
+			  <div class="panel-body">
+			    This is the area where we can create and edit the volunteer shifts.  The creation of the volunteer page allows the creation of content describing the event as well as adding time slots (start/end) and how many volunteers are needed.  This information will be used to create a page that allows be to enroll as a volunteer for a shift.
+			  </div>
+			</div>
+			<div class="panel panel-@if(event != null && Event.hasSponsors(event.id)) {success}else{danger}">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Sponsors</h3>
+			  </div>
+			  <div class="panel-body">
+			    This is the area where we can create and edit the sponsors.  This page allows sponsors to be assigned along with tracking their commitments.  These sponsors will be displayed in specific areas on the event pages.
+			  </div>
+			</div>
+			<div class="panel panel-@if(event != null && Event.hasAwards(event.id)) {success}else{danger}">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Awards</h3>
+			  </div>
+			  <div class="panel-body">
+			    This is the area where we can create and edit the awards.  This page allows us to create content around the awards that will be given for reaching specific goals.  Then the individual prizes can be added along with images and descriptions.
+			  </div>
+			</div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
