@@ -167,6 +167,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 	public URL imgUrl;
 
+	public String           webUrl;
+
 
 	
 	@OneToOne(mappedBy = "donation", optional = true)

@@ -89,7 +89,32 @@ public class Sponsors extends Model {
 		}
 		return itemMap;
 	}
-	
+
+	//===========new added+++++++++start==================27.08.2015====================//
+
+	public static List<SponsorItem> previousItemList;
+	public   void setSponsorsItemWithDonatedSponsorUnmodified( List<SponsorItem> previousItemList){
+		this.previousItemList = previousItemList;
+	}
+
+	public  List<SponsorItem> getSponsorsItemWithDonatedSponsorUnmodified(){
+		return previousItemList;
+	}
+
+	public static Map<Long, SponsorItem> getSponsorItemWithDonations1(List<SponsorItem> sponsoritems) {
+		Map<Long, SponsorItem> itemMap = new HashMap<Long, SponsorItem>();
+		for(SponsorItem item: sponsoritems) {
+			if(item.donation != null) {
+				itemMap.put(item.id, item);
+			}
+		}
+		return itemMap;
+	}
+
+//===========new added+++++++++start==================27.08.2015====================//
+
+
+
 	public List<ValidationError> validate() {
 	    List<ValidationError> errors = new ArrayList<ValidationError>();
 	    if(StringUtils.equals(content, "<p><br></p>")) {

@@ -5,9 +5,7 @@ import views.html.sponsors.createForm;
 import views.html.sponsors.editForm;
 import views.html.sponsors.viewSponsors;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import models.Donation;
 import models.Event;
@@ -105,6 +103,20 @@ public class SponsorsMgmt extends Controller {
 			return ok(views.html.index.render());
 		}
 		final Sponsors sponsors = Sponsors.findById(pageId);
+
+
+
+
+		List<SponsorItem> previousItemList= sponsors.findByEventId(event.id).sponsoritems;
+
+		System.out.println("SIZE OF SPONSOR LIST-------------------------"+previousItemList.size());
+		if(previousItemList!= null &&previousItemList.size()>0){
+			System.out.println("sponsors.previousItemList.size() :: "+previousItemList.size());
+			sponsors.sponsoritems = previousItemList;
+
+		}
+
+
 		final Map<String, Map<Long, ?>> donations = Donation.getTotalAdminDonations(event);
 		final boolean isOpen = Event.isEventOpen(event);
 		ControllerUtil.convertSessionMessages();
@@ -239,7 +251,130 @@ public class SponsorsMgmt extends Controller {
 			@Group(SecurityRole.EVENT_ASSIST) })
 	@SubjectPresent(content = "/login")
 	@Transactional
+
+//==============new update==========================28.08.2015===================start===========================//
 	public static Result update(Event event, Long pageId) {
+
+
+		System.out.println("=======================Hello============");
+		if (event.isIdOnly()) {
+			event = Event.findByIdWithMin(event.id);
+		}
+		if (!Event.canManage(ControllerUtil.getLocalUser(session()), event)) {
+			flash(ControllerUtil.FLASH_DANGER_KEY,
+					"The requested event action cannot be completed by the logged in user.");
+			return redirect(routes.Application.index());
+		}
+		final Form<Sponsors> sponsorsForm = form(Sponsors.class)
+				.bindFromRequest();
+		if (sponsorsForm.hasErrors()) {
+			//Logger.info("We had errors: {}", sponsorsForm.errorsAsJson());
+			return badRequest(editForm.render(event, pageId, sponsorsForm));
+		}
+		final Sponsors sponsors = Sponsors.findById(pageId);
+		//System.out.println("sponsors.id=> "+sponsors.id);
+		//System.out.println("sponsors.sponsoritems.size()=> "+sponsors.sponsoritems.size());
+		//System.out.println("previous value of s");
+		Map<Long, SponsorItem> itemMap = new HashMap<Long, SponsorItem>();
+		/*if(sponsors.getSponsorsItemWithDonatedSponsorUnmodified()!=null){
+			itemMap = Sponsors.getSponsorItemWithDonations(sponsors.getSponsorsItemWithDonatedSponsorUnmodified());
+		}else{
+			itemMap = Sponsors.getSponsorItemWithDonations(sponsors.sponsoritems);
+		}*/
+
+		itemMap = Sponsors.getSponsorItemWithDonations(sponsors.sponsoritems);
+		//System.out.println("itemMap.size()=> "+itemMap.size());
+		final Sponsors updatedSponsors = sponsorsForm.get();
+		System.out.println("updatedSponsors.name=> "+updatedSponsors.name);
+		updatedSponsors.content = ControllerUtil
+				.sanitizeText(updatedSponsors.content);
+		List<SponsorItem> mergedList = new ArrayList<SponsorItem>();
+		System.out.println("before mergedList :: "+mergedList);
+		//System.out.println("updatedSponsors=> "+updatedSponsors);
+		//====commentedout =====start====//
+		List<SponsorItem> mergedList1 = new ArrayList<SponsorItem>();
+		final Sponsors updatedSponsors1 = sponsorsForm.get();
+		if(MapUtils.isNotEmpty(itemMap)) {
+			for(SponsorItem item: updatedSponsors1.sponsoritems) {
+				//=================new=====start====================//
+				// System.out.println("checkbox for "+item.title+" "+item.logo);
+				//=================new=====end====================//
+
+
+				if(itemMap.containsKey(item.id)) {
+					System.out.println("if");
+					mergedList1.add(itemMap.get(item.id));
+					//mergedList.add(item);
+
+
+				} else {
+					System.out.println("else");
+					mergedList1.add(item);
+				}
+
+
+
+
+
+
+
+			}
+
+			System.out.println("mergedList.size1=> "+mergedList1.size());
+			//updatedSponsors1.sponsoritems = mergedList1;
+			updatedSponsors1.setSponsorsItemWithDonatedSponsorUnmodified(mergedList1);
+
+
+		}
+		//====commentedout =====end====//
+		for(SponsorItem item: updatedSponsors.sponsoritems){
+			System.out.println("else");
+			mergedList.add(item);
+
+		}
+		System.out.println("after mergedList :: "+mergedList);
+		System.out.println("mergedList.size1=> "+mergedList.size());
+
+		updatedSponsors.sponsoritems = mergedList;
+
+
+
+		//final Sponsors sponsorsForm1 = Sponsors.findById(pageId);
+		//System.out.println("sponsorsForm1=> "+sponsorsForm1.data().get(0).);
+
+		System.out.println("mergedList.size2=> "+mergedList.size());
+		Iterator<SponsorItem> sponitr=mergedList.iterator();
+
+		while(sponitr.hasNext()){
+			//System.out.println("==================Hello 22222222222#####################");
+			SponsorItem spon=sponitr.next();
+
+			System.out.println("==========CheckBox======="+spon.logo+"::"+spon.title);
+		}
+
+
+
+		//updatedSponsors.update();
+		updatedSponsors.update(event.id);
+		System.out.println("sponsoritem update ------->page id :: "+pageId+"event.id :: "+event.id);
+		//updatedSponsors.update(event.id);
+		//System.out.println("updatedSponsors.sponsoritems :: " + updatedSponsors.sponsoritems);
+		Iterator<SponsorItem> sponitr1=updatedSponsors.findByEventId(event.id).sponsoritems.iterator();
+
+		while(sponitr1.hasNext()){
+			//System.out.println("==================Hello 22222222222#####################");
+			SponsorItem spon=sponitr1.next();
+
+			System.out.println("==========CheckBox======="+spon.logo+"****for***"+spon.title);
+		}
+
+		flash(ControllerUtil.FLASH_SUCCESS_KEY,
+				"Sponsor Page [" + sponsorsForm.get().name
+						+ "] has been updated");
+		return EventWorkflowMgmt.update(event);
+	}
+	//==============new update==========================28.08.2015===================end===========================//
+/*	public static Result update(Event event, Long pageId) {
 		if (event.isIdOnly()) {
 			event = Event.findByIdWithMin(event.id);
 		}
@@ -275,5 +410,5 @@ public class SponsorsMgmt extends Controller {
 				"Sponsor Page [" + sponsorsForm.get().name
 						+ "] has been updated");
 		return EventWorkflowMgmt.update(event);
-	}
+	}*/
 }

@@ -76,10 +76,28 @@
                             @repeat(pageForm("sponsoritems")) { sponsoritem =>
                                 <div class="form-inline sponsoritem">
                                     @if(!sponsoritem("donation.id").value.isEmpty) {
+
+                                        <div class="col-md-3 col-lg-3">@checkbox(sponsoritem("logo"),'id -> "logo",'_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
                                         @sponsoritem("title").value | @sponsoritem("description").value | @sponsoritem("amount").value (Already sponsored, cannot be modified)
+
+                                        <input type="hidden" name="@sponsoritem("id").name" value="@sponsoritem("id").value"/>
+                                        <input type="hidden" name="@sponsoritem("title").name" value="@sponsoritem("title").value"/>
+                                        <input type="hidden" name="@sponsoritem("description").name" value="@sponsoritem("description").value"/>
+                                        <input type="hidden" name="@sponsoritem("amount").name" value="@sponsoritem("amount").value"/>
+                                        <br/><br/>
+
+
+
+
+                                       @* @sponsoritem("title").value | @sponsoritem("description").value | @sponsoritem("amount").value (Already sponsored, cannot be modified)*@
                                         <input type="hidden" name="@sponsoritem("id").name" value="@sponsoritem("id").value"/>
                                         <br/><br/>
                                     } else {
+
+
+                                        <div class="col-md-3 col-lg-3">@checkbox(sponsoritem("logo"),'id -> "logo",'_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
+
+
                                         <div class="col-md-3 col-lg-3">@text(sponsoritem("title"), '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
                                         <div class="col-md-3 col-lg-3">@text(sponsoritem("description"), '_showConstraints -> false, '_label -> "Item Description", 'class -> "form-control", 'placeholder -> "Item description", '_label_class -> "sr-only")</div>
 
@@ -95,6 +113,9 @@
                             * Keep an hidden block that will be used as template for Javascript copy code
                             **@
                             <div class="form-inline sponsoritem_template">
+
+                                @checkbox(pageForm("sponsoritems[x].logo"),'id -> "logo", '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", '_label_class -> "sr-only")
+
                                 @text(pageForm("sponsoritems[x].title"), '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")
                                 @text(pageForm("sponsoritems[x].description"), '_showConstraints -> false, '_label -> "Item Description", 'class -> "form-control", 'placeholder -> "Item description", '_label_class -> "sr-only")
 

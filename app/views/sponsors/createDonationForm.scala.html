@@ -69,15 +69,15 @@
            @* @text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@
 
 
-                <div style="display:none">
+             @*   <div style="display:none">
                 @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
 
 
                 </div>
-
+*@
 
                 @******phno format*************24.08.2015***************end*****@
-                <div>
+          @*      <div>
                     <b>Phone(Required)</b>
                 </div>
 
@@ -98,9 +98,9 @@
 
 
                     <br />
+*@
 
-
-                 @*  @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+                @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
 				@helper.inputFile(donationForm("imgUrl"), '_label -> "Add a smaller image next to your fundraising message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
 				@text(donationForm("webUrl"), '_label -> "Website url", 'class -> "form-control", 'title -> "(Website url)")
 

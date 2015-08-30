@@ -734,7 +734,7 @@
             <div id = "image_slider" style="width: 100%; margin: 0px auto;">
                 <div id="slider">
 
-                @for(donationvalue <- donation) {
+              @*  @for(donationvalue <- donation) {
                     @if(donationvalue.imgUrl != null) {
                         @if(imgUrllink ==1) {
                             <img id = "one" src="@donationvalue.imgUrl" alt="Percent" class="img-responsive" alt="Percent" height="100px">
@@ -744,11 +744,68 @@
                             <img id = "one" src="@donationvalue.imgUrl" alt="Percent" class="img-responsive" alt="Percent" height="100px">
                             }
 
-                        @* <img id = "two"  src="@ControllerUtil.getResourceRoute("progress/Progress Tree 60.png")" alt="Percent" class="img-responsive" alt="Percent" height="100px">
-                        <img id = "three" src="@ControllerUtil.getResourceRoute("progress/Progress Tree 120.png")" alt="Percent" class="img-responsive" alt="Percent" height="100px">*@
+                        *@@* <img id = "two"  src="@ControllerUtil.getResourceRoute("progress/Progress Tree 60.png")" alt="Percent" class="img-responsive" alt="Percent" height="100px">
+                        <img id = "three" src="@ControllerUtil.getResourceRoute("progress/Progress Tree 120.png")" alt="Percent" class="img-responsive" alt="Percent" height="100px">*@@*
 
                     }
-                }
+                }*@
+
+
+
+
+
+                    <marquee behavior="scroll" direction="left" id = "slider_marquee" onMouseOver="StopMarquee();" onMouseOut="StartMarquee()">
+
+                        <table >
+
+
+
+
+
+
+                            <tr>
+
+                            @for(donationvalue <- donation) {
+                                @if(donationvalue.imgUrl != null) {
+                                    @if(imgUrllink ==1) {
+                                        <td>
+
+                                            <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                        </td>
+                                        <td style="width: 20px;">
+
+                                        </td>
+                                        <td>
+                                            @* <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                            </td>
+                                            <td style="width: 20px;">
+
+                                            </td>
+                                            *@
+                                        }
+                                    @if(imgUrllink !=1) {
+                                        <td>
+                                            <a href = "https://@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                        </td>
+                                        <td style="width: 20px;">
+
+                                        </td>
+
+                                    }
+
+                                    @* <img id = "two"  src="@ControllerUtil.getResourceRoute("progress/Progress Tree 60.png")" alt="Percent" class="img-responsive" alt="Percent" height="100px">
+                                    <img id = "three" src="@ControllerUtil.getResourceRoute("progress/Progress Tree 120.png")" alt="Percent" class="img-responsive" alt="Percent" height="100px">*@
+
+                                }
+                            }
+                            </tr>
+                        </table>
+
+
+
+
+                    </marquee>
+
 
                 </div>
 

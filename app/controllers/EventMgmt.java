@@ -122,8 +122,9 @@ public class EventMgmt extends Controller {
 
 
 
+
 		//===========================uploadimage=======================20.08.2015======================start==============================//
-		//  List donationList = new ArrayList();
+		/*//  List donationList = new ArrayList();
 		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
 		int imgUrl=0;
 		System.out.println("donationList .size :: "+donationList.size());
@@ -136,10 +137,84 @@ public class EventMgmt extends Controller {
 		}
 
 
+*/
+
+
+		//  List donationList = new ArrayList();
+		System.out.println("within view event ::event id ----> "+event.id);
+		final Sponsors sponsors = Sponsors.findByEventId(event.id);
+		//final Sponsors sponsors1 = SponsorsfindByEventId(event.id);
+		//System.out.println("sponsors.id=> "+sponsors.id);
+		//System.out.println("sponsors.sponsoritems.size()=> "+sponsors.sponsoritems.size());
+
+
+		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
+		Iterator<Donation> iterator=donationList.iterator();
+		List<Donation> donationList1 = new ArrayList();
+		while(iterator.hasNext()){
+			Donation donation=iterator.next();
+			//System.out.println("donation while");
+			//System.out.println("donation.sponsorItem=> "+donation.sponsorItem);
+			//System.out.println("donation.sponsorItem.title=> "+donation.sponsorItem.title);
+			SponsorItem sponsorItemFromSponsors;
+			if((sponsors.sponsoritems!=null&& sponsors.sponsoritems.size()>0) && donation.sponsorItem!=null){
+				for(int i = 0 ; i<sponsors.sponsoritems.size();i++){
+					sponsorItemFromSponsors= sponsors.sponsoritems.get(i);
+					//System.out.println("sponsorItemFromSponsors :: "+sponsorItemFromSponsors);
+					//System.out.println("donation.sponsorItem == sponsorItemFromSponsors  -->>");
+					//System.out.println(donation.sponsorItem == sponsorItemFromSponsors);
+					//System.out.println("donation.sponsorItem.id "+donation.sponsorItem.id);
+					//System.out.println("sponsorItemFromSponsors.id "+sponsorItemFromSponsors.id);
+					//System.out.println("donation.sponsorItem.id.equals(sponsorItemFromSponsors.id) "+donation.sponsorItem.id.equals(sponsorItemFromSponsors.id));
+					if( donation.sponsorItem.id.equals(sponsorItemFromSponsors.id) ){
+						System.out.println("checkbox for :: "+donation.sponsorItem.title+" sponsor item logo "+sponsorItemFromSponsors.logo);
+
+						System.out.println("donation.sponsorItem.logo :: "+donation.sponsorItem.logo);
+
+						//donation.sponsorItem.logo!= null
+
+						if(donation.sponsorItem.logo == true){
+							//System.out.println("donationList "+donationList);
+							System.out.println("iffff  " + donation.imgUrl + "<for>" + donation.sponsorItem.title);
+							//donationList.remove(donation);
+							//System.out.println("after donationList "+donationList);
+						}else{
+							System.out.println(" elseee "+donation.imgUrl+"<for>"+donation.sponsorItem.title);
+							donationList1.add(donation);
+						}
+
+					}
+				}
+			}
+
+
+
+
+
+         /*if(donation.sponsorItem!=null) {
+            System.out.println("donation.sponsorItem.title=> "+donation.sponsorItem.title);
+            System.out.println("---------------------------" + donation.sponsorItem);
+            System.out.println("donation.sponsorItem.logo :: "+donation.sponsorItem.logo);
+            if(donation.sponsorItem.logo.equals("false")){
+               donationList.remove(donation);
+            }
+         }*/
+         /*if(donation.sponsorItem.logo.equals("false")){
+            donationList.remove(donation);
+         }*/
+		}
+		int imgUrl=0;
+   /* System.out.println("donationList .size :: "+donationList.size());
+      System.out.println("donationList :: "+donationList);*/
+		for(Donation donation:donationList1){
+			if(donation.imgUrl!=null){
+				imgUrl++;
+			}
+
+		}
 
 
 //===========================uploadimage=======================20.08.2015======================end==============================//
-
 
 
 
@@ -191,7 +266,7 @@ public class EventMgmt extends Controller {
 				Pfp.page(page, 0, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser),
 			   /*Pfp.page(0, 0, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser),*/
 			   sortBy,
-			   order, filter,donationList,imgUrl));
+			   order, filter,donationList1,imgUrl));
    }else{
 	   return ok(viewEvent.render(event,
 			   isOpen,
@@ -202,7 +277,7 @@ public class EventMgmt extends Controller {
 				/*Pfp.page(page, 0, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser),*/
 			   null,
 			   sortBy,
-			   order, filter,donationList,imgUrl));
+			   order, filter,donationList1,imgUrl));
    }
 
 
@@ -300,13 +375,90 @@ public class EventMgmt extends Controller {
 
 
 		//===========================uploadimage=======================20.08.2015======================start==============================//
+		/*//  List donationList = new ArrayList();
+		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
+		int imgUrl=0;
+		System.out.println("donationList .size :: "+donationList.size());
+		System.out.println("donationList :: "+donationList);
+		for(Donation donation:donationList){
+			if(donation.imgUrl!=null){
+				imgUrl++;
+			}
+
+		}
+
+
+*/
+
+
 		//  List donationList = new ArrayList();
-		List<Donation> donationList = (List<Donation>) Donation.findAllByEventId(event.id);
-		int imgUrl = 0;
-		System.out.println("donationList .size :: " + donationList.size());
-		System.out.println("donationList :: " + donationList);
-		for (Donation donation : donationList) {
-			if (donation.imgUrl != null) {
+		System.out.println("within view event ::event id ----> "+event.id);
+		final Sponsors sponsors = Sponsors.findByEventId(event.id);
+		//final Sponsors sponsors1 = SponsorsfindByEventId(event.id);
+		//System.out.println("sponsors.id=> "+sponsors.id);
+		//System.out.println("sponsors.sponsoritems.size()=> "+sponsors.sponsoritems.size());
+
+
+		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
+		Iterator<Donation> iterator=donationList.iterator();
+		List<Donation> donationList1 = new ArrayList();
+		while(iterator.hasNext()){
+			Donation donation=iterator.next();
+			//System.out.println("donation while");
+			//System.out.println("donation.sponsorItem=> "+donation.sponsorItem);
+			//System.out.println("donation.sponsorItem.title=> "+donation.sponsorItem.title);
+			SponsorItem sponsorItemFromSponsors;
+			if((sponsors.sponsoritems!=null&& sponsors.sponsoritems.size()>0) && donation.sponsorItem!=null){
+				for(int i = 0 ; i<sponsors.sponsoritems.size();i++){
+					sponsorItemFromSponsors= sponsors.sponsoritems.get(i);
+					//System.out.println("sponsorItemFromSponsors :: "+sponsorItemFromSponsors);
+					//System.out.println("donation.sponsorItem == sponsorItemFromSponsors  -->>");
+					//System.out.println(donation.sponsorItem == sponsorItemFromSponsors);
+					//System.out.println("donation.sponsorItem.id "+donation.sponsorItem.id);
+					//System.out.println("sponsorItemFromSponsors.id "+sponsorItemFromSponsors.id);
+					//System.out.println("donation.sponsorItem.id.equals(sponsorItemFromSponsors.id) "+donation.sponsorItem.id.equals(sponsorItemFromSponsors.id));
+					if( donation.sponsorItem.id.equals(sponsorItemFromSponsors.id) ){
+						System.out.println("checkbox for :: "+donation.sponsorItem.title+" sponsor item logo "+sponsorItemFromSponsors.logo);
+
+						//System.out.println("donation.sponsorItem.logo :: "+donation.sponsorItem.logo);
+
+						//donation.sponsorItem.logo!= null
+
+						if(donation.sponsorItem.logo == true){
+							//System.out.println("donationList "+donationList);
+							System.out.println("iffff  " + donation.imgUrl + "<for>" + donation.sponsorItem.title);
+							//donationList.remove(donation);
+							//System.out.println("after donationList "+donationList);
+						}else{
+							System.out.println(" elseee "+donation.imgUrl+"<for>"+donation.sponsorItem.title);
+							donationList1.add(donation);
+						}
+
+					}
+				}
+			}
+
+
+
+
+
+         /*if(donation.sponsorItem!=null) {
+            System.out.println("donation.sponsorItem.title=> "+donation.sponsorItem.title);
+            System.out.println("---------------------------" + donation.sponsorItem);
+            System.out.println("donation.sponsorItem.logo :: "+donation.sponsorItem.logo);
+            if(donation.sponsorItem.logo.equals("false")){
+               donationList.remove(donation);
+            }
+         }*/
+         /*if(donation.sponsorItem.logo.equals("false")){
+            donationList.remove(donation);
+         }*/
+		}
+		int imgUrl=0;
+   /* System.out.println("donationList .size :: "+donationList.size());
+      System.out.println("donationList :: "+donationList);*/
+		for(Donation donation:donationList1){
+			if(donation.imgUrl!=null){
 				imgUrl++;
 			}
 
@@ -360,7 +512,7 @@ public class EventMgmt extends Controller {
 					Event.canManage(localUser, event),
 					(Map<Long, Donation.DonationsByPfp>) donations.get("pfp"),
 					(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
-					Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null),
+					Pfp.pageForParticularEvent(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null, event.id),
 					sortBy,
 					order,
 					filter, donationList, imgUrl));
@@ -377,7 +529,7 @@ public class EventMgmt extends Controller {
 					Event.canManage(localUser, event),
 					(Map<Long, Donation.DonationsByPfp>) donations.get("pfp"),
 					(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
-					Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null),
+					Pfp.pageForParticularEvent(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null, event.id),
 					sortBy,
 					order, filter, donationList, imgUrl));
 
@@ -412,7 +564,7 @@ public class EventMgmt extends Controller {
 				Event.canManage(localUser, event),
 				(Map<Long, Donation.DonationsByPfp>) donations.get("pfp"),
 				(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
-				Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null),
+				Pfp.pageForParticularEvent(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null, event.id),
 				sortBy,
 				order, filter, donationList, imgUrl));
 	}
