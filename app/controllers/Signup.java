@@ -46,7 +46,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Do forgot password.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result doForgotPassword() {
@@ -79,7 +79,7 @@ public class Signup extends Controller {
 						Messages.get(
 								"playauthenticate.reset_password.message.instructions_sent",
 								email));
-				
+
 				// yep, we have a user with this email that is active - we do
 				// not know if the user owning that account has requested this
 				// reset, though.
@@ -111,7 +111,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Do login.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result doLogin() {
@@ -133,7 +133,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Do reset password.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result doResetPassword() {
@@ -167,12 +167,15 @@ public class Signup extends Controller {
 				flash(ControllerUtil.FLASH_INFO_KEY,
 						Messages.get("playauthenticate.reset_password.message.success.auto_login"));
 
-				return PlayAuthenticate.loginAndRedirect(ctx(),
-						new EmailAuthUser(u.email));
+//				return PlayAuthenticate.loginAndRedirect(ctx(),
+//						new EmailAuthUser(u.email));
+				return redirect(routes.Signup.login());
 			} else {
 				// send the user to the login page
 				flash(ControllerUtil.FLASH_INFO_KEY,
 						Messages.get("playauthenticate.reset_password.message.success.manual_login"));
+
+
 			}
 			return redirect(routes.Signup.login());
 		}
@@ -180,7 +183,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Do signup.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result doSignup() {
@@ -205,7 +208,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Exists.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result exists() {
@@ -215,7 +218,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Forgot password.
-	 * 
+	 *
 	 * @param email
 	 *            the email
 	 * @return the result
@@ -231,7 +234,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Login.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result login() {
@@ -240,7 +243,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Login from corp.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result loginFromCorp() {
@@ -249,7 +252,7 @@ public class Signup extends Controller {
 
 	/**
 	 * O auth denied.
-	 * 
+	 *
 	 * @param getProviderKey
 	 *            the get provider key
 	 * @return the result
@@ -261,7 +264,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Reset password.
-	 * 
+	 *
 	 * @param token
 	 *            the token
 	 * @return the result
@@ -279,7 +282,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Signup.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result signup() {
@@ -289,7 +292,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Signup from corp.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result signupFromCorp() {
@@ -299,7 +302,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Unverified.
-	 * 
+	 *
 	 * @return the result
 	 */
 	public static Result unverified() {
@@ -309,7 +312,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Verify.
-	 * 
+	 *
 	 * @param token
 	 *            the token
 	 * @return the result
@@ -341,7 +344,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Returns a token object if valid, null if not.
-	 * 
+	 *
 	 * @param token
 	 *            the token
 	 * @param type
@@ -377,7 +380,7 @@ public class Signup extends Controller {
 
 		/**
 		 * Instantiates a new password reset.
-		 * 
+		 *
 		 * @param token
 		 *            the token
 		 */
@@ -387,7 +390,7 @@ public class Signup extends Controller {
 
 		/**
 		 * Gets the token.
-		 * 
+		 *
 		 * @return the token
 		 */
 		public String getToken() {
@@ -396,7 +399,7 @@ public class Signup extends Controller {
 
 		/**
 		 * Sets the token.
-		 * 
+		 *
 		 * @param token
 		 *            the new token
 		 */
