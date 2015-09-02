@@ -93,20 +93,20 @@
 			ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
 			ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
 			) {
-			&nbsp;&nbsp;<button type="button" class="btn btn-primary" id="payByCash">Pay By Cash</button>
+			<!--&nbsp;&nbsp;<button type="button" class="btn btn-primary" id="payByCash">Pay By Cash</button>-->
 			}
 			<br/><br/><br/>
    @*         <div id="payByCreditCardDiv">
                         <div id="well" class="well">
             	<legend>Credit Card- Payment Information </legend>
             	@if(!play.Play.isProd()) {            
-            	<p>
-            	<h5>Sample Credit Card</h5>
-            	Card Number = 5000300020003003<br/>
-		    	Cvv = 123<br/>
-		    	Zip = 37920<br/>
-		    	Exp Date = 1225<br/>
-            	</p>
+            	<!--<p>-->
+            	<!--<h5>Sample Credit Card</h5>-->
+            	<!--Card Number = 5000300020003003<br/>-->
+		    	<!--Cvv = 123<br/>-->
+		    	<!--Zip = 37920<br/>-->
+		    	<!--Exp Date = 1225<br/>-->
+            	<!--</p>-->
             	<hr/>
             	}
 		            @text(donationForm("ccNum"), '_label -> "Credit Card Num", 'class -> "form-control", 'title -> "Must be between 13-19-Digits.")
