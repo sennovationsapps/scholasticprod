@@ -296,15 +296,15 @@ public class PaymentUtils {
 //			Logger.debug("ccExpDate is null");
 //			errors.put("ccExpDate", "error.required");
 //		}
-		if (StringUtils.isEmpty(form.get("ccNum"))) {
-			Logger.debug("ccNum is null");
-			errors.put("ccNum", "error.required");
-		} else {
-			if (!NumberUtils.isDigits(form.get("ccNum"))) {
-				Logger.debug("ccNum is not a number");
-				errors.put("ccNum", "error.number");
-			}
-		}
+//		if (StringUtils.isEmpty(form.get("ccNum"))) {
+//			Logger.debug("ccNum is null");
+//			errors.put("ccNum", "error.required");
+//		} else {
+//			if (!NumberUtils.isDigits(form.get("ccNum"))) {
+//				Logger.debug("ccNum is not a number");
+//				errors.put("ccNum", "error.number");
+//			}
+//		}
 //		if (StringUtils.isEmpty(form.get("ccZip"))) {
 //			Logger.debug("ccZip is null");
 //			errors.put("ccZip", "error.required");

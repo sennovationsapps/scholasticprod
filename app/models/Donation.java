@@ -774,10 +774,15 @@ public class Donation extends Model implements PathBindable<Donation> {
 	
 	public enum PaymentStatus {
 		@EnumValue("0")
-		APPROVED(0, "Approved"), @EnumValue("1")
-		PENDING(1, "Pending"), @EnumValue("2")
-		CLEARED(2, "Cleared"), @EnumValue("3")
-		REFUNDED(3, "Refunded");
+		APPROVED(0, "Approved"),
+		@EnumValue("1")
+		PENDING(1, "Pending"),
+		@EnumValue("2")
+		CLEARED(2, "Cleared"),
+		@EnumValue("3")
+		REFUNDED(3, "Refunded"),
+		@EnumValue("4")
+		FAILED(4, "Failed"); // credit transaction failed
 		
 		private static final Map<String, PaymentStatus>	MAP		= new HashMap<String, PaymentStatus>();
 		public static final Map<String, String>			VALUES	= new HashMap<String, String>();

@@ -541,33 +541,6 @@ public class DonationMgmt extends Controller {
 		SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
 		final Form<Donation> donationForm = form(Donation.class).bindFromRequest();
 
-
-
-/*
-		final Http.MultipartFormData body = request().body()
-				.asMultipartFormData();
-		System.out.println("body :: "+body);
-		final Http.MultipartFormData.FilePart imgUrlFilePart = body
-				.getFile("imgUrl");
-		System.out.println("imgUrlFilePart :: "+imgUrlFilePart);
-		S3File imgUrlFile = null;
-		if (imgUrlFilePart != null) {
-			if (!ControllerUtil.isImage(imgUrlFilePart.getFilename())) {
-				donationForm.reject("imgUrl", ControllerUtil.IMAGE_ERROR_MSG);
-			} else if (ControllerUtil.isFileTooLarge(imgUrlFilePart.getFile())) {
-				donationForm.reject("imgUrl", ControllerUtil.IMAGE_SIZE_ERROR_MSG);
-			} else {
-				imgUrlFile = new S3File();
-				imgUrlFile.name = ControllerUtil.decodeFileName(imgUrlFilePart
-						.getFilename());
-				imgUrlFile.file = imgUrlFilePart.getFile();
-				donationForm.get().imgUrl = imgUrlFile.getUrl();
-			}
-		}*/
-
-
-
-
 		if (donationForm.hasErrors()) {
 			Logger.debug("Has errors {}", donationForm.errorsAsJson());
 			return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
@@ -578,57 +551,72 @@ public class DonationMgmt extends Controller {
 		donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();
 		donation.donationType = DonationType.SPONSOR;
 		if (donation.paymentType == null) {
-			if (StringUtils.isNotEmpty(donation.ccNum)) {
-				donation.paymentType = PaymentType.CREDIT;
-			} else if (StringUtils.isNotEmpty(donation.ccCvvCode)) {
-				donation.paymentType = PaymentType.CREDIT;
-			} else {
+//			if (StringUtils.isNotEmpty(donation.ccNum)) {
+//				donation.paymentType = PaymentType.CREDIT;
+//			} else if (StringUtils.isNotEmpty(donation.ccCvvCode)) {
+//				donation.paymentType = PaymentType.CREDIT;
+//			} else {
+//				donation.paymentType = PaymentType.CHECK;
+//			}
+			if (StringUtils.isNotEmpty(donation.checkNum))
+			{
 				donation.paymentType = PaymentType.CHECK;
 			}
+			else if (StringUtils.isNotEmpty(donation.checkNum)&&StringUtils.isNotEmpty(donation.ccNum)){
+				return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+						donationForm));
+			}
+			else{
+				donation.paymentType = PaymentType.CREDIT;
+			}
 		}
+
+		System.out.println("Now the status of payment type is"+donation.paymentType);
+
 		if (donation.paymentType == PaymentType.CREDIT) {
 			Map<String, String> ccFormErrors = PaymentUtils.validateCreditForm(donationForm.data());
-			if(MapUtils.isNotEmpty(ccFormErrors)) {
-				for(String key: ccFormErrors.keySet()) {
-					if(StringUtils.isEmpty(key)) {
-						donationForm.reject(ccFormErrors.get(key));
-					} else {
-						donationForm.reject(key, ccFormErrors.get(key));
-					}
-				}
-				if (donationForm.hasErrors()) {
-					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
-									donationForm));
-				}
-			}
-			donation.ccNum = donation.ccNum.replaceAll("\\s","");
-			Map<String, String> ccProps = PaymentUtils.sendCCPayment(donation);
-			Map<String, String> ccErrors = PaymentUtils.validateCreditPayment(ccProps);
-			if(MapUtils.isNotEmpty(ccErrors)) {
-				for(String key: ccErrors.keySet()) {
-					if(StringUtils.isEmpty(key)) {
-						donationForm.reject(ccErrors.get(key));
-					} else if(StringUtils.startsWith(key, "_")) {
-						donationForm.reject(ccErrors.get(key));
-					} else {
-						donationForm.reject(key, ccErrors.get(key));
-					}
-				}
-				if (donationForm.hasErrors()) {
-					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
-									donationForm));
-				}
-			}
+//			if(MapUtils.isNotEmpty(ccFormErrors)) {
+//				for(String key: ccFormErrors.keySet()) {
+//					if(StringUtils.isEmpty(key)) {
+//						donationForm.reject(ccFormErrors.get(key));
+//					} else {
+//						donationForm.reject(key, ccFormErrors.get(key));
+//					}
+//				}
+//				if (donationForm.hasErrors()) {
+//					Logger.debug("Has errors {}", donationForm.errorsAsJson());
+//					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+//									donationForm));
+//				}
+//			}
+//			donation.ccNum = donation.ccNum.replaceAll("\\s","");
+//			Map<String, String> ccProps = PaymentUtils.sendCCPayment(donation);
+//			Map<String, String> ccErrors = PaymentUtils.validateCreditPayment(ccProps);
+//			if(MapUtils.isNotEmpty(ccErrors)) {
+//				for(String key: ccErrors.keySet()) {
+//					if(StringUtils.isEmpty(key)) {
+//						donationForm.reject(ccErrors.get(key));
+//					} else if(StringUtils.startsWith(key, "_")) {
+//						donationForm.reject(ccErrors.get(key));
+//					} else {
+//						donationForm.reject(key, ccErrors.get(key));
+//					}
+//				}
+//				if (donationForm.hasErrors()) {
+//					Logger.debug("Has errors {}", donationForm.errorsAsJson());
+//					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+//									donationForm));
+//				}
+//			}
 			donation.status = PaymentStatus.APPROVED;
 			donation.paymentType = PaymentType.CREDIT;
-			donation.transactionNumber = ccProps.get("ssl_txn_id");
+			donation.transactionNumber =UUID.randomUUID().toString();
+			//ccProps.get("ssl_txn_id");
 			if (StringUtils.isEmpty(donation.transactionNumber)) {
-				Logger.error("There is no transaction number for the ccNum {} and props {}.", donationForm.get().ccNum,
-								ToStringBuilder.reflectionToString(ccProps));
+//				Logger.error("There is no transaction number for the ccNum {} and props {}.", donationForm.get().ccNum,
+//								ToStringBuilder.reflectionToString(ccProps));
 			}
-			donation.ccDigits = donation.ccNum.substring(Math.max(0, donation.ccNum.length() - 4));
+			//donation.ccDigits = donation.ccNum.substring(Math.max(0, donation.ccNum.length() - 4));
 		} else {
 			donation.status = PaymentStatus.PENDING;
 			donation.paymentType = PaymentType.CHECK;
@@ -651,7 +639,7 @@ public class DonationMgmt extends Controller {
 				.getFile("imgUrl");
 		System.out.println("imgUrlFilePart :: "+imgUrlFilePart);
 
-		System.out.println("in saveModalWithSponsorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+		System.out.println("in saveModalWithSponsor");
 
 
 		S3File imgUrlFile = null;
@@ -683,21 +671,6 @@ public class DonationMgmt extends Controller {
 
 /**************upload image*******************20.08.2015****************end****************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		donation.save();
 		Logger.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
 						donation.ccDigits, donation.transactionNumber, donation.amount);
@@ -707,7 +680,27 @@ public class DonationMgmt extends Controller {
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
 		ReceiptMgmt.sendSponsoredMsg(updatedDonation);
 		if (updatedDonation.paymentType == PaymentType.CREDIT) {
-			return redirect(routes.ReceiptMgmt.getAndSendCCReceipt(event, updatedDonation));
+			String WorldPlayUrl=null;
+			try {
+				WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount),donation.transactionNumber,donation.email);
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (InvalidKeySpecException e) {
+				e.printStackTrace();
+			}
+			System.out.println("worldpay Now URL"+WorldPlayUrl);
+			//return redirect(routes.ReceiptMgmt.getAndSendCCReceipt(event, updatedDonation));
+			return redirect(WorldPlayUrl);
 		} else {
 			System.out.println("before calling getAndSendCheckReceipt..");
 			return redirect(routes.ReceiptMgmt.getAndSendCheckReceipt(event, updatedDonation));
