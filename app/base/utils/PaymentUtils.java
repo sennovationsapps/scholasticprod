@@ -278,24 +278,24 @@ public class PaymentUtils {
 	
 	public static Map<String, String> validateCreditForm(Map<String, String> form) {
 		Map<String, String> errors = new HashMap<String, String>();
-		if (StringUtils.isEmpty(form.get("ccCvvCode"))) {
-			Logger.debug("ccCvvCode is null");
-			errors.put("ccCvvCode", "error.required");
-		} else {
-			if (!NumberUtils.isDigits(form.get("ccCvvCode"))) {
-				Logger.debug("ccCvvCode is not a number");
-				errors.put("ccCvvCode", "error.number");
-			}
-			if (!(form.get("ccCvvCode").length() == 3 || form.get("ccCvvCode").length() == 4)) {
-				Logger.debug("ccCvvCode is not the right length");
-				errors.put("ccCvvCode", "cvv.pattern");
-			}
-		}
+//		if (StringUtils.isEmpty(form.get("ccCvvCode"))) {
+//			Logger.debug("ccCvvCode is null");
+//			errors.put("ccCvvCode", "error.required");
+//		} else {
+//			if (!NumberUtils.isDigits(form.get("ccCvvCode"))) {
+//				Logger.debug("ccCvvCode is not a number");
+//				errors.put("ccCvvCode", "error.number");
+//			}
+//			if (!(form.get("ccCvvCode").length() == 3 || form.get("ccCvvCode").length() == 4)) {
+//				Logger.debug("ccCvvCode is not the right length");
+//				errors.put("ccCvvCode", "cvv.pattern");
+//			}
+//		}
 		
-		if (StringUtils.isEmpty(form.get("ccExpDate"))) {
-			Logger.debug("ccExpDate is null");
-			errors.put("ccExpDate", "error.required");
-		}
+//		if (StringUtils.isEmpty(form.get("ccExpDate"))) {
+//			Logger.debug("ccExpDate is null");
+//			errors.put("ccExpDate", "error.required");
+//		}
 		if (StringUtils.isEmpty(form.get("ccNum"))) {
 			Logger.debug("ccNum is null");
 			errors.put("ccNum", "error.required");
@@ -305,10 +305,10 @@ public class PaymentUtils {
 				errors.put("ccNum", "error.number");
 			}
 		}
-		if (StringUtils.isEmpty(form.get("ccZip"))) {
-			Logger.debug("ccZip is null");
-			errors.put("ccZip", "error.required");
-		}
+//		if (StringUtils.isEmpty(form.get("ccZip"))) {
+//			Logger.debug("ccZip is null");
+//			errors.put("ccZip", "error.required");
+//		}
 		return errors;
 	}
 }

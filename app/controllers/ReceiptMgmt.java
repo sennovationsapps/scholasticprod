@@ -7,6 +7,7 @@ import models.Donation.DonationType;
 import models.Event;
 import models.Pfp.PfpType;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import views.html.donations.editForm;
 import views.html.donations.viewReceipt;
@@ -17,8 +18,12 @@ import views.html.profile.profileDonationsReconcile;
 
 import com.feth.play.module.mail.Mailer;
 import com.feth.play.module.mail.Mailer.Mail.Body;
-
+import play.libs.F.Function;
+import play.libs.*;
+import play.mvc.*;
 import base.utils.MailUtils;
+
+import javax.print.DocFlavor;
 
 /**
  * Manage a database of donations.
@@ -104,7 +109,7 @@ public class ReceiptMgmt extends Controller {
 				.render(donation).toString();
 		ReceiptMgmt.generateEmailReceipt(ReceiptMgmt.getGeneralSubject(donation), message, donation.email);
 		RECEIPT_LOGGER.info("Successfully sent a cash receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] in the amount of [{}]",
-						donation.pfp.id, donation.event.id, donation.id, donation.amount);
+				donation.pfp.id, donation.event.id, donation.id, donation.amount);
 	}
 
 	public static Result getCashReceipt(Event event, Donation donation) {
@@ -148,6 +153,13 @@ public class ReceiptMgmt extends Controller {
 			return "Scholastic Challenge - Sponsorship";
 		}
 		return "Scholastic Challenge - Donation";
+	}
+
+
+	public static void PaymentPostBackUrl(final String token) {
+
+		System.out.println(token);
+
 	}
 
 }

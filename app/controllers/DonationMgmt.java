@@ -2,11 +2,16 @@ package controllers;
 
 import static play.data.Form.form;
 
+import base.utils.WorldPayUtils;
 import models.aws.S3File;
 import play.mvc.Http;
 import views.html.donations.*;
 import views.html.profile.profileDonationsReconcile;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +42,10 @@ import base.utils.PaymentUtils;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Manage a database of donations.
@@ -315,45 +324,38 @@ public class DonationMgmt extends Controller {
 				//return badRequest(createForm.render(event, event.generalFund, donationForm));
 				return badRequest(creditForm.render(event, event.generalFund, donationForm));
 			}
-             /*********************Payment gateway start*****************/
 
-			//return redirect("https://secure-test.worldpay.com/wcc/purchase?instId=&cartId=&currency=&desc=&testMode=100");
-
-			/*********************Payment gateway end*****************/
 
 		}
-		System.out.println("within validateAndSendCreditInfo event2 ::"+event);
-		return redirect("https://secure-test.worldpay.com/wcc/purchase?instId=&cartId=&currency=&desc=&testMode=100");
+//		String WorldPlayUrl=null;
+//		Donation donation = donationForm.get();
+//		try {
+//			WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount),donation.transactionNumber,donation.email,donation.ccName,donation.ccNum);
+//		} catch (BadPaddingException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//		} catch (IllegalBlockSizeException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchPaddingException e) {
+//			e.printStackTrace();
+//		} catch (InvalidKeyException e) {
+//			e.printStackTrace();
+//		} catch (InvalidKeySpecException e) {
+//			e.printStackTrace();
+//		}
+//		System.out.println("within validateAndSendCreditInfo now URL sdfdsfsfsfsdfsdfsdfsdfdsfdsfsdfsdfdsf"+WorldPlayUrl);
 
-		//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
+		//return redirect(WorldPlayUrl);
+
+		//return redirect("https://secure-test.worldpay.com/wcc/purchase?instId=&cartId=&currency=&desc=&testMode=100");
+
+		return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
 
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -365,13 +367,7 @@ public class DonationMgmt extends Controller {
 		if (event.isIdOnly()) {
 			event = Event.findByIdWithMinAndGeneralFund(event.id);
 		}
-		// if (!Event.canManage(ControllerUtil.getLocalUser(session()), event))
-		// {
-		// flash(ControllerUtil.FLASH_DANGER_KEY,
-		// "The requested event action cannot be completed by the logged in user.");
-		// return redirect(routes.Application.index());
-		// }
-		final Form<Donation> donationForm = form(Donation.class).bindFromRequest();
+		final Form<Donation> donationForm = form(Donation.class).bindFromRequest(); //bind request
 		if (donationForm.hasErrors()) {
 			Logger.debug("Has errors {}", donationForm.errorsAsJson());
 			if(StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
@@ -388,7 +384,7 @@ public class DonationMgmt extends Controller {
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
 			}
 		}
-		Donation donation = donationForm.get();
+		Donation donation = donationForm.get(); // donation form in donation variable fdatsuv
 		donation.dateCreated = new Date();
 		if(event.id != Pfp.findEventIdByPfpId(donation.pfp.id)) {
 			PAYMENT_LOGGER.warn("The donation [{}] being made for pfp [{}] does not match the event [{}].", donation.id, donation.pfp.id, donation.event.id);
@@ -424,43 +420,13 @@ public class DonationMgmt extends Controller {
 		}
 
 
-
-
-
-
-
 		if (donation.paymentType == PaymentType.CREDIT) {
 			PAYMENT_LOGGER.warn("payment type is credit");
 			System.out.println("payment type is credit");
 			PAYMENT_LOGGER.info("donation.paymentType is credit " + donation.paymentType);
-			/*Map<String, String> ccFormErrors = PaymentUtils.validateCreditForm(donationForm.data());
-			if(MapUtils.isNotEmpty(ccFormErrors)) {
-
-				for(String key: ccFormErrors.keySet()) {
-					if(StringUtils.isEmpty(key)) {
-						donationForm.reject(ccFormErrors.get(key));
-					} else {
-						donationForm.reject(key, ccFormErrors.get(key));
-					}
-				}
-				if (donationForm.hasErrors()) {
-					System.out.println("within donationform.haserrors");
-					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					//return ok(creditForm.render(event,donationForm.get().pfp,donationForm));
-					return badRequest(creditForm.render(event, donation.pfp, donationForm));
-				}
-			}*/
-
-
-			//donation.ccNum = donation.ccNum.replaceAll("\\s","");
-			/****************save start**************************/
-			//donation.ccDigits = donation.ccNum.substring(Math.max(0, donation.ccNum.length() - 4));
-			//==================new add for duplicate checking =====================07.08.2015==================(else braces will be commented to go back to previous form)=========================//
-			if (event.isIdOnly()) {
+		if (event.isIdOnly()) {
 				event = Event.findByIdWithMinAndGeneralFund(event.id);
 			}
-
-
 			System.out.println("within save......donation.pfp.id "+donation.pfp.id);
 			System.out.println("before calling findDuplicateDonationToSameDonor.. ");
 			boolean isDuplicationOfDonation = donation.findDuplicateDonationToSameDonor( donation.pfp.id, donation.donorName, event.id);
@@ -470,69 +436,64 @@ public class DonationMgmt extends Controller {
 				donationForm.reject("Please Donate to Different Participant");
 				return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 			}
-			//==================new add for duplicate checking =====================07.08.2015===========(else braces will be commented to go back to previous form)==============================//
-
 			else{
 			donation.status = PaymentStatus.APPROVED;
+			donation.transactionNumber = UUID.randomUUID().toString();
 			PAYMENT_LOGGER.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
 					donation.ccDigits, donation.transactionNumber, donation.amount);
 			try {
-				donation.save();
+				donation.save();  // main donation table saved
 				PAYMENT_LOGGER.warn("payment type is credit11");
 				System.out.println("payment type is credit11");
-				return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
-			} catch (Exception e) {
-				PAYMENT_LOGGER.error("An error occurred saving the Donation so it will be refunded " + ToStringBuilder.reflectionToString(donation));
+				} catch (Exception e) {
+				//PAYMENT_LOGGER.error("An error occurred saving the Donation so it will be refunded " + ToStringBuilder.reflectionToString(donation));
 				PAYMENT_LOGGER.error("The error that caused the db failure [{}]", e.getMessage());
-				Map<String, String> response = new HashMap<String, String>();
-				try {
-					response = PaymentUtils.sendCCRefund(donation);
-				} catch (Exception r) {
-					PAYMENT_LOGGER.error("Failed to refund donation  to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
-							donation.ccDigits, donation.transactionNumber, donation.amount);
-					PAYMENT_LOGGER.error("The error that caused the refund failure [{}]", r.getMessage());
-				}
-				Map<String, String> errors = PaymentUtils.validateCreditPayment(response);
-				donationForm.reject("An error has occurred in our submission of your donation, please try your donation again.");
+				//Map<String, String> response = new HashMap<String, String>();
+//				try {
+//					//response = PaymentUtils.sendCCRefund(donation);
+//				} catch (Exception r) {
+//					PAYMENT_LOGGER.error("Failed to refund donation  to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
+//							donation.ccDigits, donation.transactionNumber, donation.amount);
+//					PAYMENT_LOGGER.error("The error that caused the refund failure [{}]", r.getMessage());
+//				}
+				//Map<String, String> errors = PaymentUtils.validateCreditPayment(response);
+
+//				donationForm.reject("An error has occurred in our submission of your donation, please try your donation again.");
 				if (donationForm.hasErrors()) {
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
 					PAYMENT_LOGGER.warn("payment type is credit22");
 					System.out.println("payment type is credit22");
-					return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
-					//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
+					return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 				}
+
 			}
 			PAYMENT_LOGGER.warn("payment type is credit33");
 			System.out.println("payment type is credit33");
-			return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
+			//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
+	    String WorldPlayUrl=null;
+		try {
+			WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount),donation.transactionNumber,donation.email);
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		System.out.println("within validateAndSendCreditInfo now URL sdfdsfsfsfsdfsdfsdfsdfdsfdsfsdfsdfdsf"+WorldPlayUrl);
+
+		return redirect(WorldPlayUrl);
+			//return redirect("https://trans.worldpay.us/cgi-bin/WebPay.cgi?formid=574301A941C9A095E474EF84D558739DC1AD0EE09278E5E321CB1E4970121245&sessionid=62A6DC8C9A988EA9");
 		}
 
-		/******************save  end*******************/
-		/**************payment gateway*************************/
-			/*Map<String, String> ccProps = PaymentUtils.sendCCPayment(donation);
-			Map<String, String> ccErrors = PaymentUtils.validateCreditPayment(ccProps);
-			if(MapUtils.isNotEmpty(ccErrors)) {
-				for(String key: ccErrors.keySet()) {
-					if(StringUtils.isEmpty(key)) {
-						donationForm.reject(ccErrors.get(key));
-					} else if(StringUtils.startsWith(key, "_")) {
-						donationForm.reject(ccErrors.get(key));
-					} else {
-						donationForm.reject(key, ccErrors.get(key));
-					}
-				}
-				if (donationForm.hasErrors()) {
-					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
-				}
-			}
-			donation.transactionNumber = ccProps.get("ssl_txn_id");
-			if (StringUtils.isEmpty(donation.transactionNumber)) {
-				Logger.error("There is no transaction number for the ccNum {} and props {}.", donationForm.get().ccNum,
-								ToStringBuilder.reflectionToString(ccProps));
-			}*/
-
-			//PAYMENT_LOGGER.info("A CC Donation [{}] with transaction number [{}] was made for PFP [{}] in the amount of [{}] by [{} {}] with CC [{}]", donation.id, donation.transactionNumber, donation.pfp.id, donation.amount, donation.firstName, donation.lastName, donation.ccDigits);
 		} else if (donation.paymentType == PaymentType.CHECK) {
 			donation.transactionNumber = UUID.randomUUID().toString();
 			donation.status = PaymentStatus.PENDING;

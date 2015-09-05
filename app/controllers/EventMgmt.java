@@ -1431,16 +1431,29 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 		}
 		if (imgUrlFile1 != null) {
 			if(event.imgUrl1 != null) {
-				S3File.delete(event.imgUrl);
+				S3File.delete(event.imgUrl1);
 			}
 			imgUrlFile1.save();
 		}
 		if (imgUrlFile2 != null) {
 			if(event.imgUrl2 != null) {
-				S3File.delete(event.imgUrl);
+				S3File.delete(event.imgUrl2);
 			}
 			imgUrlFile2.save();
 		}
+		if (imgUrlFile3 != null) {
+			if(event.imgUrl3 != null) {
+				S3File.delete(event.imgUrl3);
+			}
+			imgUrlFile3.save();
+		}
+		if (imgUrlFile4 != null) {
+			if(event.imgUrl4 != null) {
+				S3File.delete(event.imgUrl4);
+			}
+			imgUrlFile4.save();
+		}
+
 		updatedEvent.update(event.id);
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Event ["
 				+ eventForm.get().name + "] has been updated");
