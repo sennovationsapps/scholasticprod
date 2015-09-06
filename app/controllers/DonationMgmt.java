@@ -714,7 +714,7 @@ public class DonationMgmt extends Controller {
 		WorldPay wp=worldPayForm.get();
 		System.out.println("World Pay Credit Card Name"+wp.ccname);
 
-		return null;
+		return redirect("http://52.25.225.64:9000/");
 
 	}
 
