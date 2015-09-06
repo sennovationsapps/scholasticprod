@@ -708,13 +708,13 @@ public class DonationMgmt extends Controller {
 
 
 	@Transactional
-	public static Result worldPayPostBack() {
+	public static Result worldPayPostBack(String customdata) {
 
 //		Form<WorldPay> worldPayForm = Form.form(WorldPay.class).bindFromRequest();
 //		WorldPay wp=worldPayForm.get();
 //		System.out.println("World Pay Credit Card Name"+wp.ccname);
 		DynamicForm requestData = Form.form().bindFromRequest();
-		System.out.println("Request from worldpay"+requestData.get("ccname"));
+		System.out.println("Request from worldpay"+customdata);
 		System.out.println("Request form worldpay"+requestData.get("customdata"));
 
 		return ok("Hello in the worldPayPostBack"+requestData.get("customdata"));
