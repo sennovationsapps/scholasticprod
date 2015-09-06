@@ -714,7 +714,8 @@ public class DonationMgmt extends Controller {
 //		WorldPay wp=worldPayForm.get();
 //		System.out.println("World Pay Credit Card Name"+wp.ccname);
 		DynamicForm requestData = Form.form().bindFromRequest();
-		System.out.println(requestData.get("ccname"));
+		System.out.println("Request from worldpay"+requestData.get("ccname"));
+		System.out.println("Request form worldpay"+requestData.get("customdata"));
 
 		return ok("Hello in the worldPayPostBack");
 
