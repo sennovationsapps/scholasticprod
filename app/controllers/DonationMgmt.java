@@ -43,7 +43,7 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
+import play.data.DynamicForm;
 /**
  * Manage a database of donations.
  */
@@ -710,11 +710,13 @@ public class DonationMgmt extends Controller {
 	@Transactional
 	public static Result worldPayPostBack() {
 
-		Form<WorldPay> worldPayForm = Form.form(WorldPay.class).bindFromRequest();
-		WorldPay wp=worldPayForm.get();
-		System.out.println("World Pay Credit Card Name"+wp.ccname);
+//		Form<WorldPay> worldPayForm = Form.form(WorldPay.class).bindFromRequest();
+//		WorldPay wp=worldPayForm.get();
+//		System.out.println("World Pay Credit Card Name"+wp.ccname);
+		DynamicForm requestData = Form.form().bindFromRequest();
+		System.out.println(requestData.get("ccname"));
 
-		return redirect("http://52.25.225.64:9000/");
+		return ok("Hello in the worldPayPostBack");
 
 	}
 
