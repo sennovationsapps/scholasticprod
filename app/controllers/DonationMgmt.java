@@ -3,6 +3,7 @@ package controllers;
 import static play.data.Form.form;
 
 import base.utils.WorldPayUtils;
+import models.*;
 import models.aws.S3File;
 import play.mvc.Http;
 import views.html.donations.*;
@@ -18,14 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import models.Donation;
 import models.Donation.DonationType;
 import models.Donation.PaymentStatus;
 import models.Donation.PaymentType;
-import models.Event;
-import models.Pfp;
 import models.Pfp.PfpType;
-import models.SponsorItem;
 import models.security.SecurityRole;
 
 import org.apache.commons.collections.MapUtils;
@@ -283,7 +280,7 @@ public class DonationMgmt extends Controller {
 			PAYMENT_LOGGER.info("A CC Refund [transaction number {}] was made for PFP [{}] in the amount of [{}] by [{} {}] with CC [{}]", donation.transactionNumber, donation.pfp.name, donation.amount, donation.firstName, donation.lastName, donation.ccDigits);
 		}
 		return redirect(routes.Application.profileSearchDonations(0, "dateCreated",
-						"asc", "", "dateCreated"));
+				"asc", "", "dateCreated"));
 	}
 	
 	/**
@@ -548,6 +545,7 @@ public class DonationMgmt extends Controller {
 		}
 		Donation donation = donationForm.get();
 		donation.dateCreated = new Date();
+		donation.event = event;
 		donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();
 		donation.donationType = DonationType.SPONSOR;
 		if (donation.paymentType == null) {
@@ -706,6 +704,21 @@ public class DonationMgmt extends Controller {
 			return redirect(routes.ReceiptMgmt.getAndSendCheckReceipt(event, updatedDonation));
 		}
 	}
+
+
+
+	@Transactional
+	public static Result worldPayPostBack() {
+
+		Form<WorldPay> worldPayForm = Form.form(WorldPay.class).bindFromRequest();
+		WorldPay wp=worldPayForm.get();
+		System.out.println("World Pay Credit Card Name"+wp.ccname);
+
+		return null;
+
+	}
+
+
 	
 	/**
 	 * Handle the 'edit form' submission .
