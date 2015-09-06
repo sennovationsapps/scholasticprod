@@ -70,6 +70,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	@Constraints.Required
+
 	public int				amount;
 	
 	@Pattern(value = "^[0-9]{3,4}$", message = "cvv.pattern")

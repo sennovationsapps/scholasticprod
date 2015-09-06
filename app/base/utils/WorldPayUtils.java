@@ -17,7 +17,7 @@ import java.util.Date;
 public class WorldPayUtils {
 
 
-    public static String checkout(String donationamount, String TranscationId ,String MailId)
+    public static String checkout(String donationamount, String TranscationId ,String MailId, String EventSlug )
     throws BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, UnsupportedEncodingException,
            NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException
 
@@ -40,7 +40,7 @@ public class WorldPayUtils {
         String $sessionIdString="&sessionid=";
         String $sessionId=ThreeDES.SESSION_ID;
         String $customdataString= "&customdata=";
-        String $cdata1="cdata1="+TranscationId+"&"+"cdata2="+MailId;
+        String $cdata="cdata1="+TranscationId+"&"+"cdata2="+MailId+"&"+"cdata3="+EventSlug;
 
         //append the url string
         url.append($webpay_url);
@@ -48,7 +48,7 @@ public class WorldPayUtils {
         url.append($sessionIdString);
         url.append($sessionId);
         url.append($customdataString);
-        url.append(ThreeDES.encrypt($cdata1));
+        url.append(ThreeDES.encrypt($cdata));
         return url.toString();
     }
 
