@@ -111,6 +111,7 @@ public class EventMgmt extends Controller {
 	public static Result get(Event event,int page, String sortBy, String order,
 							 String filter, String fieldName) {
 		System.out.println("within get view event666..");
+		System.out.println(	"within get to check the changes of viewevent..");
 		if (event.isIdOnly()) {
 			event = Event.findById(event.id);
 		}
