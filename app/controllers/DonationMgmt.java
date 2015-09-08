@@ -611,7 +611,7 @@ public class DonationMgmt extends Controller {
 			//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
 	    String WorldPlayUrl=null;
 		try {
-			WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount),donation.transactionNumber,donation.email,"events/"+event.slug);
+			WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 		} catch (BadPaddingException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
@@ -843,7 +843,7 @@ public class DonationMgmt extends Controller {
 		if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			String WorldPlayUrl=null;
 			try {
-				WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount),donation.transactionNumber,donation.email,"events/"+event.slug);
+				WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 			} catch (BadPaddingException e) {
 				e.printStackTrace();
 			} catch (NoSuchAlgorithmException e) {
