@@ -271,6 +271,10 @@ public class SponsorsMgmt extends Controller {
 			//Logger.info("We had errors: {}", sponsorsForm.errorsAsJson());
 			return badRequest(editForm.render(event, pageId, sponsorsForm));
 		}
+
+
+
+
 		final Sponsors sponsors = Sponsors.findById(pageId);
 		//System.out.println("sponsors.id=> "+sponsors.id);
 		//System.out.println("sponsors.sponsoritems.size()=> "+sponsors.sponsoritems.size());
@@ -286,6 +290,12 @@ public class SponsorsMgmt extends Controller {
 		//System.out.println("itemMap.size()=> "+itemMap.size());
 		final Sponsors updatedSponsors = sponsorsForm.get();
 		System.out.println("updatedSponsors.name=> "+updatedSponsors.name);
+
+
+
+
+
+
 		updatedSponsors.content = ControllerUtil
 				.sanitizeText(updatedSponsors.content);
 		List<SponsorItem> mergedList = new ArrayList<SponsorItem>();
@@ -329,6 +339,26 @@ public class SponsorsMgmt extends Controller {
 		//====commentedout =====end====//
 		for(SponsorItem item: updatedSponsors.sponsoritems){
 			System.out.println("else");
+
+
+			//============new add for checking web url and img url======================07.09.2015======================start==================//
+/*
+
+			if(item.webLogo == true){
+				//System.out.println("donation.imgUrl :: "+donation.imgUrl);
+				if(item.logo == false){
+					sponsorsForm.reject("please check the Logo upload allowed to continue ");
+					//pageForm.reject("please check the Logo upload allowed to continue ");
+					//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
+					return badRequest(editForm.render(event, pageId, sponsorsForm));
+				}
+			}
+*/
+
+			//============new add for checking web url and img url======================07.09.2015=======================end===================//
+
+
+
 			mergedList.add(item);
 
 		}

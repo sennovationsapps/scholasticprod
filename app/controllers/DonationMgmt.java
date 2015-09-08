@@ -348,11 +348,153 @@ public class DonationMgmt extends Controller {
 		//return redirect(WorldPlayUrl);
 
 		//return redirect("https://secure-test.worldpay.com/wcc/purchase?instId=&cartId=&currency=&desc=&testMode=100");
-
-		return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
+		return redirect("https://trans.worldpay.us/cgi-bin/WebPAY.cgi?formid=574301A941C9A095E474EF84D558739D7629CC97FFFFF5C1&sessionid=62A6DC8C9A988EA9");
+		//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
 
 
 	}
+
+
+
+
+
+
+
+//=================returning page to the credit form================start============03.09.2015=======================//
+
+
+
+	public static Result returnCreditCardInfo() throws Exception{
+		System.out.println("within returnCreditCardInfo..");
+		/*Map<String,String[]> val=request().queryString();
+		for (Map.Entry<String, String[]> entry : val.entrySet()) {
+			String[] val1=entry.getValue();
+			System.out.println("Key : " + entry.getKey() + " Value : " + val1[0]);
+		}*/
+		TripleDES tripleDES = new TripleDES();
+		Map<String,String[]> valForDecrypt=request().queryString();
+		for (Map.Entry<String, String[]> entry : valForDecrypt.entrySet()) {
+			String[] val1=entry.getValue();
+			System.out.println("Key : " + entry.getKey() + " Value : " + val1);
+			System.out.println("val1.length :: "+val1.length);
+			for(int i = 0; i<val1.length;i++){
+				System.out.println("val1[i] :: "+val1[i]+" for i  "+i);
+				String actualText =  tripleDES.decrypt(val1[i]);
+				System.out.println("actualText :: "+actualText);
+
+			}
+
+		}
+
+
+
+		String texdt=Http.Context.current().request().body().asText();
+		System.out.println("texdt==> "+texdt);
+		return ok(returnCreditForm.render());
+	}
+
+
+
+	public static Result returnCreditInfo() throws Exception{
+		System.out.println("within return creditInfo..");
+		Map<String,String[]> val=request().queryString();
+		for (Map.Entry<String, String[]> entry : val.entrySet()) {
+			System.out.println("Key post : " + entry.getKey() + " Value post: " + entry.getValue());
+		}
+		//System.out.println("Value---"+val);
+
+		TripleDES tripleDES = new TripleDES();
+		Map<String,String[]> valForDecrypt=request().queryString();
+		for (Map.Entry<String, String[]> entry : valForDecrypt.entrySet()) {
+			String[] val1=entry.getValue();
+			System.out.println("Key post: " + entry.getKey() + " Value post: " + val1[0]);
+			for(int i = 0; i<val1.length;i++){
+
+				String actualText =  tripleDES.decrypt(val1[i]);
+				System.out.println("actualText post:: "+actualText);
+
+			}
+
+		}
+
+
+		String texdt=Http.Context.current().request().body().asText();
+		System.out.println("texdt==> "+texdt);
+		return ok(returnCreditForm.render());
+	}
+
+
+
+
+
+
+	public static Result returnCreditCardSuccessInfo() throws Exception{
+		System.out.println("within returnCreditCardSuccessInfo..");
+		/*Map<String,String[]> val=request().queryString();
+		for (Map.Entry<String, String[]> entry : val.entrySet()) {
+			String[] val1=entry.getValue();
+			System.out.println("Key : " + entry.getKey() + " Value : " + val1[0]);
+		}*/
+		//TripleDES tripleDES = new TripleDES();
+		Map<String,String[]> valForDecrypt=request().queryString();
+		for (Map.Entry<String, String[]> entry : valForDecrypt.entrySet()) {
+			String[] val1=entry.getValue();
+			System.out.println("Key returnCreditCardSuccessInfo : " + entry.getKey() + " Value : " + val1);
+			System.out.println("val1.length :: "+val1.length);
+			for(int i = 0; i<val1.length;i++){
+				System.out.println("val1[i] returnCreditCardSuccessInfo :: "+val1[i]+" for i  "+i);
+				//String actualText =  tripleDES.decrypt(val1[i]);
+				//System.out.println("actualText :: "+actualText);
+
+			}
+
+		}
+
+
+
+		String texdt=Http.Context.current().request().body().asText();
+		System.out.println("texdt==> "+texdt);
+		return ok(returnCreditForm.render());
+	}
+
+
+
+	public static Result returnCreditCardFailInfo() throws Exception{
+		System.out.println("within return returnCreditCardFailInfo..");
+		Map<String,String[]> val=request().queryString();
+		for (Map.Entry<String, String[]> entry : val.entrySet()) {
+			System.out.println("Key post returnCreditCardFailInfo: " + entry.getKey() + " Value post: " + entry.getValue());
+		}
+		//System.out.println("Value---"+val);
+
+		//TripleDES tripleDES = new TripleDES();
+		Map<String,String[]> valForDecrypt=request().queryString();
+		for (Map.Entry<String, String[]> entry : valForDecrypt.entrySet()) {
+			String[] val1=entry.getValue();
+			System.out.println("Key post: " + entry.getKey() + " Value post: " + val1[0]);
+			for(int i = 0; i<val1.length;i++){
+
+				//	String actualText =  tripleDES.decrypt(val1[i]);
+				//	System.out.println("actualText post:: "+actualText);
+
+			}
+
+		}
+
+
+		String texdt=Http.Context.current().request().body().asText();
+		System.out.println("texdt==> "+texdt);
+		return ok(returnCreditForm.render());
+	}
+
+
+	//=================returning page to the credit form================end============03.09.2015=======================//
+
+
+
+
+
+
 
 
 
@@ -543,7 +685,28 @@ public class DonationMgmt extends Controller {
 			return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
 							donationForm));
 		}
+
+
 		Donation donation = donationForm.get();
+		//============new add for checking web url and img url======================07.09.2015======================start==================//
+/*
+        if(donation.webUrl!=null){
+			System.out.println("donation.imgUrl :: "+donation.imgUrl);
+			final Http.MultipartFormData body1 = request().body()
+					.asMultipartFormData();
+			System.out.println("body1 :: "+body1);
+			final Http.MultipartFormData.FilePart imgUrlFilePart1 = body1
+					.getFile("imgUrl");
+			System.out.println("imgUrlFilePart1 :: "+imgUrlFilePart1);
+			if(imgUrlFilePart1 == null){
+				donationForm.reject("Please select a image first..");
+				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
+				return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+						donationForm));
+			}
+		}*/
+
+		//============new add for checking web url and img url======================07.09.2015=======================end===================//
 		donation.dateCreated = new Date();
 		donation.event = event;
 		donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();

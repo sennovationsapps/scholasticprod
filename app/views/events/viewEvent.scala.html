@@ -107,7 +107,7 @@
     }
 
     #image_slider{
-    height: 250px !important;
+    height: 50px !important;
     }
     </style>
     <style>
@@ -561,8 +561,21 @@
             <a class="twitter_link"  href="#" onclick="initfbShareButton()"><img  src="@ControllerUtil.getResourceRoute("fbshare.jpg")"></a>
 
             <a class="twitter_link" href="http://twitter.com/intent/tweet?text=&url="+window.location target="_blank" id="url_sharetweet"><img id = "twitter_share" src="@ControllerUtil.getResourceRoute("tweet.png")"></a>
-            <span id="button_Email_share"></span>
+           @* <span id="button_Email_share" ></span>*@
+
+
+
+
+
             <script src="@ControllerUtil.getResourceRoute("addthisbuttons.js")"></script>
+
+
+
+            <span   id="button_Email_share"><img src="@ControllerUtil.getResourceRoute("Email_Icon.png")"/><span class="email_txt">       Email</span></span>
+
+
+
+
             <script type="text/javascript">
                    stLight.options({
 
@@ -609,7 +622,7 @@
 
 
 
-
+/*
                 stWidget.addEntry({
                         "service":"email",
                         "element":document.getElementById('button_Email_share'),
@@ -620,7 +633,25 @@
                         "text":"Helping my School" ,
                         "image":imageUrl,
                         "onhover":false
-                });
+                });*/
+
+
+
+
+                       stWidget.addEntry({
+                            "service":"email",
+                            "element":document.getElementById('button_Email_share'),
+                            "summary":"link to page i.e: "+urlPath,
+                             "url":"Please click on the link below to view the fundraiser I am participating in.",
+                            "title":"Helping my School",
+                            "type":"custom",
+                            "text":"Helping my School" ,
+                            "image":imageUrl,
+                            "onhover":false
+                    });
+
+
+
 
             </script>
 
@@ -754,7 +785,60 @@
 
 
 
-                    <marquee behavior="scroll" direction="left" id = "slider_marquee" onMouseOver="StopMarquee();" onMouseOut="StartMarquee()">
+                    <script>
+
+function StartMarquee(){
+
+
+if(navigator.userAgent.indexOf("Firefox") != -1 )
+    {
+
+var marquee = document.getElementById ("slider_marquee");
+marquee.setAttribute('scrollamount', 6, 0);	;
+    }
+
+else {
+var marquee = document.getElementById ("slider_marquee");
+ marquee.start();
+	}
+
+
+
+ }
+
+
+
+function StopMarquee(){
+
+if(navigator.userAgent.indexOf("Firefox") != -1)
+    {
+
+var marquee = document.getElementById ("slider_marquee");
+marquee.setAttribute('scrollamount', 0, 0);	;
+    }
+
+	else {
+
+var marquee = document.getElementById ("slider_marquee");
+marquee.stop();
+
+		}
+
+ }
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+                    <marquee behavior="scroll" direction="left"  bgcolor="#CCCCCC"   id = "slider_marquee" onMouseOver="StopMarquee();" onMouseOut="StartMarquee()">
 
                         <table >
 
@@ -768,14 +852,34 @@
                             @for(donationvalue <- donation) {
                                 @if(donationvalue.imgUrl != null) {
                                     @if(imgUrllink ==1) {
-                                        <td>
 
-                                            <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
-                                        </td>
-                                        <td style="width: 20px;">
 
-                                        </td>
-                                        <td>
+                                        @if(donationvalue.webUrl!=null){
+
+
+                                            <td>
+
+                                                <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  style="height:50px; width:100px; "onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                            </td>
+                                            <td style="width: 20px;">
+
+                                            </td>
+                                            <td>
+
+                                        }else{
+
+                                            <td>
+
+                                                <img id = "one" src="@donationvalue.imgUrl" style="height:50px; width:100px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px">
+                                            </td>
+                                            <td style="width: 20px;">
+
+                                            </td>
+                                            <td>
+
+                                        }
+
+
                                             @* <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
                                             </td>
                                             <td style="width: 20px;">
@@ -784,12 +888,22 @@
                                             *@
                                         }
                                     @if(imgUrllink !=1) {
-                                        <td>
-                                            <a href = "https://@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
-                                        </td>
-                                        <td style="width: 20px;">
+                                        @if(donationvalue.webUrl!=null){
+                                            <td>
+                                                <a href = "https://@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" style="height:50px; width:100px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                            </td>
+                                            <td style="width: 20px;">
 
-                                        </td>
+                                            </td>
+                                        }else{
+                                            <td>
+                                               <img id = "one" src="@donationvalue.imgUrl" style="height:50px; width:100px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px">
+                                            </td>
+                                            <td style="width: 20px;">
+
+                                            </td>
+                                        }
+
 
                                     }
 
@@ -1010,4 +1124,11 @@ $("#url_sharetweet").attr("href", "http://twitter.com/intent/tweet?text=&url="+u
        $("#tableOnSearch").hide();
        }
     </script>*@
+
+
+
+
+
+
+
 }

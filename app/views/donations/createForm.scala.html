@@ -1,6 +1,8 @@
 @(event: Event, pfp: Pfp, donationForm: Form[Donation])
 
-@import html5.tags.html._
+@*/*@@*import html5.tags.html._*/*@
+
+    @import helper._
 
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
@@ -60,26 +62,60 @@
 	          			<tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="500">  $500</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="250"> $250</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="150"> $150</button></td></tr>
 	          			<tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="100"> $100</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="50"> $50</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="25">$25</button></td></tr>
 	          	</table>
-	            @text(donationForm("amount"), '_label -> "Amount(Min. donation is $1.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+                @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $1.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
 
 				<!--@checkbox(donationForm("agreeToPolicy"), '_label -> "Give this amount monthly for the duration of this event", '_labelSide -> "right")-->
             </div>
             <br/>
             <div id="well" class="well">
             	<center><legend class="legend_hightlight">Donor Information</legend></center>
-            @text(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
-            @text(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
-            @text(donationForm("email"), '_label -> "Email", 'class -> "form-control")
-            @*@text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@
-			@text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+
+                @******phno format*************01.09.2015***************start*****@
+
+                <div style="display:none;">
+                @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                </div>
+                <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                            @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                            </td>
+                            <td> - </td>
+                            <td>
+                            @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                            </td>
+                            <td> - </td>
+                            <td>
+                            @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                @******phno format*************01.09.2015***************end*****@
+
+           @* *@@*@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@*
+			@text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
             </div>
             <br/>
             <div id="well" class="well">
             	<center><legend class="legend_hightlight">Message to Participant</legend></center>
 				<!----------new addition of checkbox-----14.08.2015----start-->
 			@checkbox(donationForm("agreeToPolicy"), '_label -> "Make my donation Anonymous", '_labelSide -> "right",'id -> "anonymous")
-            @text(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control",'id -> "donorname")
-            @text(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
+                @helper.inputText(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control",'id -> "donorname")
+                @helper.inputText(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
             </div>
             <br/>
             <button type="button" class="btn btn-primary" id="payByCreditCard">Pay By Credit Card</button>&nbsp;&nbsp;
@@ -98,7 +134,7 @@
 			ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
 			ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
 			) {
-			@text(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
+                    @helper.inputText(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
 			} else {
             			<h5>PLEASE NOTE: Payment by credit card is our preferred method of payment.</h5>
 						<p>
@@ -350,6 +386,93 @@ else{
 
    });
   </script>
+
+
+
+
+
+    <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+$(document).ready(function(){
+
+
+/*$("#phNo").hide();*/
+var phNoValue = $("#phNo").val();
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}
+});
+
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*/
+patternMatchForPhone(currentFormId);
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+mergeTotalPhNo();
+}
+
+function mergeTotalPhNo(){
+//alert("within keyup");
+patternMatchForPhone('phoneSuf');
+var totalPhValue;
+var length1 = $("#areaCode").val().length;
+var length2 = $("#phonePre").val().length;
+var length3 = $("#phoneSuf").val().length;
+
+if(length1==3 && length2 ==3 &&length3 == 4){
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+//alert($("#phNo").val());
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+    <script>
+    function patternMatchForPhone(id){
+
+    var phPattern = /^([0-9])+$/;
+    var phValue =document.getElementById(id).value;
+    //alert(phValue );
+    //alert(phValue.match(phPattern));
+    if(phValue.match(phPattern)==null){
+    //alert("before "+phValue);
+     phValue = phValue.substring(0,phValue.length-1);
+    // alert("after "+phValue);
+     }
+     id = "#"+id;
+     // alert("id :: "+id);
+     $(id).val(phValue);
+
+     //alert(" $(id).val"+ $(id).val);
+    //alert(ph)
+
+     //document.getElementById(id).HTML(phValue);
+
+    }
+</script>
+
+
+
 
 
 }
