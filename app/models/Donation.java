@@ -141,11 +141,54 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 
 
+
+
+//=======================change for the phno format=============start=============01.09.2015========================//
+
+
+
+
 	@Constraints.Required
+		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
+	@MaxLength(value = 3)
+	@Pattern(value = "[0-9.+]+", message = "A valid phone number is required")
+	public String phPart1;
+
+
+
+
+	@Constraints.Required
+		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
+	@MaxLength(value = 3)
+	@Pattern(value = "[0-9.+]+", message = "A valid phone number is required")
+	public String phPart2;
+
+
+
+
+	@Constraints.Required
+		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
+	@Pattern(value = "[0-9.+]+", message = "A valid phone number is required")
+	@MaxLength(value = 4)
+	public String phPart3;
+
+
+	@Constraints.Required
+		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
+	@MaxLength(value = 10)
+	public String phone;
+
+
+	//=======================change for the phno format==============end==============01.09.2015========================//
+
+
+
+
+	/*@Constraints.Required
 
 	@Pattern(value = "^[0-9]{3}-[0-9]{3}-[0-9]{4}$", message = "phone.pattern")
 	@MaxLength(value = 12)
-	public String			phone;
+	public String			phone;*/
 	//===============for image and web=================start==================================//
 
 	/*public URL             imgUrl;

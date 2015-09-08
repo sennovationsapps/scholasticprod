@@ -35,6 +35,9 @@
     </style>
 
 
+
+
+
     <div class="wrapper">
         <div class="section-header">
             <div class="container">
@@ -74,10 +77,19 @@
                         <div id="well sponsoritems" class="well">
                             <legend>Sponsor Items</legend>
                             @repeat(pageForm("sponsoritems")) { sponsoritem =>
-                                <div class="form-inline sponsoritem">
+                                <div class="form-inline sponsoritem" id = "form_inline_sponsoritem">
                                     @if(!sponsoritem("donation.id").value.isEmpty) {
 
-                                        <div class="col-md-3 col-lg-3">@checkbox(sponsoritem("logo"),'id -> "logo",'_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
+                                        <div class="col-md-3 col-lg-3" style="font-size: 12px;">@checkbox(sponsoritem("logo"),'id -> "logo",'_showConstraints -> false, '_label -> "Logo upload allowed", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")Logo upload allowed</div>
+
+
+
+                                      @*  <div class="col-md-3 col-lg-3" style="font-size: 12px;">@checkbox(sponsoritem("webLogo"),'id -> "webLogo",'_showConstraints -> false, '_label -> "URL addition allowed ", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")URL addition allowed</div>*@
+
+
+
+
+
                                         @sponsoritem("title").value | @sponsoritem("description").value | @sponsoritem("amount").value (Already sponsored, cannot be modified)
 
                                         <input type="hidden" name="@sponsoritem("id").name" value="@sponsoritem("id").value"/>
@@ -95,7 +107,12 @@
                                     } else {
 
 
-                                        <div class="col-md-3 col-lg-3">@checkbox(sponsoritem("logo"),'id -> "logo",'_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
+                                        <div class="col-md-3 col-lg-3" style="font-size: 12px;">@checkbox(sponsoritem("logo"),'id -> "logo",'_showConstraints -> false, '_label -> "Logo upload allowed", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")Logo upload allowed</div>
+
+                                       @* <div class="col-md-3 col-lg-3" style="font-size: 12px;">@checkbox(sponsoritem("webLogo"),'id -> "webLogo",'_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")URL addition allowed</div>*@
+
+
+
 
 
                                         <div class="col-md-3 col-lg-3">@text(sponsoritem("title"), '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")</div>
@@ -112,9 +129,16 @@
                             @**
                             * Keep an hidden block that will be used as template for Javascript copy code
                             **@
-                            <div class="form-inline sponsoritem_template">
+                            <div class="form-inline sponsoritem_template" id ="form_inline_sponsoritem">
 
-                                @checkbox(pageForm("sponsoritems[x].logo"),'id -> "logo", '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", '_label_class -> "sr-only")
+                                @checkbox(pageForm("sponsoritems[x].logo"),'id -> "logo", '_showConstraints -> false, '_label -> "Logo upload allowed", 'class -> "form-control", '_label_class -> "sr-only")
+                               Logo upload allowed
+
+                               @* @checkbox(pageForm("sponsoritems[x].webLogo"),'id -> "webLogo", '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", '_label_class -> "sr-only")
+                                URL addition allowed*@
+
+
+
 
                                 @text(pageForm("sponsoritems[x].title"), '_showConstraints -> false, '_label -> "Item Title", 'class -> "form-control", 'placeholder -> "Item title", '_label_class -> "sr-only")
                                 @text(pageForm("sponsoritems[x].description"), '_showConstraints -> false, '_label -> "Item Description", 'class -> "form-control", 'placeholder -> "Item description", '_label_class -> "sr-only")
@@ -195,4 +219,110 @@
     <!-- Extra Hidden Content -->
     @sponsors.samples()
     <script src="@ControllerUtil.getResourceRoute("scSponsorsAdmin.min.js")"></script>
+
+
+
+    <script>
+    /*   if($('#logo').is(':checked')) {
+       alert("checked ");
+$("#webLogo").show();
+//$('#agreeToPolicy').prop('checked', "unchecked");
+}else{
+alert("not checked..");
+$("#webLogo").hide();
+}*/
+    </script>
+
+
+    <script>
+  /*      $(function() {
+  enable_cb();
+  $("#logo").click(enable_cb);
+});
+
+function enable_cb() {
+  if (this.checked) {
+    $("#webLogo").removeAttr("disabled");
+  } else {
+    $("#webLogo").attr("disabled", true);
+  }
+}*/
+    </script>
+
+
+    <script>
+
+
+    $(document).ready(function(){
+
+    /*var logo =  $("#logo").val;
+     for(var i = 0; i< logo.length; i++){
+     alert("uu");
+    //x = document.getElementById(logo[i]).checked;
+    if($(this).is(':checked')){
+     alert("checked");
+        // $("#webLogo").removeAttr("disabled");
+    }else {
+    alert("unchecked");
+//$("#webLogo").attr("disabled", true);
+    }
+    }   */
+
+
+    /*$('input[id="logo"]').each(function (index, value) {
+    alert("ll"+index);
+    if ( $(this).is(':checked')) {
+      alert("checkeddddddd");
+         $(this).siblings().removeAttr("disabled");
+    }else{
+    alert("hhh");
+    //$(this).parent.siblings().attr("disabled", true);
+    }
+});
+});*/
+   /* $(document).ready(function(){
+     var x ;
+
+
+     $('div[id="form_inline_sponsoritem"]').each(function () {
+    if ( $().is(':checked')) {
+      alert("checked");
+         $("#webLogo").removeAttr("disabled");
+    }else{
+    $("#webLogo").attr("disabled", true);
+    }
+});
+
+
+
+    for(var i = 0; i< logo.length; i++){
+    x = document.getElementById(logo[i]).checked;
+    if(x == true){
+     alert("checked");
+         $("#webLogo").removeAttr("disabled");
+    }else if(x == false){
+    alert("unchecked");
+$("#webLogo").attr("disabled", true);
+    }
+    }
+    /!* if($('#logo').is(':checked')) {
+        alert("checked");
+         $("#webLogo").removeAttr("disabled");
+    }
+
+     if($('#logo').is(':checked')) {
+        alert("checked");
+         $("#webLogo").removeAttr("disabled");
+
+//$('#agreeToPolicy').prop('checked', "unchecked");
+}else{
+ alert("unchecked");
+$("#webLogo").attr("disabled", true);
+}*!/
+    })*/
+
+    </script>
+    <script>
+
+    </script>
 }

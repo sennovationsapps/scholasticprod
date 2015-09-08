@@ -52,6 +52,9 @@ public class SponsorItem extends Model {
 	public String title;
 
 	public boolean logo;
+
+
+	/*public boolean webLogo;*/
 	
 	@Override
 	public String toString() {

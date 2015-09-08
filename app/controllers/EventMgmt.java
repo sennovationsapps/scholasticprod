@@ -175,12 +175,21 @@ public class EventMgmt extends Controller {
 
 						if(donation.sponsorItem.logo == true){
 							//System.out.println("donationList "+donationList);
-							System.out.println("iffff  " + donation.imgUrl + "<for>" + donation.sponsorItem.title);
+							//============web url checking======start============07.09.2015========================//
+							/*System.out.println("iffff  " + donation.imgUrl + "<for>" + donation.sponsorItem.title);
+							if(donation.sponsorItem.webLogo == true){
+								donationList1.add(donation);
+							}else{
+								donation.webUrl = null;
+								donationList1.add(donation);
+							}*/
+							//============web url checking=======end=============07.09.2015========================//
 							//donationList.remove(donation);
 							//System.out.println("after donationList "+donationList);
-						}else{
-							System.out.println(" elseee "+donation.imgUrl+"<for>"+donation.sponsorItem.title);
 							donationList1.add(donation);
+						}else {
+							System.out.println(" elseee " + donation.imgUrl + "<for>"+donation.sponsorItem.title);
+							/*donationList1.add(donation);*/
 						}
 
 					}

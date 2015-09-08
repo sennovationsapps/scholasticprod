@@ -1,0 +1,59 @@
+@()
+
+@*/*@@*import html5.tags.html._*/*@
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main("Create Donation") {
+    <!-- Main body
+================== -->
+    <!--=====start of new addition================-->
+    @general.alerts()
+ @*   @if(donationForm.hasErrors) {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @Messages("form.has.errors")<br/>
+            @for(key <- donationForm.errors().keySet()) {
+                @for(error <- donationForm.errors().get(key)) {
+                    <br/> @Messages(error.message())
+                }
+            }
+        </div>
+    }*@
+
+
+    <div class="wrapper">
+        <div class="section-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                            <!-- Remove the .animated class if you don't want things to move -->
+                        <h1 class="animated slideInLeft"><span>REturning from credit payment</span></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @*
+
+    @form(controllers.routes.DonationMgmt.validateAndSendCreditInfo(event), 'id -> "donateForm") {
+
+    <!--=====end of new addition================-->
+
+    }*@
+    <script>
+         $("#payByCreditCardButton").click(function(){
+             //  alert("within payByCreditCardButton click..");
+               $('form#donateForm').submit();
+           });
+	   $('form#donateForm').submit(function(){
+
+              //  alert("within submit for credit info.....");
+	   		$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+		    $('#payByCreditCardButton').attr('disabled', 'disabled');
+		    $('#payByCheckButton').attr('disabled', 'disabled');
+		    $('#payByCashButton').attr('disabled', 'disabled');
+		});
+    </script>
+}

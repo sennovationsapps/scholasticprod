@@ -129,12 +129,16 @@
 
                 &nbsp;&nbsp;
 
-            <a class="twitter_link"  href="#" onclick="initfbShareButton()"><img  src="@ControllerUtil.getResourceRoute("fbshare.jpg")"></a>
+            <a class="twitter_link"  href="#" onclick="initfbShareButton()"><img  src="@ControllerUtil.getResourceRoute("fbshare.jpg")" style="width:80px;"></a>
 
-            <a class="twitter_link" href="http://twitter.com/intent/tweet?text=&url="+window.location target="_blank" id="url_sharetweet"><img id = "twitter_share" src="@ControllerUtil.getResourceRoute("tweet.png")"></a>
+            <a class="twitter_link" href="http://twitter.com/intent/tweet?text=&url="+window.location target="_blank" id="url_sharetweet"><img style="width:80px;" id = "twitter_share" src="@ControllerUtil.getResourceRoute("tweet.png")"></a>
 
-            <span id="button_Email_share"></span>
+            @*<span id="button_Email_share"></span>*@
             <script src="@ControllerUtil.getResourceRoute("addthisbuttons.js")"></script>
+
+
+
+            <span   id="button_Email_share"><img src="@ControllerUtil.getResourceRoute("Email_Icon.png")" style="height: 26px;"/><span class="email_txt">       Email</span></span>
             <script type="text/javascript">
                    stLight.options({
                            publisher:'dadf4b5f-0de7-4abf-abad-07251fb68c3e' ,
@@ -174,7 +178,7 @@
                       }
 
 
-                stWidget.addEntry({
+               /* stWidget.addEntry({
                         "service":"email",
                         "element":document.getElementById('button_Email_share'),
                         "summary":"link to page i.e: "+urlPath,
@@ -185,6 +189,23 @@
                         "image":imageUrl,
                         "onhover":false
                 });
+*/
+
+
+
+
+               stWidget.addEntry({
+        "service":"email",
+        "element":document.getElementById('button_Email_share'),
+        "summary":"link to page i.e: "+urlPath,
+         "url":"Please click on the link below to view the fundraiser I am participating in.",
+        "title":"Helping my School",
+        "type":"custom",
+        "text":"Helping my School" ,
+        "image":imageUrl,
+        "onhover":false
+});
+
 
             </script>
 
