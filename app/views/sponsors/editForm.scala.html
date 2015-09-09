@@ -133,7 +133,7 @@
                             **@
                             <div class="form-inline sponsoritem_template" id ="form_inline_sponsoritem">
 
-                                @checkbox(pageForm("sponsoritems[x].logo"),'id -> "logo", '_showConstraints -> false, '_label -> "Logo upload allowed", 'class -> "", '_label_class -> "sr-only")
+                                @checkbox(pageForm("sponsoritems[x].logo"),'id -> "logo", 'onclick -> "clickOnLogoCheck(this)", '_showConstraints -> false, '_label -> "Logo upload allowed", 'class -> "", '_label_class -> "sr-only")
                                Logo upload allowed
 
                                 @checkbox(pageForm("sponsoritems[x].webLogo"),'id -> "webLogo", '_showConstraints -> false, '_label -> "Item Title", 'class -> "", '_label_class -> "sr-only")
@@ -393,7 +393,26 @@ $(this).attr("disabled", true);
     }
  });
 
+ function clickOnLogoCheck(logoId){
+ //alert("clickOnLogoCheck"+logoId.name);
+ var indexOfLogo = logoId.name.substring(logoId.name.indexOf("[")+1,logoId.name.indexOf("]"));
+ //alert("indexOfLogo :: "+indexOfLogo);
+  /*str.substring(1, 4);
+  str.indexOf("welcome")*/;
+ /*indexOfLogo.subString*/
+  if ( $(logoId).is(':checked')) {
+     // alert("checkeddddddd");
 
+         webLogoStatus(indexOfLogo,'checked');
+
+        // $(this).siblings().removeAttr("disabled");
+    }else{
+  //  alert("hhh");
+     webLogoStatus(indexOfLogo,'unChecked');
+
+    //$(this).parent.siblings().attr("disabled", true);
+    }
+ }
 
    /* $(document).ready(function(){
      var x ;
