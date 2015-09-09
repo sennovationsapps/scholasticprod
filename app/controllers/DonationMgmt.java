@@ -689,7 +689,7 @@ public class DonationMgmt extends Controller {
 
 		Donation donation = donationForm.get();
 		//============new add for checking web url and img url======================07.09.2015======================start==================//
-/*
+
         if(donation.webUrl!=null){
 			System.out.println("donation.imgUrl :: "+donation.imgUrl);
 			final Http.MultipartFormData body1 = request().body()
@@ -699,12 +699,12 @@ public class DonationMgmt extends Controller {
 					.getFile("imgUrl");
 			System.out.println("imgUrlFilePart1 :: "+imgUrlFilePart1);
 			if(imgUrlFilePart1 == null){
-				donationForm.reject("Please select a image first..");
+				donationForm.reject("Please Upload Logo Image");
 				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 				return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
 						donationForm));
 			}
-		}*/
+		}
 
 		//============new add for checking web url and img url======================07.09.2015=======================end===================//
 		donation.dateCreated = new Date();

@@ -138,14 +138,14 @@
                 @******phno format*************01.09.2015***************end*****@
 
                 @*/*@@*text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*/*@
-			@*   /*@@*if(sponsorItem.logo == true){*/*@
+			@if(sponsorItem.logo == true){
                    @helper.inputFile(donationForm("imgUrl"), '_label -> "Upload Logo Image ", 'class -> "form-control", '_info -> "helpImgUrl")
 
-             @* @if(sponsorItem.webLogo == true){*@
+              @if(sponsorItem.webLogo == true){
                   @helper.inputText(donationForm("webUrl"), '_label -> "Website url", 'class -> "form-control", 'title -> "(Website url)")
-             @* }*@
+              }
 
-            @*   }*@
+               }
                @* @helper.inputFile(donationForm("imgUrl"), '_label -> "Add a smaller image next to your fundraising message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
                 @helper.inputText(donationForm("webUrl"), '_label -> "Website url", 'class -> "form-control", 'title -> "(Website url)")
 *@

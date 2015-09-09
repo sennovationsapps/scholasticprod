@@ -342,7 +342,7 @@ public class SponsorsMgmt extends Controller {
 
 
 			//============new add for checking web url and img url======================07.09.2015======================start==================//
-/*
+
 
 			if(item.webLogo == true){
 				//System.out.println("donation.imgUrl :: "+donation.imgUrl);
@@ -353,7 +353,7 @@ public class SponsorsMgmt extends Controller {
 					return badRequest(editForm.render(event, pageId, sponsorsForm));
 				}
 			}
-*/
+
 
 			//============new add for checking web url and img url======================07.09.2015=======================end===================//
 
