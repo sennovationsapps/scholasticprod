@@ -247,7 +247,7 @@ public class User extends Model implements Subject {
 
 		this.mergedAccounts.add(MergedAccount.create(otherUser));
 
-		Ebean.save(Arrays.asList(new User[] { otherUser, this }));
+		Ebean.save(Arrays.asList(new User[]{otherUser, this}));
 	}
 
 	public void resetPassword(final AuthUser authUser, final boolean create) {
@@ -455,8 +455,27 @@ public class User extends Model implements Subject {
 	}
 
 	public static User findByEmail(final String email) {
+		//System.out.println("email within findByEmail : " + email);
 		return getEmailUserFind(email).findUnique();
+
+		//return getUserFindByEmail(email).findUnique();
 	}
+
+	/***************************get value by user id **************************start**********************************10.09.2015******************************/
+
+
+	public static User findByUserId(final String userId) {
+		System.out.println("userId within findByUserId : " + userId);
+		return getUserFindById(userId).findUnique();
+
+		//return getUserFindByEmail(email).findUnique();
+	}
+
+
+
+	/***************************get value by user id ***************************end***********************************10.09.2015******************************/
+
+
 	
 	public static User findById(Long id) {
 		return find.byId(id);
@@ -503,8 +522,24 @@ public class User extends Model implements Subject {
 	}
 
 	private static ExpressionList<User> getEmailUserFind(final String email) {
+		//System.out.println("email within getEmailUserFind :: "+email);
 		return find.where().eq("active", true).eq("email", email);
 	}
+
+ /**************************************get user by user id********************start****************************10.09.2015********************************************/
+
+
+ private static ExpressionList<User> getUserFindById(final String userId) {
+	 System.out.println("userId within getUserFindById :: "+userId);
+	 return find.where().eq("active", true).eq("id", userId);
+ }
+
+
+	/**************************************get user by user id********************end****************************10.09.2015********************************************/
+
+
+
+
 
 
 	/*****************new addition******for partial search of email*********19.08.2015**********start*******/
@@ -545,6 +580,7 @@ public class User extends Model implements Subject {
 	}
 
 	public static ExpressionList<User> findByFirst(final String first) {
+		System.out.println("first within findByFirst :: "+first);
 		return getFirstUserFind(first);
 	}
 
@@ -566,6 +602,7 @@ public class User extends Model implements Subject {
 
 
 	private static ExpressionList<User>  getFirstUserFind(String first){
+		System.out.println("first within getFirstUserFind :: "+first);
 		return find.where().eq("active", true).like("LCASE(firstName)", first.toLowerCase()+"%");
 
 	}

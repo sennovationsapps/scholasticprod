@@ -2,12 +2,12 @@ package controllers;
 
 import static play.data.Form.form;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import models.Donation;
-import models.Event;
-import models.Team;
+import models.*;
 import models.aws.S3File;
 import models.security.SecurityRole;
 import models.security.User;
@@ -122,13 +122,90 @@ public class TeamMgmt extends Controller {
 		final Team team = Team.findById(teamId);
 		final Map<String, Map<Long, ?>> donations = Donation.getTotalAdminDonations(event, team);
 		final boolean isOpen = Event.isEventOpen(event);
-		
+
+
+
+
+
+		//===========================uploadimage and web url=======================10.09.2015======================start==============================//
+
+
+		System.out.println("within view event ::event id ----> "+event.id);
+		final Sponsors sponsors = Sponsors.findByEventId(event.id);
+		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
+		Iterator<Donation> iterator=donationList.iterator();
+		List<Donation> donationList1 = new ArrayList();
+		while(iterator.hasNext()){
+			Donation donation=iterator.next();
+
+			SponsorItem sponsorItemFromSponsors;
+			if((sponsors.sponsoritems!=null&& sponsors.sponsoritems.size()>0) && donation.sponsorItem!=null){
+				for(int i = 0 ; i<sponsors.sponsoritems.size();i++){
+					sponsorItemFromSponsors= sponsors.sponsoritems.get(i);
+
+					if( donation.sponsorItem.id.equals(sponsorItemFromSponsors.id) ){
+						System.out.println("checkbox for :: "+donation.sponsorItem.title+" sponsor item logo "+sponsorItemFromSponsors.logo);
+
+						System.out.println("donation.sponsorItem.logo :: "+donation.sponsorItem.logo);
+						if(donation.sponsorItem.logo == true){
+
+							//============web url checking======start============07.09.2015========================//
+							System.out.println("iffff  " + donation.imgUrl + "<for>" + donation.sponsorItem.title);
+							if(donation.sponsorItem.webLogo == true){
+								donationList1.add(donation);
+							}else{
+								donation.webUrl = null;
+								donationList1.add(donation);
+							}
+							//============web url checking=======end=============07.09.2015========================//
+
+						}else {
+							System.out.println(" elseee " + donation.imgUrl + "<for>"+donation.sponsorItem.title);
+							/*donationList1.add(donation);*/
+						}
+
+					}
+				}
+			}
+
+		}
+
+
+		int imgUrl=0;
+
+		for(Donation donation:donationList1){
+			if(donation.imgUrl!=null){
+				imgUrl++;
+			}
+
+		}
+
+
+
 		return ok(viewTeam.render(event, team,
 				isOpen,
 				Event.canParticipate(localUser, isOpen),
 				Event.canManage(localUser, event),
 				(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"),
-				(Map<Long, Donation.DonationsByTeam>)donations.get("team")));
+				(Map<Long, Donation.DonationsByTeam>)donations.get("team"),
+				donationList1,
+				imgUrl));
+
+
+
+//===========================uploadimage and web url=======================10.09.2015======================end==============================//
+
+
+
+
+
+
+		/*return ok(viewTeam.render(event, team,
+				isOpen,
+				Event.canParticipate(localUser, isOpen),
+				Event.canManage(localUser, event),
+				(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"),
+				(Map<Long, Donation.DonationsByTeam>)donations.get("team")));*/
 	}
 
 	public static String getUrl(Team team) {
