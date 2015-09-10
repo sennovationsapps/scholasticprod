@@ -168,7 +168,7 @@ public class Application extends Controller {
 		System.out.println("within organizational search...");
 		String type = request().getQueryString("type");
 		String id = request().getQueryString("id");
-
+		System.out.println("id within organizationalSearch :: "+id);
 		ExpressionList<User> user = null;
 		ExpressionList<Organization> orga = null;
 		User user1=null;
@@ -177,14 +177,17 @@ public class Application extends Controller {
 		System.out.println("type :: "+type);
 		if (StringUtils.equals(type, "email")) {
 			System.out.println("StringUtils.equals(type, email)");
+
 			user = User.findByEmailList(id);
 			System.out.println("user :: "+user);
 			list = user.findList();
 			System.out.println(":::::::::::::::::::  list :::::::::::::::: "+list.size());
 		}
 		if (StringUtils.equals(type, "first")) {
+			System.out.println("within type first..");
 			user = User.findByFirst(id);
 			list = user.findList();
+			//System.out.println("list after type first.."+list);
 		}
 		if (StringUtils.equals(type, "last")) {
 			user = User.findByLast(id);
@@ -251,8 +254,18 @@ public class Application extends Controller {
 		User user = null;
 		List<User> list = null;
 		if(StringUtils.equals(type, "email")) {
+			System.out.println("the id is :: "+id);
 			user = User.findByEmail(id);
 		}
+		//===============new addtion get user by id=============start===================10.09.2015===========================================//
+
+
+		if(StringUtils.equals(type, "userId")) {
+			System.out.println("the id in userID is :: "+id);
+			user = User.findByUserId(id);
+		}
+
+		//===============new addtion get user by id==============end====================10.09.2015===========================================//
 		if(StringUtils.equals(type, "taxid")) {
 			user = User.findByTaxid(NumberUtils.createLong(id));
 		}

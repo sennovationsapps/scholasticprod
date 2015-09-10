@@ -44,11 +44,11 @@
 
                 <div class="form-group">
                   <label for="taxId" class="  ">PFP's First Name</i></label>
-                  <input type="text" id="firstName" name="taxId" value="" class="form-control" placeholder="Enter Event Admin's First Name">
+                  <input type="text" id="firstName" name="firstName" value="" class="form-control" placeholder="Enter Event Admin's First Name">
                 </div>
                 <div class="form-group">
                   <label for="taxId" class="  ">PFP's Last Name</i></label>
-                  <input type="text" id="lastName" name="taxId" value="" class="form-control" placeholder="Enter Event Admin's Last Name">
+                  <input type="text" id="lastName" name="lastName" value="" class="form-control" placeholder="Enter Event Admin's Last Name">
                 </div>
 
 
@@ -84,7 +84,7 @@
                   <tbody>
                   @for(users <- mgdUser) {
                     <tr>
-                      <td><a href="@routes.Application.organizationEditProfiles?type=email&id=@users.email">@users.firstName</a></td>
+                      <td><a href="@routes.Application.organizationEditProfiles?type=userId&id=@users.id">@users.firstName</a></td>
                       <td>@users.lastName</td>
                       <td>@users.email</td>
                       <td>@users.taxid</td>

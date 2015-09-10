@@ -2,14 +2,9 @@ package controllers;
 
 import static play.data.Form.form;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import models.Donation;
-import models.Event;
-import models.Pfp;
-import models.Team;
+import models.*;
 import models.Pfp.PfpType;
 import models.aws.S3File;
 import models.security.SecurityRole;
@@ -134,6 +129,88 @@ public class PfpMgmt extends Controller {
 		final List<Donation> donations = Donation.findByPfpId(pfp.id);
 		final Map<Long, Donation.DonationsByTeam> teamDonations = Donation
 				.getTotalTeamDonations(event.id);
+
+
+
+
+
+
+
+
+
+		//===========================uploadimage and web url=======================10.09.2015======================start==============================//
+
+
+		System.out.println("within view event ::event id ----> "+event.id);
+		final Sponsors sponsors = Sponsors.findByEventId(event.id);
+		List<Donation> donationList = (List<Donation>)Donation.findAllByEventId(event.id);
+		Iterator<Donation> iterator=donationList.iterator();
+		List<Donation> donationList1 = new ArrayList();
+		while(iterator.hasNext()){
+			Donation donation=iterator.next();
+
+			SponsorItem sponsorItemFromSponsors;
+			if((sponsors.sponsoritems!=null&& sponsors.sponsoritems.size()>0) && donation.sponsorItem!=null){
+				for(int i = 0 ; i<sponsors.sponsoritems.size();i++){
+					sponsorItemFromSponsors= sponsors.sponsoritems.get(i);
+
+					if( donation.sponsorItem.id.equals(sponsorItemFromSponsors.id) ){
+						System.out.println("checkbox for :: "+donation.sponsorItem.title+" sponsor item logo "+sponsorItemFromSponsors.logo);
+
+						System.out.println("donation.sponsorItem.logo :: "+donation.sponsorItem.logo);
+						if(donation.sponsorItem.logo == true){
+
+							//============web url checking======start============07.09.2015========================//
+							System.out.println("iffff  " + donation.imgUrl + "<for>" + donation.sponsorItem.title);
+							if(donation.sponsorItem.webLogo == true){
+								donationList1.add(donation);
+							}else{
+								donation.webUrl = null;
+								donationList1.add(donation);
+							}
+							//============web url checking=======end=============07.09.2015========================//
+
+						}else {
+							System.out.println(" elseee " + donation.imgUrl + "<for>"+donation.sponsorItem.title);
+							/*donationList1.add(donation);*/
+						}
+
+					}
+				}
+			}
+
+		}
+
+
+		int imgUrl=0;
+
+		for(Donation donation:donationList1){
+			if(donation.imgUrl!=null){
+				imgUrl++;
+			}
+
+		}
+
+
+
+	/*	return ok(viewTeam.render(event, team,
+				isOpen,
+				Event.canParticipate(localUser, isOpen),
+				Event.canManage(localUser, event),
+				(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"),
+				(Map<Long, Donation.DonationsByTeam>)donations.get("team"),
+				donationList1,
+				imgUrl));
+*/
+
+
+//===========================uploadimage and web url=======================10.09.2015======================end==============================//
+
+
+
+
+
+
 		User localUser = ControllerUtil.getLocalUser(session());
 		if(Logger.isDebugEnabled()) {
 			if(pfp == null) {
@@ -149,9 +226,15 @@ public class PfpMgmt extends Controller {
 				}
 			}
 		}
+		/*return ok(viewPfp.render(event, pfp, donations, teamDonations, Event
+				.isEventOpen(event), Pfp.canManage(
+						localUser, event, pfp)));*/
+
 		return ok(viewPfp.render(event, pfp, donations, teamDonations, Event
 				.isEventOpen(event), Pfp.canManage(
-						localUser, event, pfp)));
+				localUser, event, pfp),donationList1,imgUrl));
+
+
 	}
 
 	/**
