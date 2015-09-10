@@ -787,7 +787,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 		if (StringUtils.equals("donorName", fieldName)
 				|| StringUtils.equals("transactionNumber", fieldName)
 				|| StringUtils.equals("ccDigits", fieldName)
-				|| StringUtils.equals("schoolId", fieldName)) {
+				|| StringUtils.equals("schoolId", fieldName)
+				|| StringUtils.equals("invoice_number",fieldName)) {
 			queryField = fieldName;
 		}
 		if (StringUtils.equals("pfpName", fieldName) ) {
