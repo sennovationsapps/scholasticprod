@@ -2,6 +2,7 @@ package controllers;
 
 import static play.data.Form.form;
 
+
 import models.security.TokenAction;
 import models.security.TokenAction.Type;
 import models.security.User;
@@ -247,6 +248,13 @@ public class Signup extends Controller {
 	 * @return the result
 	 */
 	public static Result loginFromCorp() {
+
+		//=======================new add================start=========================15.09.2015==============================//
+		/*CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
+		Thread t = new Thread(cronJobUtilsThread);
+		t.start();*/
+		//=======================new add================end=========================15.09.2015==============================//
+
 		return ok(login.render(EmailAuthProvider.LOGIN_FORM));
 	}
 

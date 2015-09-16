@@ -273,6 +273,11 @@
 					          <th>Supporter</th>
 					          <th>Message</th>
 					          <th>Amount</th>
+                                @**************start*****************************15.09.2015***********************************@
+                                <th style="font-size: 12px;width: 100px;">Mode of Payment</th>
+                                @*<th style="font-size: 12px;">Payment Status</th>*@
+                                @***************end******************************15.09.2015***********************************@
+
 					        </tr>
 					      </thead>
 					      <tbody>
@@ -283,9 +288,57 @@
                         }  else {
                        @for(donation <- pfpDonations) {
                         <tr>
-					          <td>@donation.donorName</td>
+					          @*<td>@donation.donorName</td>
 					          <td>@donation.donorMessage</td>
-					          <td>@donation.amount</td>
+					          <td>@donation.amount</td>*@
+                            @**************start*****************************15.09.2015***********************************@
+
+                           @* @if(donation.paymentType!=null) {
+
+
+                                @if(donation.paymentType.getValue.equals("Credit")){
+                                    <td style="width: 100px;">Credit Card</td>
+                                }
+                                @if(donation.paymentType.getValue.equals("Check")){
+                                    <td style="width: 100px;">Check</td>
+                                }
+
+                            }else{
+                                <td style="width: 100px;"></td>
+                            }
+*@
+
+
+                            @if(donation.status!=null){
+                                @if(donation.status.getValue.equalsIgnoreCase("Cleared")){
+                                    <td>@donation.donorName</td>
+                                    <td>@donation.donorMessage</td>
+                                    <td>@donation.amount</td>
+                                    @if(donation.paymentType!=null) {
+
+
+                                        @if(donation.paymentType.getValue.equals("Credit")){
+                                            <td style="width: 100px;">Credit Card</td>
+                                        }
+                                        @if(donation.paymentType.getValue.equals("Check")){
+                                            <td style="width: 100px;">Check</td>
+                                        }
+
+                                    }else{
+                                        <td style="width: 100px;"></td>
+                                    }
+
+
+
+                                    @* <td>@donation.status.getValue</td>*@
+                                }else{
+
+                                }
+
+                            }else{
+                                <td colspan="3">No Donations At This Time</td>
+                            }
+                            @***************end******************************15.09.2015***********************************@
 					        </tr>
                         }
                         }

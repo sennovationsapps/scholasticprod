@@ -552,6 +552,7 @@ public class DonationMgmt extends Controller {
 			} else if (StringUtils.isNotEmpty(donation.ccCvvCode)) {
 				donation.paymentType = PaymentType.CREDIT;
 			} else if (StringUtils.isNotEmpty(donation.checkNum)) {
+				System.out.println("PaymentType.CHECK : "+PaymentType.CHECK);
 				donation.paymentType = PaymentType.CHECK;
 			} else {
 				donation.paymentType = PaymentType.CASH;
@@ -634,11 +635,15 @@ public class DonationMgmt extends Controller {
 		}
 
 		} else if (donation.paymentType == PaymentType.CHECK) {
+			System.out.println("PaymentType.CHECK 111:"+donation.paymentType);
 			donation.transactionNumber = UUID.randomUUID().toString();
 			donation.status = PaymentStatus.PENDING;
 			donation.save();
+			System.out.println("after save PaymentType.CHECK 111 : "+donation.paymentType);
+
 			PAYMENT_LOGGER.info("A Check Donation [{}] was made for PFP ID [{}] in the amount of [{}] by [{} {}]", donation.id, donation.pfp.id, donation.amount, donation.firstName, donation.lastName);
 		} else {
+			System.out.println("elseee in donation type");
 			donation.status = PaymentStatus.CLEARED;
 			donation.datePaid = new Date();
 			donation.save();
@@ -646,6 +651,7 @@ public class DonationMgmt extends Controller {
 		}
 		
 		Donation updatedDonation = Donation.findById(donation.id);
+		System.out.println("after save :: "+donation.status);
 		final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
 		if (pfp.pfpType == PfpType.PFP && updatedDonation.paymentType != PaymentType.CHECK) {
 			ReceiptMgmt.sendSponsoredMsg(updatedDonation);

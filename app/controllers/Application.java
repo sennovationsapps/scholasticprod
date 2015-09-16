@@ -1,35 +1,34 @@
 package controllers;
 
-import static play.data.Form.form;
-
-import java.util.Arrays;
-import java.util.List;
-
+import base.utils.CronJobUtilsThread;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.avaje.ebean.ExpressionList;
 import models.ContactUs;
 import models.Donation;
 import models.Event;
 import models.Pfp;
 import models.security.*;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
 import play.Logger;
 import play.Routes;
 import play.data.Form;
 import play.db.ebean.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.general.helpcenter;
 import views.html.index;
 import views.html.profile.*;
 import views.html.restricted;
-import views.html.general.helpcenter;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static play.data.Form.form;
 
 
 /**
@@ -86,6 +85,46 @@ public class Application extends Controller {
 			@Group(SecurityRole.EVENT_ADMIN) })
 	@SubjectPresent
 	public static Result profile() {
+
+
+		//=======================new add================start=========================15.09.2015==============================//
+
+		System.out.println("before calling cronJobUtilsThread..");
+		CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
+		Thread t = new Thread(cronJobUtilsThread);
+		t.setPriority(1);
+		t.start();
+
+		System.out.println("after calling cronJobUtilsThread..");
+
+
+
+		/*ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
+		ses.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				// do some work
+				System.out.println("within thread ScheduledExecutorService");
+			}
+		}, 0, 5, TimeUnit.MINUTES);  // every 5 minutes
+
+		// when anything is entered, the task is stopped
+		Scanner sc = new Scanner(System.in);
+		String whatever = sc.next();
+		// shutdown the executor
+		ses.shutdown();
+		try{
+			ses.awaitTermination(15, TimeUnit.SECONDS);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+*/
+
+
+
+		//=======================new add================end=========================15.09.2015==============================//
+
+
 		final User localUser = ControllerUtil.getLocalUser(session());
 		if (localUser == null) {
 			return ok(index.render());
@@ -126,6 +165,9 @@ public class Application extends Controller {
 					"Your account is now setup.  Your next step is to select the Event that you would like to participate it.");
 			return EventMgmt.index();
 		}
+
+
+
 		return ok(profileMain.render(localUser));
 	}
 

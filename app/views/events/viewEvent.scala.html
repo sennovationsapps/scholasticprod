@@ -693,6 +693,10 @@
 					        <tr>
 					          <th>Participant</th>
 					          <th>Amount</th>
+                                @**************start*****************************15.09.2015***********************************@
+                              @*  <th style="font-size: 12px; width: 100px;">Mode of Payment</th>
+                                <th style="font-size: 12px;">Payment Status</th>*@
+                                @***************end******************************15.09.2015***********************************@
 					        </tr>
 					      </thead>
 					      <tbody>
@@ -705,6 +709,48 @@
 							<tr>
 					          <td>@if(value.isPrivate && !(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN))) { Private Account } else { <a href="@routes.PfpMgmt.getById(event, key)">@value.name</a> }</td>
 					          <td>@value.amount</td>
+                                @*/*@@*if(value.paymentType!=null){
+                                    @if(value.paymentType.getValue().equals("CREDIT")){
+                                        <td>Credit Card</td>
+                                    }
+                                    @if(value.paymentType.equals("CHECK")){
+                                        <td>Cheque</td>
+                                    }else{
+                                        <td></td>
+                                    }
+
+                                }else{
+                                    <td></td>
+                                }*/*@
+                                @**************start*****************************15.09.2015***********************************@
+                            @*    @if(value.paymentType!=null) {
+
+
+                                    @if(value.paymentType.getValue.equals("Credit")){
+                                        <td style="width: 100px;">Credit Card</td>
+                                    }
+                                    @if(value.paymentType.getValue.equals("Check")){
+                                        <td style="width: 100px;">Check</td>
+                                    }
+
+                                }else{
+                                    <td style="width: 100px;"></td>
+                                }
+
+
+
+                                @if(value.status!=null){
+                                    @if(value.status.getValue.equalsIgnoreCase("Cleared")){
+                                        <td>@value.status.getValue</td>
+                                    }else{
+                                        <td></td>
+                                    }
+
+                                }else{
+                                    <td></td>
+                                }*@
+                                @***************end******************************15.09.2015***********************************@
+
 
                           <!--------start:<>------create delete and edit link-----------05.08.2015----->
                                 @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||

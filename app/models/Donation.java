@@ -1,55 +1,31 @@
 package models;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-
+import base.utils.DateUtils;
+import base.utils.SortUtils;
+import com.avaje.ebean.*;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import models.Pfp.PfpType;
 import models.security.User;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang3.StringUtils;
-
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Pattern;
 import play.db.ebean.Model;
 import play.mvc.PathBindable;
-import base.utils.DateUtils;
-// import scala.collection.generic.BitOperations.Int;
-import base.utils.SortUtils;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Page;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
-import com.avaje.ebean.annotation.EnumValue;
+import javax.persistence.*;
+import java.net.URL;
+import java.util.*;
+
+// import scala.collection.generic.BitOperations.Int;
 
 /**
  * Event entity managed by JPA
@@ -437,8 +413,18 @@ public class Donation extends Model implements PathBindable<Donation> {
 	
 	public static List<Donation.DonationTotals> findByEventExceptSponsorTotals(Long eventId) {
 		List<Donation.DonationTotals> donations = new ArrayList<Donation.DonationTotals>();
-		String sql = "SELECT donation.pfp_id, pfp.name as pfp_name, pfp.private_acct, donation.id as donation_id, team.id as team_id, team.name as team_name, donation.amount from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and (donation.status = 0 or donation.status = 2) and donation.event_id = :eventId and pfp.team_id = team.id order by team.id;";
-		
+		System.out.println("eventId findByEventExceptSponsorTotals :: "+eventId);
+		//String sql = "SELECT donation.pfp_id, pfp.name as pfp_name, pfp.private_acct, donation.id as donation_id, team.id as team_id, team.name as team_name, donation.amount from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and (donation.status = 0 or donation.status = 2) and donation.event_id = :eventId and pfp.team_id = team.id order by team.id;";
+		//===================14.09.2015============================start===========================//
+		/*String sql = "SELECT donation.status, donation.donation_type, donation.pfp_id, pfp.name as pfp_name, pfp.private_acct, donation.id as donation_id, team.id as team_id, team.name as team_name, donation.amount from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and (donation.status = 0 or donation.status = 2) and donation.event_id = :eventId and pfp.team_id = team.id order by team.id;";*/
+		//===================14.09.2015============================start===========================//
+
+		//===================16.09.2015============================start===========================//
+		String sql = "SELECT donation.status, donation.donation_type, donation.pfp_id, pfp.name as pfp_name, pfp.private_acct, donation.id as donation_id, team.id as team_id, team.name as team_name, donation.amount from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and  donation.status = 2 and donation.event_id = :eventId and pfp.team_id = team.id order by team.id;";
+		//===================16.09.2015=============================end============================//
+
+
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("eventId", eventId);
 		
@@ -454,6 +440,104 @@ public class Donation extends Model implements PathBindable<Donation> {
 				donationByPfp.teamName = row.getString("team_name");
 				donationByPfp.donationId = row.getLong("donation_id");
 				donationByPfp.isPrivate = row.getBoolean("private_acct");
+				//===================14.09.2015============================start===========================//
+
+			//	System.out.println("row.getInteger:status "+row.getInteger("status"));
+				//PaymentStatus paymentStatus=PaymentStatus.get(row.getInteger("status") + "");
+				int id=row.getInteger("status");
+
+				if(id == 0){
+					donationByPfp.status = PaymentStatus.APPROVED;
+				}else if(id == 1){
+					donationByPfp.status = PaymentStatus.PENDING;
+
+					//actualPaymentStatusValue = "Pending";
+
+				}else if(id == 2){
+					donationByPfp.status = PaymentStatus.CLEARED;
+
+					//actualPaymentStatusValue = "Cleared";
+
+				}else if(id == 3){
+					donationByPfp.status = PaymentStatus.REFUNDED;
+
+				//	actualPaymentStatusValue = "Refunded";
+
+				}else {
+					donationByPfp.status = PaymentStatus.FAILED;
+					//actualPaymentStatusValue = "Failed";
+
+				}
+
+
+
+
+
+
+
+
+
+
+
+
+				//donationByPfp.status	=  PaymentStatus.get(row.getInteger("status") + "");
+
+
+				if(donationByPfp.pfpName.equals("FRIENDS OF DR JOEY JONES")) {
+					System.out.println("**************************************");
+
+					System.out.println("id :: " + id);
+					System.out.println("donationByPfp.pfpName :: " + donationByPfp.pfpName);
+					System.out.println("donationByPfp.status :: " + donationByPfp.status);
+					System.out.println("row.getInteger:donation_type " + row.getInteger("donation_type"));
+					System.out.println("**************************************");
+				} else if(donationByPfp.pfpName.equals("Morgan Tinsley")) {
+					System.out.println("**************************************");
+
+					System.out.println("id :: " + id);
+					System.out.println("donationByPfp.pfpName :: " + donationByPfp.pfpName);
+					System.out.println("donationByPfp.status :: " + donationByPfp.status);
+					System.out.println("row.getInteger:donation_type " + row.getInteger("donation_type"));
+					System.out.println("**************************************");
+				}
+
+
+
+
+						int paymentId = row.getInteger("donation_type");
+
+
+
+				 if(paymentId == 1){
+					// System.out.println("PaymentType.CREDIT :: "+PaymentType.CREDIT);
+					donationByPfp.paymentType = PaymentType.CREDIT;
+
+					//actualPaymentStatusValue = "Pending";
+
+				}else if(paymentId == 2){
+					// System.out.println("donationByPfp.paymentType = PaymentType.CHECK :: "+donationByPfp.paymentType);
+					donationByPfp.paymentType = PaymentType.CHECK;
+
+					//actualPaymentStatusValue = "Cleared";
+
+				}else {
+					// System.out.println("donationByPfp.paymentType = PaymentType.CASH :: "+donationByPfp.paymentType);
+					donationByPfp.paymentType = PaymentType.CASH;
+					//actualPaymentStatusValue = "Failed";
+
+				}
+
+
+
+
+
+			//	donationByPfp.paymentType	=	PaymentType.get(row.getInteger("donation_type")+"");
+				System.out.println("donationByPfp.paymentType :: "+donationByPfp.paymentType);
+
+
+
+
+				//===================14.09.2015============================end=============================//
 				donations.add(donationByPfp);
 			}
 		}
@@ -488,9 +572,12 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static class DonationTotals implements Comparable {
-		
+
+
+
 		public DonationTotals() {
 			super();
+
 			// TODO Auto-generated constructor stub
 		}
 		
@@ -513,7 +600,14 @@ public class Donation extends Model implements PathBindable<Donation> {
 		public String	teamName;
 		public Long		donationId;
 		public boolean	isPrivate;
-		
+
+
+		//============start====================14.09.2015=====================================//
+
+		public PaymentStatus	status;
+
+		public PaymentType		paymentType;
+		//=============end=====================14.09.2015=====================================//
 		@Override
 		public int compareTo(Object arg0) {
 			return this.pfpName.compareTo(((DonationTotals) arg0).pfpName);
@@ -536,6 +630,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 			this.id = totals.pfpId;
 			this.name = totals.pfpName;
 			this.isPrivate = totals.isPrivate;
+			this.status = totals.status;
+			this.paymentType = totals.paymentType;
 		}
 		
 		public DonationsByPfp() {
@@ -547,6 +643,12 @@ public class Donation extends Model implements PathBindable<Donation> {
 		public Long		id;
 		public String	name;
 		public boolean	isPrivate;
+
+		//==========================start=========================14.09.2015=============================//
+		public PaymentStatus	status;
+
+		public PaymentType		paymentType;
+		//==========================end===========================14.09.2015=============================//
 		
 		@Override
 		public int compareTo(Object arg0) {
@@ -610,6 +712,14 @@ public class Donation extends Model implements PathBindable<Donation> {
 	public static Donation findById(Long id) {
 		return find.byId(id);
 	}
+
+	//==========================findByTransactionNo================start=====================15.09.2015========================//
+
+	/*public static Donation findByTransactionNo(Long transactionNumber) {
+		return find.byId(transactionNumber);
+	}*/
+
+	//==========================findByTransactionNo=================end======================15.09.2015========================//
 	
 	public static Donation findByIdWithMin(Long id) {
 		return find.where().eq("id", id).select("id, amount, donorName, pfp.id, pfp.name, transactionNumber, ccDigits, paymentType, status, event.id, event.name, invoiceNumber").fetch("pfp").fetch("event").findUnique();
@@ -631,7 +741,11 @@ public class Donation extends Model implements PathBindable<Donation> {
 	public static int getTotalDonations(List<Donation> donations) {
 		int total = 0;
 		for (final Donation donation : donations) {
-			total += donation.amount;
+			//======================start============================16.09.2015============================//
+			if(donation.status.getValue().equalsIgnoreCase("Cleared")){
+				total += donation.amount;
+			}
+			//=======================end=============================16.09.2015============================//
 		}
 		return total;
 	}
@@ -660,7 +774,10 @@ public class Donation extends Model implements PathBindable<Donation> {
 		for (final Donation.DonationTotals donation : donations) {
 			if(pfpTeam == null || (pfpTeam != null && ObjectUtils.compare(pfpTeam.id, donation.teamId) == 0)) {
 				if (pfpTotals.containsKey(donation.pfpId)) {
-					pfpTotals.get(donation.pfpId).amount = pfpTotals.get(donation.pfpId).amount + donation.amount;
+					if(donation.status.getValue().equalsIgnoreCase("Cleared")){
+						pfpTotals.get(donation.pfpId).amount = pfpTotals.get(donation.pfpId).amount + donation.amount;
+					}
+
 					// pfpTotals.put(donation.pfpId,
 					// (pfpTotals.get(donation.pfpId).amount + donation.amount));
 				} else {
@@ -859,7 +976,45 @@ public class Donation extends Model implements PathBindable<Donation> {
 			this.id = id;
 			this.value = value;
 		}
-		
+
+
+
+
+
+
+		//====================get value against id======start================14.09.2015==============================//
+
+
+
+
+		public static String getPaymentStatusValueFromId(int id){
+
+		//	PaymentStatus pt.value = actualPaymentStatusValue;
+			String actualPaymentStatusValue = null;
+
+			if(id == 0){
+				actualPaymentStatusValue = "Approved";
+			}else if(id == 1){
+				actualPaymentStatusValue = "Pending";
+
+			}else if(id == 2){
+				actualPaymentStatusValue = "Cleared";
+
+			}else if(id == 3){
+				actualPaymentStatusValue = "Refunded";
+
+			}else if(id == 4){
+				actualPaymentStatusValue = "Failed";
+
+			}
+
+			return actualPaymentStatusValue;
+		}
+
+
+
+
+		//====================get value against id=======end=================14.09.2015==============================//
 		// @Override
 		// public String toString() {
 		// return id + "";
@@ -868,8 +1023,10 @@ public class Donation extends Model implements PathBindable<Donation> {
 	
 	public enum PaymentType {
 		@EnumValue("1")
-		CREDIT(1, "Credit"), @EnumValue("2")
-		CHECK(2, "Check"), @EnumValue("3")
+		CREDIT(1, "Credit"),
+		@EnumValue("2")
+		CHECK(2, "Check"),
+		@EnumValue("3")
 		CASH(3, "Cash");
 		
 		private static final Map<String, PaymentType>	MAP		= new HashMap<String, PaymentType>();

@@ -1,5 +1,5 @@
 @(donation: Donation)
-
+<center><link rel="shortcut icon" type="image/png" href="@ControllerUtil.getResourceRoute("favicon.jpg")"></center>
 *PLEASE NOTE THAT ON YOUR CREDIT CARD STATEMENT YOUR DONATION WILL BE PROCESSED BY SCHOLASTIC CHALLENGE INC..
 
 Thank you for your generous contribution to the @donation.event.userAdmin.organization.name as part of the annual @donation.event.name fundraiser. The funds raised by the @donation.event.name will directly serve the students and families of our school. 
