@@ -569,14 +569,14 @@ public class DonationMgmt extends Controller {
 			}
 			System.out.println("within save......donation.pfp.id "+donation.pfp.id);
 			System.out.println("before calling findDuplicateDonationToSameDonor.. ");
-			boolean isDuplicationOfDonation = donation.findDuplicateDonationToSameDonor( donation.pfp.id, donation.donorName, event.id);
+			/*boolean isDuplicationOfDonation = donation.findDuplicateDonationToSameDonor( donation.pfp.id, donation.donorName, event.id);
 			System.out.println("isDuplicationOfDonation :: "+isDuplicationOfDonation);
 			if(isDuplicationOfDonation == true){
 				System.out.println("isDuplicationOfDonation == true");
 				donationForm.reject("Please Donate to Different Participant");
 				return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 			}
-			else{
+			else{*/
 			donation.status = PaymentStatus.APPROVED;
 			donation.transactionNumber = UUID.randomUUID().toString();
 			PAYMENT_LOGGER.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
@@ -632,7 +632,7 @@ public class DonationMgmt extends Controller {
 
 		return redirect(WorldPlayUrl);
 			//return redirect("https://trans.worldpay.us/cgi-bin/WebPay.cgi?formid=574301A941C9A095E474EF84D558739DC1AD0EE09278E5E321CB1E4970121245&sessionid=62A6DC8C9A988EA9");
-		}
+		//}
 
 		} else if (donation.paymentType == PaymentType.CHECK) {
 			System.out.println("PaymentType.CHECK 111:"+donation.paymentType);
