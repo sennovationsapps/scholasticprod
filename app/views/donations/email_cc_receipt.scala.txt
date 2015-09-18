@@ -1,11 +1,11 @@
 @(donation: Donation)
-<center><link rel="shortcut icon" type="image/png" href="@ControllerUtil.getResourceRoute("favicon.jpg")"></center>
+
 *PLEASE NOTE THAT ON YOUR CREDIT CARD STATEMENT YOUR DONATION WILL BE PROCESSED BY SCHOLASTIC CHALLENGE INC..
 
-Thank you for your generous contribution to the @donation.event.userAdmin.organization.name as part of the annual @donation.event.name fundraiser. The funds raised by the @donation.event.name will directly serve the students and families of our school. 
- 
-Please save this information as a receipt for donation to be used as your tax deductible donation. 
- 
+Thank you for your generous contribution to the @donation.event.userAdmin.organization.name as part of the annual @donation.event.name fundraiser. The funds raised by the @donation.event.name will directly serve the students and families of our school.
+
+Please save this information as a receipt for donation to be used as your tax deductible donation.
+
 
 Non-Profit Information:
 Non-Profit Name: @donation.event.userAdmin.organization.name
@@ -13,10 +13,10 @@ Non-Profit Address: @donation.event.userAdmin.organization.address, @donation.ev
 Non-Profit Tax ID #: @donation.event.userAdmin.organization.taxId
 
 Payment Information:
-Donor: @donation.firstName @donation.lastName (ID: @donation.id)
+Donor: @donation.ccName (ID: @donation.id)
 Participant: @donation.pfp.name (ID: @donation.pfp.id)
 Donation Amount: $@donation.amount
-Card Number: @donation.ccDigits
+Card Number: @donation.ccNum
 Transaction ID: @donation.transactionNumber
 Time Submitted: @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
 

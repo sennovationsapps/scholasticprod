@@ -1,29 +1,15 @@
 package controllers;
 
-import org.slf4j.LoggerFactory;
-
+import com.feth.play.module.mail.Mailer;
+import com.feth.play.module.mail.Mailer.Mail.Body;
 import models.Donation;
 import models.Donation.DonationType;
 import models.Event;
 import models.Pfp.PfpType;
+import org.slf4j.LoggerFactory;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
-import views.html.donations.editForm;
 import views.html.donations.viewReceipt;
-import views.html.donations.createForm;
-import views.html.donations.list;
-import views.html.donations.viewDonation;
-import views.html.profile.profileDonationsReconcile;
-
-import com.feth.play.module.mail.Mailer;
-import com.feth.play.module.mail.Mailer.Mail.Body;
-import play.libs.F.Function;
-import play.libs.*;
-import play.mvc.*;
-import base.utils.MailUtils;
-
-import javax.print.DocFlavor;
 
 /**
  * Manage a database of donations.
@@ -38,7 +24,7 @@ public class ReceiptMgmt extends Controller {
 				.render(donation).toString();
 		ReceiptMgmt.generateEmailReceipt(ReceiptMgmt.getGeneralSubject(donation), message, donation.email);
 		RECEIPT_LOGGER.info("Successfully sent a check receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] in the amount of [{}]",
-						donation.pfp.id, donation.event.id, donation.id, donation.amount);
+				donation.pfp.id, donation.event.id, donation.id, donation.amount);
 	}
 
 	public static Result getCheckReceipt(Event event, Donation donation) {
@@ -84,6 +70,16 @@ public class ReceiptMgmt extends Controller {
 		ReceiptMgmt.generateEmailReceipt(ReceiptMgmt.getGeneralSubject(donation), message, donation.email);
 		RECEIPT_LOGGER.info("Successfully sent a cc receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}]",
 						donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount);
+	}
+
+
+
+	public static void sendCCReceiptForCron(Donation donation) {
+		String message = views.txt.donations.email_cc_receipt
+				.render(donation).toString();
+		ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Tax Letter", message, donation.email);
+		RECEIPT_LOGGER.info("Successfully sent a cc receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}]",
+				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount);
 	}
 
 	public static Result getCCReceipt(Event event, Donation donation) {
@@ -142,18 +138,39 @@ public class ReceiptMgmt extends Controller {
 	}
 	
 	private static void generateEmailReceipt(String subject, String content, String email) {
+		System.out.println("subject in generateEmailReceipt :: "+subject);
 		final Body body = new Body(content);
 
 		Mailer.getDefaultMailer().sendMail(subject, body,
 				email);
 	}
 	
+/*
+	private static String getGeneralSubject(Donation donation) {
+		if(donation.donationType == DonationType.SPONSOR) {
+
+
+				return "Scholastic Challenge - Sponsorship";
+
+
+
+		}
+
+			return "Scholastic Challenge - Donation";
+
+
+	}
+*/
+
+
+
 	private static String getGeneralSubject(Donation donation) {
 		if(donation.donationType == DonationType.SPONSOR) {
 			return "Scholastic Challenge - Sponsorship";
 		}
 		return "Scholastic Challenge - Donation";
 	}
+
 
 
 	public static void PaymentPostBackUrl(final String token) {
