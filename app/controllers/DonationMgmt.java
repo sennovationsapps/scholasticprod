@@ -348,7 +348,7 @@ public class DonationMgmt extends Controller {
 		//return redirect(WorldPlayUrl);
 
 		//return redirect("https://secure-test.worldpay.com/wcc/purchase?instId=&cartId=&currency=&desc=&testMode=100");
-		return redirect("https://trans.worldpay.us/cgi-bin/WebPAY.cgi?formid=574301A941C9A095E474EF84D558739D7629CC97FFFFF5C1&sessionid=62A6DC8C9A988EA9");
+		return redirect(" ");
 		//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
 
 

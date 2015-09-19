@@ -469,16 +469,11 @@ public class ReportMgmt extends Controller {
 						" from users where id=user_admin_id) as 'AccountOwner'," +
 						"(select distinct name from team where id=team_id) as 'Team'" +
 						"from pfp where pfp_type=1 and event_id=:id) pfp where donation.pfp_id =pfp.id " +
-						"group by pfp.id ";
+						"and donation.status=2 group by pfp.id ";
 		SqlQuery bug = Ebean.createSqlQuery(sql)
 				.setParameter("id", eventy.id);
 		List<SqlRow> list = bug.findList();
-
-		//List<Pfp> pfp = Pfp.findAll(event);// need to remove from pfp
-		JsonNode myJsonNode = Json.toJson(list);
-
-
-		//System.out.println("asdadasdasdsadsadasdasddsadas"+event);
+    	JsonNode myJsonNode = Json.toJson(list);
 		return ok(myJsonNode);
 
 	}
@@ -499,7 +494,7 @@ public class ReportMgmt extends Controller {
 				"select	pfp.Team,pfp.name as 'Participant Name' ,pfp.AccountOwner as 'Account Owner'," +
 						"amount as 'Donation Amount'," +
 						"first_name as 'Donor First Name',last_name as 'Donor Last Name',email as 'Donor Email'," +
-						"phone as 'Donor Phone',date_created as 'Date Created',date_paid as 'Date Paid'," +
+						"phone as 'Donor Phone',cast(date_created as Char) as 'Date Created',cast(date_paid as Char) as 'Date Paid'," +
 						"case payment_type when 1 then 'credit' when 2 then 'check' when 3 then 'cash' end as 'payment_type'," +
 						"transaction_number	from donation	join " +
 						"(select id,name,(select distinct concat(first_name,' ',last_name)" +
@@ -592,14 +587,13 @@ public class ReportMgmt extends Controller {
 	@SubjectPresent(content = "/login")
 	public static Result teamReport(String event) throws IOException {
 		Event eventy=Event.findBySlug(event);
-		String sql =
-				"select (select distinct name from team where id=al.team_id) as 'Team Name', " +
-						"al.name as 'Participant Name' ,al.total as 'Amount'," +
-						"team.teamtot as 'Team Total' from " +
-						"(select team_id,name ,total from pfp where pfp_type=1 and event_id=:id)al join " +
-						"(select team_id,sum(total) as teamtot from pfp where pfp_type=1 and event_id=:id" +
-						" group by team_id ) team " +
-						"on al.team_id=team.team_id";
+		String sql ="select  IFNULL(p.team,'<b>EVENT</b>') as team " +
+				", IFNULL(p.name, '<b>TOTAL :</b>') as 'participant name',sum(d.amount) as 'amount' from" +
+				" (select event_id,pfp_id,sum(amount) as amount from donation where status=2 group by pfp_id ) d ," +
+				"(select id,(select distinct name from team where id=team_id) team,team_id ,event_id," +
+				"name from pfp where pfp_type=1) p" +
+				" where	d.event_id=:id	and p.event_id=d.event_id and d.pfp_id=p.id " +
+				"GROUP BY  p.team,p.name,amount with ROLLUP";
 		SqlQuery bug = Ebean.createSqlQuery(sql)
 				.setParameter("id", eventy.id);
 		List<SqlRow> list = bug.findList();
