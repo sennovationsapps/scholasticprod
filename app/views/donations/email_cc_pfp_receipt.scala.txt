@@ -1,0 +1,25 @@
+@(donation: Donation)
+
+Dear @donation.pfp.name,
+
+
+
+Thank you for participating in @donation.event.name. You have received a contribution for your Fundraising Page.
+
+
+
+Donor Name : @donation.ccName
+
+Participant Name : @donation.pfp.name
+
+Donation Amount : $@donation.amount
+
+Transaction Id :  @donation.transactionNumber
+
+Time Submitted : @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
+
+
+
+Thanks,
+
+Scholastic Challenge Inc.

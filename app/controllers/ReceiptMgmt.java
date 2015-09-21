@@ -82,6 +82,23 @@ public class ReceiptMgmt extends Controller {
 				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount);
 	}
 
+
+	//=====================mail sent to pfp================start===============21.09.2015==================================//
+
+
+	public static void sendCCReceiptForPfp(Donation donation){
+		String message = views.txt.donations.email_cc_pfp_receipt
+				.render(donation).toString();
+		System.out.println("donation.pfp.emergencyContact :: "+donation.pfp.userAdmin.email);
+		System.out.println("message in sendCCReceiptForPfp.."+message);
+		ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Donation Receipt Letter", message, donation.pfp.userAdmin.email);
+		RECEIPT_LOGGER.info("Successfully sent a cc receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}]",
+				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount);
+	}
+
+	//====================mailsent to pfp=================end================21.09.2015===================================//
+
+
 	public static Result getCCReceipt(Event event, Donation donation) {
 		String message = views.html.donations.email_cc_receipt
 				.render(donation).toString();

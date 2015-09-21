@@ -311,7 +311,14 @@
 
                             @if(donation.status!=null){
                                 @if(donation.status.getValue.equalsIgnoreCase("Cleared")){
-                                    <td>@donation.donorName</td>
+                                    @if(donation.donorName == null || donation.donorName.trim.equals("")){
+                                        <td>Anonymous</td>
+                                    }else{
+                                        <td>@donation.donorName</td>
+                                    }
+
+
+                                    @*<td>@donation.donorName</td>*@
                                     <td>@donation.donorMessage</td>
                                     <td>@donation.amount</td>
                                     @if(donation.paymentType!=null) {

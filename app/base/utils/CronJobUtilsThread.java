@@ -39,28 +39,47 @@ public class CronJobUtilsThread implements Runnable {
                       if (transaction.mailSent == false) {
                           System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.transid);
                           Donation donation = Donation.findByTransactionNumber(transaction.transid);
+                          if(donation.status == Donation.PaymentStatus.CLEARED){
 
-                          String creditCardNumber = transaction.accountNumber;
 
-                          if (creditCardNumber != null) {
-                              creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
-                              System.out.println("creditCardNumber :: " + creditCardNumber);
-                              donation.ccNum = creditCardNumber;
+                              String creditCardNumber = transaction.accountNumber;
+
+                              if (creditCardNumber != null) {
+                                  creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
+                                  System.out.println("creditCardNumber :: " + creditCardNumber);
+                                  donation.ccNum = creditCardNumber;
+                              }
+
+                              donation.ccName = transaction.ccname;
+                              ReceiptMgmt receiptMgmt = new ReceiptMgmt();
+                              System.out.println(("before calling getAndSendCCReceipt"));
+                              receiptMgmt.sendCCReceiptForCron(donation);
+                              //System.out.println("result :: " + result);
+                              System.out.println(("after calling getAndSendCCReceipt"));
+
+                              System.out.println("before calling sendCCReceiptForPfp...");
+                              receiptMgmt.sendCCReceiptForPfp(donation);
+                              System.out.println("after calling sendCCReceiptForPfp");
+
+                              //update
+                              transaction.mailSent = true;
+                              transaction.update();
+
+
                           }
 
-                          donation.ccName = transaction.ccname;
-                          ReceiptMgmt receiptMgmt = new ReceiptMgmt();
-                          System.out.println(("before calling getAndSendCCReceipt"));
-                          receiptMgmt.sendCCReceiptForCron(donation);
-                          //System.out.println("result :: " + result);
-                          System.out.println(("after calling getAndSendCCReceipt"));
-
-                          //update
-                          transaction.mailSent = true;
-                          transaction.update();
 
 
                       }
+
+
+                      //===for testing=========//
+                      /*ReceiptMgmt receiptMgmt = new ReceiptMgmt();
+                      Donation donation = Donation.findByTransactionNumber(transaction.transid);
+                      System.out.println("before calling sendCCReceiptForPfp...");
+                      receiptMgmt.sendCCReceiptForPfp(donation);
+                      System.out.println("after calling sendCCReceiptForPfp");*/
+                      //===for testing=========//
                   }
 
 
