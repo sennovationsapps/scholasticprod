@@ -461,13 +461,15 @@ public class ReportMgmt extends Controller {
 		Event eventy=Event.findBySlug(event);
 		String sql =
 				"select	 pfp.Event, pfp.Name as 'Participant Name', " +
-						"pfp.AccountOwner as 'Account Owner',pfp.Team,count(*) as'Number of Donation'," +
+						"pfp.AccountOwner as 'Account Owner', pfp.AccountEmail as ' Account Owner Email'," +
+						"pfp.Team,count(*) as'Number of Donation'," +
 						"sum(amount) as'Total amount Raised',avg(amount) as'Average amount Raised'," +
 						"cast(pfp.date_created as Char) as 'Page Create Date' from donation	join " +
 						"(select id,(select distinct name from event where id= event_id) as 'Event'," +
 						"name,date_created,(select distinct concat(first_name,' ',last_name)" +
 						" from users where id=user_admin_id) as 'AccountOwner'," +
-						"(select distinct name from team where id=team_id) as 'Team'" +
+						"(select distinct email	from users where id=user_admin_id) as 'AccountEmail',"+
+				"(select distinct name from team where id=team_id) as 'Team'" +
 						"from pfp where pfp_type=1 and event_id=:id) pfp where donation.pfp_id =pfp.id " +
 						"and donation.status=2 group by pfp.id ";
 		SqlQuery bug = Ebean.createSqlQuery(sql)

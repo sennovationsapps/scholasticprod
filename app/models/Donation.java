@@ -115,6 +115,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 	@JsonBackReference
 	public Pfp				pfp;
 
+	public String           ccname;
+
 
 
 
@@ -905,8 +907,14 @@ public class Donation extends Model implements PathBindable<Donation> {
 				|| StringUtils.equals("transactionNumber", fieldName)
 				|| StringUtils.equals("ccDigits", fieldName)
 				|| StringUtils.equals("schoolId", fieldName)
+				|| StringUtils.equals("email", fieldName)
 				|| StringUtils.equals("invoice_number",fieldName)) {
-			queryField = fieldName;
+			if (fieldName.equals("donorName")){
+				queryField="ccname";
+			}
+			else {
+				queryField = fieldName;
+			}
 		}
 		if (StringUtils.equals("pfpName", fieldName) ) {
 			queryField = "pfp.name";
