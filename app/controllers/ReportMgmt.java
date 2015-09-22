@@ -503,6 +503,13 @@ public class ReportMgmt extends Controller {
 						"from users where id=user_admin_id) as 'AccountOwner'," +
 						"(select distinct name from team where id=team_id) as 'Team'" +
 						"from pfp where pfp_type=1 and event_id=:id) pfp	where donation.pfp_id =pfp.id " +
+						"and donation.status=2 " +
+						" union all "+
+						"select	'','','<b>TOTAL : </b>',sum(amount),'','','','','','','','' from donation	join " +
+						"(select id,name,(select distinct concat(first_name,' ',last_name) " +
+						"from users where id=user_admin_id) as 'AccountOwner', " +
+						"(select distinct name from team where id=team_id) as 'Team' " +
+						"from pfp where pfp_type=1 and event_id=:id) pfp where donation.pfp_id =pfp.id " +
 						"and donation.status=2"; // all cleared  donation
 		SqlQuery bug = Ebean.createSqlQuery(sql)
 				.setParameter("id", eventy.id);
