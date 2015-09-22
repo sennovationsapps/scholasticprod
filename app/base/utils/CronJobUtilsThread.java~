@@ -35,10 +35,10 @@ public class CronJobUtilsThread implements Runnable {
                   while(transactionItr.hasNext()) {
                       Transaction transaction = (Transaction) transactionItr.next();
                       System.out.println("transaction.mailSent :: " + transaction.mailSent);
-                      System.out.println("transaction.transid2:: " + transaction.donationTranId);
+                      System.out.println("transaction.transid2:: " + transaction.transid);
                       if (transaction.mailSent == false) {
-                          System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.donationTranId);
-                          Donation donation = Donation.findByTransactionNumber(transaction.donationTranId);
+                          System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.transid);
+                          Donation donation = Donation.findByTransactionNumber(transaction.transid);
                           if(donation.status == Donation.PaymentStatus.CLEARED){
 
 
