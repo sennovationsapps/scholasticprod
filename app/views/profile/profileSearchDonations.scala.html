@@ -145,7 +145,7 @@
 									</td>
 									<td><input type="text" id="amount" name="amount" value="@donation.amount" class="form-control" @if(donation.paymentType == Donation.PaymentType.CREDIT) {disabled="disabled"}></td>
 									<!-- TODO - Fix this, it is not showing the Refund button -->
-									<td>@if(donation.paymentType != Donation.PaymentType.CREDIT || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)) {<button class="btn btn-default" type="submit">Save</button>&nbsp;<a href="@routes.DonationMgmt.edit(donation.event, donation.pfp, donation.id)" class="btn btn-default" type="button">Edit</a>}@if(donation.paymentType == Donation.PaymentType.CREDIT && donation.status == Donation.PaymentStatus.CLEARED) {<a href="@routes.DonationMgmt.refund(donation.event, donation.pfp, donation.id)" class="btn btn-default refundBtn" type="button">Refund</a>}</td>
+									<td>@if(donation.paymentType != Donation.PaymentType.CREDIT || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN)) {<button class="btn btn-default" type="submit">Save</button>&nbsp;<a href="@routes.DonationMgmt.edit(donation.event, donation.pfp, donation.id)" class="btn btn-default" type="button">Edit</a>}@if(donation.paymentType == Donation.PaymentType.CREDIT && donation.status == Donation.PaymentStatus.CLEARED) {<a href="@routes.DonationMgmt.refund(donation.event, donation.pfp, donation.id)" class="btn btn-default refundBtn" type="button">Refund</a>}</td>
 								</tr>
 							}
 					} else {

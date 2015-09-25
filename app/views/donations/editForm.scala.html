@@ -1,6 +1,9 @@
 @(event: Event, pfp: Pfp, donationId: Long, donationForm: Form[Donation])
 
-@import html5.tags.html._
+@*/*@@*import html5.tags.html._*/*@
+
+
+@import helper._
 
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
@@ -27,8 +30,18 @@
           @general.alerts()
           @if(donationForm.hasErrors) {
           <div class="alert alert-dismissable alert-danger">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-            @Messages("form.has.errors")
+          @*<button type="button" class="close" data-dismiss="alert">&times;</button>*@
+            @*/*@@*Messages("form.has.errors")*/*@
+
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              @Messages("form.has.errors")<br/>
+              @for(key <- donationForm.errors().keySet()){
+                  @for(error <- donationForm.errors().get(key)){
+                      <br/>@Messages(error.message())
+                  }
+              }
+
+
           </div>
           }
 		  @if(donationForm.hasGlobalErrors) {
@@ -37,29 +50,70 @@
 			</div>
 		  }
           <p>This form will help you edit a donation.</p>
-    @form(routes.DonationMgmt.update(event, pfp, donationId)) {    			
+    @form(routes.DonationMgmt.updateDonations(event, pfp, donationId)) {
     		<div class="form-group ">
 	    		<label for="event_name" class="  ">Event </i>  &nbsp;( <span class="help-block">Required </span>) </label>
     			<input type="text" id="event_name" name="event.name" value="@event.name" class="form-control" disabled="disabled"/>
 			</div>
 			<div id="well" class="well">
             	<legend>Donation</legend>
-    		@select(
+    	@*	@select(
                 donationForm("pfp.id"), 
                 options(Pfp.findByEventIdMapWithPrivate(event)), 
                 '_label -> "PFP", 
                 '_showConstraints -> false, 'class -> "form-control", 'readonly -> "readonly"
-            )
-            @text(donationForm("amount"), '_label -> "Amount", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+            )*@
+
+
+                @helper.inputText(donationForm("pfp.name"), '_label -> "PFP", 'class -> "form-control", 'readonly -> "readonly")
+                @helper.inputText(donationForm("amount"), '_label -> "Amount", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
             </div>
             <br/>
             <div id="well" class="well">
             	<legend>Information</legend>
-            @text(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
-            @text(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
-            @text(donationForm("zipCode"), '_label -> "Zip Code", 'class -> "form-control", 'title -> "5 or 9 digits with dash (11111-1111)")
-            @text(donationForm("email"), '_label -> "Email", 'class -> "form-control")
-                @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                @helper.inputText(donationForm("zipCode"), '_label -> "Zip Code", 'class -> "form-control", 'title -> "5 or 9 digits with dash (11111-1111)")
+                @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+
+
+                @******phno format*************22.09.2015***************start*****@
+
+                <div style="display:none;">
+                @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                </div>
+                <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                            @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                            </td>
+                            <td> - </td>
+                            <td>
+                            @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                            </td>
+                            <td> - </td>
+                            <td>
+                            @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                @******phno format*************22.09.2015***************end*****@
+
+
+
+
+                @*/*@@*helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*/*@
             </div>
             <br/>
 			@select(
@@ -81,20 +135,20 @@
             <div id="well" class="well">
             	<legend>Check</legend>
             @checkbox(donationForm("payByCheck"), '_label -> "Pay By Check", 'class -> "form-control", 'readonly -> "readonly")
-            @text(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
+                @helper.inputText(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
                         </div>
             <br/>
             <div id="well" class="well">
             	<legend>Message</legend>
-            @text(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control")          
-            @text(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
+                @helper.inputText(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control")
+                @helper.inputText(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
                         </div>
             <br/>
             <div id="well" class="well">
             	<legend>Transaction Information</legend>
-            @text(donationForm("dateCreated"), '_label -> "Date Created", 'class -> "form-control", 'readonly -> "readonly")
-            @text(donationForm("datePaid"), '_label -> "Date Paid", 'class -> "form-control")
-            @text(donationForm("transactionNumber"), '_label -> "Transaction Number", 'class -> "form-control", 'readonly -> "readonly")
+                @helper.inputText(donationForm("dateCreated"), '_label -> "Date Created", 'class -> "form-control", 'readonly -> "readonly")
+                @helper.inputText(donationForm("datePaid"), '_label -> "Date Paid", 'class -> "form-control")
+                @helper.inputText(donationForm("transactionNumber"), '_label -> "Transaction Number", 'class -> "form-control", 'readonly -> "readonly")
             @select(
                 donationForm("status"), 
                 options(Donation.PaymentStatus.VALUES), 
@@ -103,7 +157,7 @@
             )
        		</div>
             <br/>
-			<button type="submit" class="btn btn-green" id="@routes.DonationMgmt.update(event, pfp, donationId)">Save this Donation</button>&nbsp;&nbsp;
+			<button type="submit" class="btn btn-green" id="@routes.DonationMgmt.updateDonations(event, pfp, donationId)">Save this Donation</button>&nbsp;&nbsp;
             <a href="@routes.Application.profileSearchDonations()" class="btn btn-default" type="button">Cancel</a>
         
     }
@@ -169,13 +223,126 @@
 	     $('#submitButtons').hide();
 	     @if(donationForm.hasErrors) {
 	     	$('#payByCreditCardDiv').show();	
-	     }	
+	     }
+
+
+
+	     		//========================new add for phone number=======start========22.09.2015===================================//
+
+
+                            /*$("#phNo").hide();*/
+                var phNoValue = $("#phNo").val();
+                var phNoValuePart1;
+                var phNoValuePart2;
+                var phNoValuePart3;
+
+                /*if(phNoValue!= null){
+                phNoValuePart1  = phNoValue.substring(0,3);
+                $("#areaCode").val(phNoValuePart1);
+                phNoValuePart2 = phNoValue.substring(3,6);
+                $("#phonePre").val(phNoValuePart2);
+                phNoValuePart3 = phNoValue.substring(6,10);
+                $("#phoneSuf").val(phNoValuePart3);
+                }*/
+
+	     	//========================new add for phone number=======start========22.09.2015====================================//
+
+
 	   });
   </script>
 <script src="@ControllerUtil.getResourceRoute("scDonationsView.min.js")"></script>
 
 
+
+
+
     <script>
+        //============================phno partition validation ====================================24.08.2015==========start========================================//
+/*$(document).ready(function(){
+
+
+/!*$("#phNo").hide();*!/
+var phNoValue = $("#phNo").val();
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}
+});*/
+
+function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+/*if(currentFormId.equals("phoneSuf")){
+$("#phoneSuf").onkeyup();
+}*/
+patternMatchForPhone(currentFormId);
+
+	if(document.getElementById(currentFormId).value.length==afterNumChars) {
+		document.getElementById(nextFormId).focus();
+	}
+
+mergeTotalPhNo();
+}
+
+function mergeTotalPhNo(){
+//alert("within keyup");
+patternMatchForPhone('phoneSuf');
+var totalPhValue;
+var length1 = $("#areaCode").val().length;
+var length2 = $("#phonePre").val().length;
+var length3 = $("#phoneSuf").val().length;
+
+if(length1==3 && length2 ==3 &&length3 == 4){
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+//alert($("#phNo").val());
+}else{
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+}
+
+//alert("totalPhValue :: "+totalPhValue);
+
+
+}
+
+        //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+    <script>
+    function patternMatchForPhone(id){
+
+    var phPattern = /^([0-9])+$/;
+    var phValue =document.getElementById(id).value;
+    //alert(phValue );
+    //alert(phValue.match(phPattern));
+    if(phValue.match(phPattern)==null){
+    //alert("before "+phValue);
+     phValue = phValue.substring(0,phValue.length-1);
+    // alert("after "+phValue);
+     }
+     id = "#"+id;
+     // alert("id :: "+id);
+     $(id).val(phValue);
+
+     //alert(" $(id).val"+ $(id).val);
+    //alert(ph)
+
+     //document.getElementById(id).HTML(phValue);
+
+    }
+</script>
+
+
+
+
+   @* <script>
 
 //=========new add
 
@@ -289,7 +456,7 @@ else{
 
 
    });
-  </script>
+  </script>*@
 
 
 

@@ -115,7 +115,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	@JsonBackReference
 	public Pfp				pfp;
 
-	public String           ccname;
+	/*public String           ccname;*/
 
 
 
@@ -129,7 +129,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	@Constraints.Required
 		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
 	@MaxLength(value = 3)
-	@Pattern(value = "[0-9.+]+", message = "A valid phone number is required")
+	@Pattern(value = "[0-9.+]{3}+", message = "A valid phone number is required")
 	public String phPart1;
 
 
@@ -138,7 +138,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	@Constraints.Required
 		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
 	@MaxLength(value = 3)
-	@Pattern(value = "[0-9.+]+", message = "A valid phone number is required")
+	@Pattern(value = "[0-9.+]{3}+", message = "A valid phone number is required")
 	public String phPart2;
 
 
@@ -146,7 +146,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 	@Constraints.Required
 		/*@Pattern(value = "^[0-9]$", message = "phone.pattern")*/
-	@Pattern(value = "[0-9.+]+", message = "A valid phone number is required")
+	@Pattern(value = "[0-9.+]{4}+", message = "A valid phone number is required")
 	@MaxLength(value = 4)
 	public String phPart3;
 
@@ -551,8 +551,12 @@ public class Donation extends Model implements PathBindable<Donation> {
 	
 	public static List<Donation.DonationsByTeam> findByEventExceptSponsorMinTeam(Long eventId) {
 		List<Donation.DonationsByTeam> donations = new ArrayList<Donation.DonationsByTeam>();
-		String sql = "SELECT team.id, team.name, donation.amount from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and (donation.status = 0 or donation.status = 2) and donation.event_id = :eventId and pfp.team_id = team.id order by donation.pfp_id;";
-		
+		/*String sql = "SELECT team.id, team.name, donation.amount from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and (donation.status = 0 or donation.status = 2) and donation.event_id = :eventId and pfp.team_id = team.id order by donation.pfp_id;";*/
+        /************start***************25.09.2015**************************in clear state********************************************/
+
+		String sql = "SELECT team.id, team.name, donation.amount, donation.status, donation.donation_type  from donation, pfp, team where donation.pfp_id = pfp.id and donation.donation_type != 3 and  donation.status = 2 and donation.event_id = :eventId and pfp.team_id = team.id order by donation.pfp_id;";
+
+		/*************end****************25.09.2015**************************in clear state********************************************/
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("eventId", eventId);
 		
@@ -564,6 +568,105 @@ public class Donation extends Model implements PathBindable<Donation> {
 				donationByTeam.amount = row.getInteger("amount");
 				donationByTeam.id = row.getLong("id");
 				donationByTeam.name = row.getString("name");
+
+				//===================25.09.2015============================start===========================//
+
+				//	System.out.println("row.getInteger:status "+row.getInteger("status"));
+				//PaymentStatus paymentStatus=PaymentStatus.get(row.getInteger("status") + "");
+				int id=row.getInteger("status");
+
+				if(id == 0){
+					donationByTeam.status = PaymentStatus.APPROVED;
+				}else if(id == 1){
+					donationByTeam.status = PaymentStatus.PENDING;
+
+					//actualPaymentStatusValue = "Pending";
+
+				}else if(id == 2){
+					donationByTeam.status = PaymentStatus.CLEARED;
+
+					//actualPaymentStatusValue = "Cleared";
+
+				}else if(id == 3){
+					donationByTeam.status = PaymentStatus.REFUNDED;
+
+					//	actualPaymentStatusValue = "Refunded";
+
+				}else {
+					donationByTeam.status = PaymentStatus.FAILED;
+					//actualPaymentStatusValue = "Failed";
+
+				}
+
+
+
+
+
+
+
+
+
+
+
+
+				//donationByPfp.status	=  PaymentStatus.get(row.getInteger("status") + "");
+
+
+				/*if(donationByTeam.pfpName.equals("FRIENDS OF DR JOEY JONES")) {
+					System.out.println("**************************************");
+
+					System.out.println("id :: " + id);
+					System.out.println("donationByPfp.pfpName :: " + donationByPfp.pfpName);
+					System.out.println("donationByPfp.status :: " + donationByPfp.status);
+					System.out.println("row.getInteger:donation_type " + row.getInteger("donation_type"));
+					System.out.println("**************************************");
+				} else if(donationByPfp.pfpName.equals("Morgan Tinsley")) {
+					System.out.println("**************************************");
+
+					System.out.println("id :: " + id);
+					System.out.println("donationByPfp.pfpName :: " + donationByPfp.pfpName);
+					System.out.println("donationByPfp.status :: " + donationByPfp.status);
+					System.out.println("row.getInteger:donation_type " + row.getInteger("donation_type"));
+					System.out.println("**************************************");
+				}*/
+
+
+
+
+				int paymentId = row.getInteger("donation_type");
+
+
+
+				if(paymentId == 1){
+					// System.out.println("PaymentType.CREDIT :: "+PaymentType.CREDIT);
+					donationByTeam.paymentType = PaymentType.CREDIT;
+
+					//actualPaymentStatusValue = "Pending";
+
+				}else if(paymentId == 2){
+					// System.out.println("donationByPfp.paymentType = PaymentType.CHECK :: "+donationByPfp.paymentType);
+					donationByTeam.paymentType = PaymentType.CHECK;
+
+					//actualPaymentStatusValue = "Cleared";
+
+				}else {
+					// System.out.println("donationByPfp.paymentType = PaymentType.CASH :: "+donationByPfp.paymentType);
+					donationByTeam.paymentType = PaymentType.CASH;
+					//actualPaymentStatusValue = "Failed";
+
+				}
+
+
+
+
+
+				//	donationByPfp.paymentType	=	PaymentType.get(row.getInteger("donation_type")+"");
+				System.out.println("donationByTeam.paymentType :: "+donationByTeam.paymentType);
+
+
+
+
+				//===================25.09.2015============================end=============================//
 				donations.add(donationByTeam);
 			}
 		}
@@ -686,6 +789,12 @@ public class Donation extends Model implements PathBindable<Donation> {
 		public int		amount;
 		public Long		id;
 		public String	name;
+
+		//==========================start=========================25.09.2015=============================//
+		public PaymentStatus	status;
+
+		public PaymentType		paymentType;
+		//==========================end===========================25.09.2015=============================//
 		
 		@Override
 		public int compareTo(Object arg0) {
@@ -787,7 +896,10 @@ public class Donation extends Model implements PathBindable<Donation> {
 				}
 			}
 			if (teamTotals.containsKey(donation.teamId)) {
-				teamTotals.get(donation.teamId).amount = teamTotals.get(donation.teamId).amount + donation.amount;
+				if(donation.status.getValue().equalsIgnoreCase("Cleared")){
+					teamTotals.get(donation.teamId).amount = teamTotals.get(donation.teamId).amount + donation.amount;
+				}
+				/*teamTotals.get(donation.teamId).amount = teamTotals.get(donation.teamId).amount + donation.amount;*/
 				// teamTotals.put(donation.teamId,
 				// (teamTotals.get(donation.teamId).amount + donation.amount));
 			} else {
@@ -860,11 +972,22 @@ public class Donation extends Model implements PathBindable<Donation> {
 		final List<Donation.DonationsByTeam> donations = findByEventExceptSponsorMinTeam(id);
 		final Map<Long, Donation.DonationsByTeam> teamTotals = new HashMap<Long, Donation.DonationsByTeam>();
 		for (final Donation.DonationsByTeam donation : donations) {
-			if (teamTotals.containsKey(donation.id)) {
-				teamTotals.get(donation.id).amount = teamTotals.get(donation.id).amount + donation.amount;
-			} else {
-				teamTotals.put(donation.id, donation);
+
+//=================start=================25.09.2015========================for cleared status=================================//
+
+			if(donation.status.getValue().equalsIgnoreCase("Cleared")){
+				if (teamTotals.containsKey(donation.id)) {
+
+						teamTotals.get(donation.id).amount = teamTotals.get(donation.id).amount + donation.amount;
+				} else {
+					teamTotals.put(donation.id, donation);
+				}
 			}
+
+
+
+//==================end==================25.09.2015========================for cleared status=================================//
+
 		}
 		List<Team> teams = Team.findByEventId(id);
 		for (Team team : teams) {

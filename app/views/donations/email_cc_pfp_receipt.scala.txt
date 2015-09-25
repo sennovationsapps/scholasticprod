@@ -6,7 +6,11 @@ Dear @donation.pfp.name,
 
 Thank you for participating in @donation.event.name. You have received a contribution for your Fundraising Page.
 
+We suggest you contact them and thank them for their generous contribution.
 
+
+
+Donor Email : @donation.email
 
 Donor Name : @donation.ccName
 

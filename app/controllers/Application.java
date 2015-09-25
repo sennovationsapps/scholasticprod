@@ -20,11 +20,13 @@ import play.data.Form;
 import play.db.ebean.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.donations.ProfileCashDonations;
 import views.html.general.helpcenter;
 import views.html.index;
 import views.html.profile.*;
 import views.html.restricted;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -422,6 +424,27 @@ public class Application extends Controller {
 				.getLocalUser(session()), null));
 	}
 
+
+	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
+	public static Result profileCashDonations(){
+		final User localUser = ControllerUtil.getLocalUser(session());
+		List<Event> events = new ArrayList<Event>();
+if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+      events = Event.findAllEvents();
+		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
+	events = Event.findAllByUserId(localUser.id);
+		}
+
+		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
+
+		if(events!= null && events.size()>0){
+			return ok(ProfileCashDonations.render(localUser, events, null , null));
+		}else{
+			return ok(ProfileCashDonations.render(localUser, null, null, null));
+		}
+
+	}
+	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
 	/**
 	 * Profile donations.
 	 * 

@@ -1,0 +1,126 @@
+@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null)
+
+@import helper._
+
+@import com.feth.play.module.pa.views.html._
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+    <!-- Main body
+================== -->
+    <div class="wrapper">
+        <div class="section-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                            <!-- Remove the .animated class if you don't want things to move -->
+                        <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @general.alerts()
+        <div class="container">
+            <div class="row">
+                @profile.menu(localUser)
+
+                    <!-- Avatar & social links -->
+                <div class="col-sm-8 col-md-9">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 class="hl"><i class="fa fa-map-marker"></i> Cash Handling Requirement</h4>
+                            <hr>
+
+
+
+                            @if(events == null ||  events.isEmpty || events.size == 0){
+                                <p>No Events for this user.</p>
+                            }else{
+                                <p>Select Event</p>
+                                <div class="form-horizontal">
+                                    <select id="adminsEvents" name="adminsEvents" class="form-control" onchange="getDetailsForEvent();">
+                                        <option value="select">--select--</option>
+                                    @for(event <- events) {
+                                        <option value="@event.id" >@event.name</option>
+
+                                    }
+                                    </select>
+                                    <br/>
+                                    @*<a class="btn btn-primary" href="#" id="createDonation" role="button">Create Donation</a>*@
+                                </div>
+                                <div id = 'cashDonationDetails1' style="display: none;" >
+
+                                </div>
+                                <div id ='cashDonationDetails'>
+                                    <p>Select Participant</p>
+                                   @donationSubMenuForpfp(localUser, eventForPfp, pfps)
+                                </div>
+                            }
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        @defining(Event.getDefaultEvent()) { defaultEvent =>
+  $('#createDonation').click(function(){
+  	var donationLoad = '@routes.DonationMgmt.create(defaultEvent)';
+    window.location.href = donationLoad.replace("@defaultEvent.slug", $('#adminsEvents').val());
+  });
+  }
+    </script>
+    <script>
+   // var event;
+  /* $('#adminsEvents').onChange(function(){
+    var eventname = $('#adminsEvents').val();
+    alert("eventname :: "+eventname);
+   })*/
+
+$(document).ready(function(){
+$('#cashDonationDetails').hide();
+});
+    function getDetailsForEvent(){
+    var eventId = $('#adminsEvents').val();
+    //alert("eventId :: "+eventId);
+
+        if(eventId === 'select'){
+        alert("within eventId >>>");
+        $('#cashDonationDetails').hide();
+        }else{
+        /* $('#cashDonationDetails1').attr(value,eventId);
+         alert("valuesss :: "+$('#cashDonationDetails1').val());*/
+         alert('eventId '+eventId);
+         //var participantsForEventLoad =
+        /*/!* *!/*/
+       // //
+
+
+     /* $.ajax({
+        url: '../profile/pfpsForCashDonations/',
+         type: 'GET',
+        data: 'eventId='+eventId,
+        dataType : 'html',
+        success: function (response) {
+        alert(response);
+         /!* $('#volunteerModalBody').empty();
+          $('#volunteerModal').modal('hide');*!/
+         // location.reload();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          $('#volunteerModalBody').empty();
+          $('#volunteerModalBody').html(xhr.responseText);
+          $('#volunteerModalBody').scrollTop(0);
+        }
+    });*/
+         $('#cashDonationDetails').show();
+
+
+        }
+    }
+
+    </script>
+}

@@ -1,6 +1,6 @@
 @(donation: Donation)
 
-*PLEASE NOTE THAT ON YOUR CREDIT CARD STATEMENT YOUR DONATION WILL BE PROCESSED BY SCHOLASTIC CHALLENGE INC..
+*IF YOU PAID BY CREDIT CARD, PLEASE NOTE THAT ON YOUR CREDIT CARD STATEMENT YOUR DONATION WILL BE PROCESSED BY SCHOLASTIC CHALLENGE INC..
 
 Thank you for your generous contribution to the @donation.event.userAdmin.organization.name as part of the annual @donation.event.name fundraiser. The funds raised by the @donation.event.name will directly serve the students and families of our school.
 
@@ -22,4 +22,4 @@ Time Submitted: @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
 
 If you have questions about your donation, please email us at donations@@scholasticchallenge.com or call us at 855-358-2022.
 
-Disclaimer: All information has been provided from sources believed by Scholastic Challenge to accurate and reliable. Please consult with your tax advisor for specific tax advice.
+Disclaimer: All information has been provided from sources believed by Scholastic Challenge to be accurate and reliable. Please consult with your tax advisor for specific tax advice.

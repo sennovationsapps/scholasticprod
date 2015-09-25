@@ -945,7 +945,7 @@ public class DonationMgmt extends Controller {
 		}
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Donation has been updated");
 		return redirect(routes.Application.profileSearchDonations(0, "dateCreated",
-						"asc", "", "dateCreated"));
+				"asc", "", "dateCreated"));
 	}
 	
 	/**
@@ -959,6 +959,177 @@ public class DonationMgmt extends Controller {
 	 *            the donation id
 	 * @return the result
 	 */
+
+
+	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
+
+	public static Result participantDetailsForParticularEvent(String eventId1){
+		System.out.println("eventId within participantDetailsForParticularEvent :: "+eventId1);
+		Long eventId = Long.parseLong(eventId1);
+		Event event = Event.findById(eventId);
+
+		List<Pfp> pfps= Pfp.findAll(eventId.toString());
+		return ok(donationSubMenuForpfp.render(ControllerUtil.getLocalUser(session()),event, pfps));
+
+
+	}
+
+	/*****************end********************Bulk Cash Donation*******************24.09.2015**********************************/
+
+	//=====================new update=================22.09.2015=========================start==============================//
+
+	@Restrict({ @Group(SecurityRole.ROOT_ADMIN), @Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN),
+			@Group(SecurityRole.EVENT_ASSIST) })
+	@SubjectPresent
+	public static Result updateDonations(Event event, Pfp pfp, Long donationId) {
+		System.out.println("donationid within updateDonations :: "+donationId);
+
+		if (event.isIdOnly()) {
+			event = Event.findByIdWithMin(event.id);
+		}
+		if (pfp.isIdOnly()) {
+			pfp = Pfp.findByIdWithMin(pfp.id);
+		}
+		final Form<Donation> donationForm = form(Donation.class).bindFromRequest();
+		if (!Event.canManage(ControllerUtil.getLocalUser(session()), event)) {
+			flash(ControllerUtil.FLASH_DANGER_KEY,
+					"The requested event action cannot be completed by the logged in user.");
+			return redirect(routes.Application.index());
+		}
+
+		//System.out.println("donationForm :: "+donationForm.get());
+		if (donationForm.hasErrors()) {
+			return badRequest(views.html.donations.editForm.render(event, pfp, donationId, donationForm));
+		}
+
+
+
+
+		Donation updatedDonation = (Donation)donationForm.get();
+		System.out.println("updateddonation :: "+updatedDonation);
+
+		Donation donation = Donation.findById(donationId);
+
+		if(donation.amount != updatedDonation.amount){
+
+			donation.amount = updatedDonation.amount;
+		}
+		if(!StringUtils.equals(donation.firstName, updatedDonation.firstName)){
+
+			donation.firstName = updatedDonation.firstName;
+		}
+		if(!StringUtils.equals(donation.lastName, updatedDonation.lastName)) {
+
+			donation.lastName = updatedDonation.lastName;
+		}
+
+		if(!StringUtils.equals(donation.zipCode, updatedDonation.zipCode)){
+			donation.zipCode = updatedDonation.zipCode;
+		}
+
+		if(!StringUtils.equals(donation.email, updatedDonation.email)){
+			donation.email = updatedDonation.email;
+		}
+		updatedDonation.phPart1 = ControllerUtil.stripPhone(donationForm.get().phPart1);
+		System.out.println("updatedDonation.phPart1 :: "+updatedDonation.phPart1);
+		if(!StringUtils.equals(donation.phPart1, updatedDonation.phPart1)){
+			donation.phPart1 = updatedDonation.phPart1;
+		}
+		updatedDonation.phPart2 = ControllerUtil.stripPhone(donationForm.get().phPart2);
+		System.out.println("updatedDonation.phPart2 :: "+updatedDonation.phPart2);
+		if(!StringUtils.equals(donation.phPart2, updatedDonation.phPart2)){
+			donation.phPart2 = updatedDonation.phPart2;
+		}
+		updatedDonation.phPart3 = ControllerUtil.stripPhone(donationForm.get().phPart3);
+		System.out.println("updatedDonation.phPart3 :: "+updatedDonation.phPart3);
+		if(!StringUtils.equals(donation.phPart3, updatedDonation.phPart3)){
+			donation.phPart3 = updatedDonation.phPart3;
+		}
+		updatedDonation.phone = ControllerUtil.stripPhone(donationForm.get().phone);
+		if(!StringUtils.equals(donation.phone, updatedDonation.phone)){
+			donation.phone = updatedDonation.phone;
+		}
+		if(!donation.paymentType.equals(updatedDonation.paymentType)){
+			donation.paymentType = updatedDonation.paymentType;
+		}
+		if(!StringUtils.equals(donation.checkNum, updatedDonation.checkNum)){
+			donation.checkNum = updatedDonation.checkNum;
+		}
+		if(!StringUtils.equals(donation.donorName, updatedDonation.donorName)){
+			donation.donorName = updatedDonation.donorName;
+		}
+		if(!StringUtils.equals(donation.donorMessage, updatedDonation.donorMessage)){
+			donation.donorMessage = updatedDonation.donorMessage;
+		}
+		if(!donation.dateCreated.equals( updatedDonation.dateCreated)){
+			donation.dateCreated = updatedDonation.dateCreated;
+		}
+		/*if(!donation.datePaid.equals( updatedDonation.datePaid)){
+			donation.datePaid = updatedDonation.datePaid;
+		}*/
+		if(!StringUtils.equals(donation.transactionNumber, updatedDonation.transactionNumber)){
+			donation.transactionNumber = updatedDonation.transactionNumber;
+		}
+
+
+
+		PaymentStatus originalStatus = donation.status;
+		if (PaymentType.CHECK == donationForm.get().paymentType && PaymentStatus.CLEARED == donationForm.get().status) {
+			if (PaymentStatus.CLEARED != originalStatus) {
+				updatedDonation.datePaid = new Date();
+				donation.datePaid = updatedDonation.datePaid;
+
+			}
+		}
+
+		if(!donation.status.equals( updatedDonation.status)){
+
+
+			donation.status = updatedDonation.status;
+		}
+
+
+		if(updatedDonation.event == null) {
+			updatedDonation.event = event;
+		}
+
+		if(!donation.event.equals(updatedDonation.event)){
+			donation.event = updatedDonation.event;
+		}
+
+
+		donation.update();
+
+
+		System.out.println("donation.phPart1 :: " + donation.phPart1);
+		System.out.println("donation.phPart2 :: " + donation.phPart2);
+		System.out.println("donation.phPart3 :: " + donation.phPart3);
+
+
+
+
+
+		//donationForm.get().phone = ControllerUtil.stripPhone(donationForm.get().phone);
+
+
+		//Donation updatedDonation = Donation.findById(donationId);
+		if (PaymentType.CHECK == donation.paymentType && PaymentStatus.CLEARED == donation.status) {
+			if (PaymentStatus.CLEARED != originalStatus) {
+				ReceiptMgmt.sendCheckReceivedReceipt(donation);
+				if (pfp.pfpType == PfpType.PFP) {
+					ReceiptMgmt.sendSponsoredMsg(donation);
+				}
+			}
+		}
+		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Donation has been updated");
+		return redirect(routes.Application.profileSearchDonations(0, "dateCreated",
+				"asc", "", "dateCreated"));
+	}
+
+	//====================new update==================22.09.2015=========================end================================//
+
+
+
 	@Restrict({ @Group(SecurityRole.ROOT_ADMIN), @Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN),
 					@Group(SecurityRole.EVENT_ASSIST) })
 	@SubjectPresent(content = "/login")

@@ -423,14 +423,14 @@ var phNoValuePart1;
 var phNoValuePart2;
 var phNoValuePart3;
 
-if(phNoValue!= null){
+/*if(phNoValue!= null){
 phNoValuePart1  = phNoValue.substring(0,3);
 $("#areaCode").val(phNoValuePart1);
 phNoValuePart2 = phNoValue.substring(3,6);
 $("#phonePre").val(phNoValuePart2);
 phNoValuePart3 = phNoValue.substring(6,10);
 $("#phoneSuf").val(phNoValuePart3);
-}
+}*/
 });
 
 function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
@@ -458,6 +458,10 @@ if(length1==3 && length2 ==3 &&length3 == 4){
 totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
 $("#phNo").val(totalPhValue);
 //alert($("#phNo").val());
+}else{
+totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+$("#phNo").val(totalPhValue);
+
 }
 
 //alert("totalPhValue :: "+totalPhValue);
