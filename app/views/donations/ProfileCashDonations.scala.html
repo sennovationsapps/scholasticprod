@@ -1,4 +1,4 @@
-@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null)
+@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null,donationForm: Form[Donation])
 
 @import helper._
 
@@ -52,7 +52,7 @@
                                 </div>
                                 <div id ='cashDonationDetails'>
                                     <p>Select Participant</p>
-                                   @donationSubMenuForpfp(localUser, eventForPfp, pfps)
+                                   @donationSubMenuForpfp(localUser, eventForPfp, pfps, donationForm)
                                 </div>
                             }
 
@@ -74,40 +74,28 @@
   }
     </script>
     <script>
-   // var event;
-  /* $('#adminsEvents').onChange(function(){
-    var eventname = $('#adminsEvents').val();
-    alert("eventname :: "+eventname);
-   })*/
 
 $(document).ready(function(){
+alert("document.redy");
 $('#cashDonationDetails').hide();
 });
-    function getDetailsForEvent(){
-    var eventId = $('#adminsEvents').val();
-    //alert("eventId :: "+eventId);
 
-        if(eventId === 'select'){
+
+/*function getDetailsForEvent(){
+var eventId = $('#adminsEvents').val();
+    alert("eventId :: "+eventId);
+   if(eventId === 'select'){
         alert("within eventId >>>");
         $('#cashDonationDetails').hide();
         }else{
-        /* $('#cashDonationDetails1').attr(value,eventId);
-         alert("valuesss :: "+$('#cashDonationDetails1').val());*/
-         alert('eventId '+eventId);
-         //var participantsForEventLoad =
-        /*/!* *!/*/
-       // //
-
-
-     /* $.ajax({
-        url: '../profile/pfpsForCashDonations/',
+        alert("within else");
+    /*      $.ajax({
+        url: '../profile/pfpsForCashDonations/:eventId='+eventId,
          type: 'GET',
-        data: 'eventId='+eventId,
         dataType : 'html',
         success: function (response) {
         alert(response);
-         /!* $('#volunteerModalBody').empty();
-          $('#volunteerModal').modal('hide');*!/
+         $('#cashDonationDetails').show();
          // location.reload();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -116,11 +104,18 @@ $('#cashDonationDetails').hide();
           $('#volunteerModalBody').scrollTop(0);
         }
     });*/
-         $('#cashDonationDetails').show();
+    /* $('#cashDonationDetails').show();*/
+
+   /* var donationLoad = '';
+
+   if(eventId) {
+      window.location.href = donationLoad + "?type=eventId&id=" + eventId;
+   }
 
 
         }
-    }
+}*/
+
 
     </script>
 }

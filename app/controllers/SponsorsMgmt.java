@@ -82,6 +82,26 @@ public class SponsorsMgmt extends Controller {
 		return ok(editForm.render(event, pageId, sponsorsForm));
 	}
 
+
+
+	//=======start============remove sponsor item==========28.09.2015====================================//
+
+
+	/*public static Result removeSponsorItem(){
+		String type = request().getQueryString("type");
+		String id = request().getQueryString("id");
+		String event = request().getQueryString("event");
+
+		Long sponsorItemId = Long.parseLong(id);
+		SponsorItem sponsorItem =  SponsorItem.findById(sponsorItemId);
+		sponsorItem.delete();
+		return ok(editForm.render(event, pageId, sponsorsForm));
+
+	}*/
+
+
+	//========end=============remove sponsor item==========28.09.2015====================================//
+
 	/**
 	 * Display the 'edit form' of a existing Pfp.
 	 * 

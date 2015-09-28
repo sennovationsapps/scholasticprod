@@ -457,6 +457,37 @@ $("#webLogo").attr("disabled", true);
 
     </script>
     <script>
+/*var renumber = function(sponsoritem) {
+            $('.sponsoritem').each(function(i) {
+            //alert('i :: '+i);
+                $('input', this).each(function() {
+                    $(this).attr('name', $(this).attr('name').replace(/sponsoritems\[.+?\]/g, 'sponsoritems[' + i + ']'))
+                })
+            })
+        }
 
+        $(document).on("click", ".removeSponsorItem1", function(event){
+        alert('on click on remove button');
+        	event.preventDefault();
+        	alert('$(this).parent() :: '+$(this).parent());
+
+
+  			$(this).parent().remove();
+  		  	renumber(event);
+        });*/
+
+
+
+       /* function removeSponsorItem(sponsorItemId, pageId, eventId){
+              alert("sponsorItemId : "+sponsorItemId);
+              alert("pageId :: "+pageId);
+              alert("eventId :: "+eventId);
+              if(sponsorItemId!=null){
+               var donationLoad = '';
+
+      window.location.href = donationLoad + "?type=removeSponsorItem&id=" + sponsorItemId ;
+
+              }
+        }*/
     </script>
 }

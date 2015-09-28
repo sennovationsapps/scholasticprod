@@ -434,13 +434,13 @@ if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
 		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
 	events = Event.findAllByUserId(localUser.id);
 		}
-
+		final Form<Donation> donationForm = form(Donation.class);
 		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
 
 		if(events!= null && events.size()>0){
-			return ok(ProfileCashDonations.render(localUser, events, null , null));
+			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm));
 		}else{
-			return ok(ProfileCashDonations.render(localUser, null, null, null));
+			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm));
 		}
 
 	}

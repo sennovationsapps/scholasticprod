@@ -963,13 +963,17 @@ public class DonationMgmt extends Controller {
 
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
 
-	public static Result participantDetailsForParticularEvent(String eventId1){
-		System.out.println("eventId within participantDetailsForParticularEvent :: "+eventId1);
-		Long eventId = Long.parseLong(eventId1);
+	public static Result participantDetailsForParticularEvent(){
+		System.out.println("eventId within participantDetailsForParticularEvent :: ");
+		String type = request().getQueryString("type");
+		System.out.println("type : "+type);
+		String id = request().getQueryString("id");
+		System.out.println("eventId within participantDetailsForParticularEvent :: "+id);
+		Long eventId = Long.parseLong(id);
 		Event event = Event.findById(eventId);
-
-		List<Pfp> pfps= Pfp.findAll(eventId.toString());
-		return ok(donationSubMenuForpfp.render(ControllerUtil.getLocalUser(session()),event, pfps));
+		final Form<Donation> donationForm = form(Donation.class);
+		List<Pfp> pfps= Pfp.findByEventId(eventId);
+		return ok(donationSubMenuForpfp.render(ControllerUtil.getLocalUser(session()),event, pfps, donationForm));
 
 
 	}
