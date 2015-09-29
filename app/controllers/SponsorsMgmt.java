@@ -64,6 +64,11 @@ public class SponsorsMgmt extends Controller {
 	 *            the page id
 	 * @return the result
 	 */
+
+
+
+     static Long pageIdForRemove ;
+	static Long eventIdForRemove ;
 	@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
 			@Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN),
 			@Group(SecurityRole.EVENT_ASSIST) })
@@ -79,6 +84,9 @@ public class SponsorsMgmt extends Controller {
 		}
 		final Form<Sponsors> sponsorsForm = form(Sponsors.class).fill(
 				Sponsors.findById(pageId));
+
+		pageIdForRemove = pageId;
+		eventIdForRemove = event.id;
 		return ok(editForm.render(event, pageId, sponsorsForm));
 	}
 
@@ -87,17 +95,30 @@ public class SponsorsMgmt extends Controller {
 	//=======start============remove sponsor item==========28.09.2015====================================//
 
 
-	/*public static Result removeSponsorItem(){
+	public static Result removeSponsorItem(){
+		System.out.println("within removeSponsorItem");
 		String type = request().getQueryString("type");
 		String id = request().getQueryString("id");
-		String event = request().getQueryString("event");
+		/*String eventFromRequest = request().getQueryString("event");
+		String eventIdFromRequest = request().getQueryString("event_id");
+		String page = request().getQueryString("page");
+		String pageIdFromRequest = request().getQueryString("page_id");*/
 
 		Long sponsorItemId = Long.parseLong(id);
 		SponsorItem sponsorItem =  SponsorItem.findById(sponsorItemId);
 		sponsorItem.delete();
-		return ok(editForm.render(event, pageId, sponsorsForm));
+		//Sponsors sponsors = Sponsors.findbyspon
 
-	}*/
+		/*Long eventId = Long.parseLong(eventIdFromRequest);
+		Long pageId = Long.parseLong(pageIdFromRequest);*/
+         Event event = Event.findById(eventIdForRemove);
+
+		final Form<Sponsors> sponsorsForm = form(Sponsors.class).fill(
+				Sponsors.findById(pageIdForRemove));
+
+		return ok(editForm.render(event, pageIdForRemove, sponsorsForm));
+
+	}
 
 
 	//========end=============remove sponsor item==========28.09.2015====================================//

@@ -121,7 +121,7 @@
                                         <div class="col-md-3 col-lg-3">@text(sponsoritem("description"), '_showConstraints -> false, '_label -> "Item Description", 'class -> "form-control", 'placeholder -> "Item description", '_label_class -> "sr-only")</div>
 
                                         <div class="col-md-5 col-lg-5">@text(sponsoritem("amount"), '_showConstraints -> false, '_label -> "Item Amount ", 'id -> "item_amount",'class -> "form-control", 'placeholder -> "Item amount", '_label_class -> "sr-only", '_addon -> "Sponsorship Amount   $")</div>
-                                        <div class="col-md-1 col-lg-1 text-center"><a type="button" class="removeSponsorItem">Remove</a></div>
+                                        <div class="col-md-1 col-lg-1 text-center"><a type="button" class="removeSponsorItem1" onclick="removeSponsorItem(@sponsoritem("id").value,@pageForm("id").value,@event.id)">Remove</a></div>
                                         <input type="hidden" name="@sponsoritem("id").name" value="@sponsoritem("id").value"/>
                                         <br clear="all"/><br clear="all"/>
                                     }
@@ -478,16 +478,16 @@ $("#webLogo").attr("disabled", true);
 
 
 
-       /* function removeSponsorItem(sponsorItemId, pageId, eventId){
-              alert("sponsorItemId : "+sponsorItemId);
-              alert("pageId :: "+pageId);
-              alert("eventId :: "+eventId);
+        function removeSponsorItem(sponsorItemId, pageId, eventId){
+             // alert("sponsorItemId : "+sponsorItemId);
+             // alert("pageId :: "+pageId);
+             // alert("eventId :: "+eventId);
               if(sponsorItemId!=null){
-               var donationLoad = '';
+               var donationLoad = '@routes.SponsorsMgmt.removeSponsorItem';
 
       window.location.href = donationLoad + "?type=removeSponsorItem&id=" + sponsorItemId ;
 
               }
-        }*/
+        }
     </script>
 }

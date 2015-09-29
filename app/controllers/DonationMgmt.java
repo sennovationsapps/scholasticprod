@@ -1,49 +1,45 @@
 package controllers;
 
-import static play.data.Form.form;
-
+import base.utils.PaymentUtils;
 import base.utils.WorldPayUtils;
-import models.*;
-import models.aws.S3File;
-import play.mvc.Http;
-import views.html.donations.*;
-import views.html.profile.profileDonationsReconcile;
-
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
+import models.Donation;
 import models.Donation.DonationType;
 import models.Donation.PaymentStatus;
 import models.Donation.PaymentType;
+import models.Event;
+import models.Pfp;
 import models.Pfp.PfpType;
+import models.SponsorItem;
+import models.aws.S3File;
 import models.security.SecurityRole;
-
+import models.security.User;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.LoggerFactory;
-
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.db.ebean.Transactional;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
-import base.utils.PaymentUtils;
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
+import views.html.donations.*;
+import views.html.profile.profileDonationsReconcile;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import play.data.DynamicForm;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.*;
+
+import static play.data.Form.form;
 /**
  * Manage a database of donations.
  */
@@ -963,20 +959,58 @@ public class DonationMgmt extends Controller {
 
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
 
+
+	/*public static Result profileCashDonations(){
+		final User localUser = ControllerUtil.getLocalUser(session());
+		List<Event> events = new ArrayList<Event>();
+		if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+			events = Event.findAllEvents();
+		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
+			events = Event.findAllByUserId(localUser.id);
+		}
+		final Form<Donation> donationForm = form(Donation.class);
+		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
+
+		if(events!= null && events.size()>0){
+			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm));
+		}else{
+			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm));
+		}
+
+	}*/
+
+
 	public static Result participantDetailsForParticularEvent(){
 		System.out.println("eventId within participantDetailsForParticularEvent :: ");
+		final User localUser = ControllerUtil.getLocalUser(session());
 		String type = request().getQueryString("type");
 		System.out.println("type : "+type);
 		String id = request().getQueryString("id");
 		System.out.println("eventId within participantDetailsForParticularEvent :: "+id);
+
+		List<Event> events = new ArrayList<Event>();
+		if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+			events = Event.findAllEvents();
+		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
+			events = Event.findAllByUserId(localUser.id);
+		}
+
+
 		Long eventId = Long.parseLong(id);
 		Event event = Event.findById(eventId);
 		final Form<Donation> donationForm = form(Donation.class);
+		List<Donation> donations = Donation.findAllByEventId(eventId);
 		List<Pfp> pfps= Pfp.findByEventId(eventId);
-		return ok(donationSubMenuForpfp.render(ControllerUtil.getLocalUser(session()),event, pfps, donationForm));
+		return ok(test.render(donations));
+		//return ok(ProfileCashDonations.render(localUser,events, event, pfps, donationForm, donations));
 
 
 	}
+
+
+
+
+
 
 	/*****************end********************Bulk Cash Donation*******************24.09.2015**********************************/
 

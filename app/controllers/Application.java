@@ -438,9 +438,9 @@ if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
 		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
 
 		if(events!= null && events.size()>0){
-			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm));
+			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm, null));
 		}else{
-			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm));
+			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm, null));
 		}
 
 	}

@@ -1,8 +1,11 @@
-@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null,donationForm: Form[Donation])
+@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null,donationForm: Form[Donation], donations: List[Donation]=null)
 
 @import helper._
 
 @import com.feth.play.module.pa.views.html._
+
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
 
 @main(Messages("playauthenticate.profile.title"),"profile") {
     <!-- Main body
@@ -26,45 +29,276 @@
                     <!-- Avatar & social links -->
                 <div class="col-sm-8 col-md-9">
                     <div class="row">
-                        <div class="col-sm-12">
+
                             <h4 class="hl"><i class="fa fa-map-marker"></i> Cash Handling Requirement</h4>
                             <hr>
 
 
+                           @if(eventForPfp == null || eventForPfp.id == null ){
 
-                            @if(events == null ||  events.isEmpty || events.size == 0){
-                                <p>No Events for this user.</p>
-                            }else{
-                                <p>Select Event</p>
-                                <div class="form-horizontal">
-                                    <select id="adminsEvents" name="adminsEvents" class="form-control" onchange="getDetailsForEvent();">
-                                        <option value="select">--select--</option>
-                                    @for(event <- events) {
-                                        <option value="@event.id" >@event.name</option>
+                               @if(events == null ||  events.isEmpty || events.size == 0){
+                                   <p>No Events for this user.</p>
+                               }else{
+                                   <p>Select Event</p>
+                                   <div class="form-horizontal">
+                                       <select id="adminsEvents" name="adminsEvents" class="form-control" onchange="getDetailsForEvent();">
+                                           <option value="select">--select--</option>
+                                           @for(event <- events) {
+                                               <option value="@event.id" >@event.name</option>
 
-                                    }
-                                    </select>
-                                    <br/>
-                                    @*<a class="btn btn-primary" href="#" id="createDonation" role="button">Create Donation</a>*@
-                                </div>
-                                <div id = 'cashDonationDetails1' style="display: none;" >
-
-                                </div>
-                                <div id ='cashDonationDetails'>
-                                    <p>Select Participant</p>
-                                   @donationSubMenuForpfp(localUser, eventForPfp, pfps, donationForm)
-                                </div>
-                            }
+                                           }
+                                       </select>
+                                       <br/>
+                                       @*<a class="btn btn-primary" href="#" id="createDonation" role="button">Create Donation</a>*@
+                                   </div>
 
 
+                                   @*****************end**************************************@
 
+                        }
+
+
+                           }else{
+
+
+                    @if(events == null ||  events.isEmpty || events.size == 0){
+                        <p>No Events1 for this user.</p>
+                    }else{
+                        <p>Select Event</p>
+                        <div class="form-horizontal">
+                            <select id="adminsEvents" name="adminsEvents" class="form-control" onchange="getDetailsForEvent();">
+                                <option value="@eventForPfp.id">@eventForPfp.name</option>
+                                @for(event <- events) {
+                                    <option value="@event.id" >@event.name</option>
+
+                                }
+                            </select>
+                            <br/>
+                            @*<a class="btn btn-primary" href="#" id="createDonation" role="button">Create Donation</a>*@
+                        </div>
+                        <div id = 'cashDonationDetails1' style="display: none;" >
 
                         </div>
+                        <div id ='cashDonationDetails'>
+
+                            @*****************start**********************************@
+
+
+                            <div class="col-md-12">
+
+
+                                <nav class="navbar navbar-default" role="navigation">
+
+
+                                    <div class="navbar-header">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sub-navbar-collapse">
+                                            <span><i class="fa fa-arrow-down fa-fw"></i> Event Workflow Details</span>
+                                        </button>
+                                    </div>
+                                    <div class="navbar-collapse collapse sub-navbar-collapse">
+                                        <ul class="nav navbar-nav">
+                                            <div class="btn-group">
+                                                <a type="button" class="btn navbar-btn btn-default" href="">Add Cash transaction</a>
+                                                <a type="button" class="btn navbar-btn btn-default" href="">Edit Cash transaction</a>
+                                            </div>
+                                                &nbsp;&nbsp;
+
+                                        </ul>
+                                    </div>
+                                    </nav>
+                            </div>
+
+
+
+
+
+                                    <div class="wrapper">
+                                        @* <div class="section-header">
+                                        <div class="container">
+                                        <div class="row">
+                                        <div class="col-md-12">
+                                        <!-- Remove the .animated class if you don't want things to move -->
+                                        <h1 class="animated slideInLeft"><span>Create Donation</span></h1>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        </div>*@
+                                        <div class="container">
+                                            <div class="row">
+                                                    <!-- Contact us form -->
+                                                <div class="col-sm-8">
+
+                                                    <hr>
+                                                    @general.alerts()
+
+                                                    @form(controllers.routes.DonationMgmt.save(eventForPfp), 'id -> "donateForm") {
+                                                        <input type="hidden" id="event_name" name="event.name" value="@eventForPfp.name"/>
+
+                                                        <table>
+                                                            <tr>
+                                                                <td><b>Select Participants</b></td>
+                                                                <td width ="20px;">
+
+                                                                </td>
+                                                                <td><b>Amount</b></td>
+                                                                <td width ="20px;">
+
+                                                                </td>
+                                                                <td><b>Status</b></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                @*/*@@*if(pfp.pfpType == Pfp.PfpType.GENERAL) {
+                                                                    @select(
+                                                                        donationForm("pfp.id"),
+                                                                        options(Pfp.findByEventIdMap(eventForPfp)),
+                                                                        '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
+                                                                        '_default -> "-- Select Participant --",
+                                                                        '_showConstraints -> false, 'class -> "form-control"
+                                                                    )
+                                                                } else {
+                                                                    <input type="hidden" name="pfp.id" value="@pfp.id"/>
+                                                                }*/*@
+
+
+
+
+                                                                    <select id="adminsEvents" name="adminsEvents" class="form-control">
+                                                                        <option value="selectPfpsForEvent">--select--</option>
+                                                                        @for(pfp <- pfps) {
+                                                                            <option value="@pfp.id" >@pfp.name</option>
+
+                                                                        }
+                                                                    </select>
+                                                                </td>
+                                                                <td width ="20px;">
+
+                                                                </td>
+                                                                <td>
+
+                                                                    <br />
+                                                                @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+                                                                </td>
+                                                                <td width ="20px;">
+
+                                                                </td>
+                                                                <td>
+
+
+                                                                    <select id="status" name="status" class="form-control" >
+
+                                                                        <option value="APPROVED">Approved</option>
+                                                                        <option value="PENDING" >Pending</option>
+                                                                        <option value="CLEARED" >Cleared</option>
+                                                                        <option value="REFUNDED" >Refunded</option>
+                                                                    </select>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                        <div id="well" class="well">
+
+
+
+
+
+                                                                <!--@checkbox(donationForm("agreeToPolicy"), '_label -> "Give this amount monthly for the duration of this event", '_labelSide -> "right")-->
+                                                        </div>
+                                                        <br/>
+                                                        <div id="well" class="well">
+                                                            <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                                            @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                                                            @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                                                            @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+
+                                                            @******phno format*************01.09.2015***************start*****@
+
+                                                            <div style="display:none;">
+                                                            @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                            </div>
+                                                            <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                                                            <div>
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>
+                                                                        @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                                        </td>
+                                                                        <td> - </td>
+                                                                        <td>
+                                                                        @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                        </td>
+                                                                        <td> - </td>
+                                                                        <td>
+                                                                        @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+
+                                                            @******phno format*************01.09.2015***************end*****@
+
+                                                            @* *@@*@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@*
+                                                            @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+                                                        </div>
+                                                        <br/>
+
+
+                                                        <br/><br/><br/>
+
+                                                        <br/>
+
+                                                    }
+                                                </div>
+
+                                                    <!-- Right column -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                        </div>
+
+
+                        @*****************end**************************************@
+
+                    }
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
                     </div>
+
+
                 </div>
+
+
             </div>
-        </div>
+
+
     </div>
+
+  </div>
+
+
+
     <script>
         @defining(Event.getDefaultEvent()) { defaultEvent =>
   $('#createDonation').click(function(){
@@ -77,7 +311,7 @@
 
 $(document).ready(function(){
 alert("document.redy");
-$('#cashDonationDetails').hide();
+/*$('#cashDonationDetails').hide();*/
 });
 
 
@@ -89,7 +323,7 @@ var eventId = $('#adminsEvents').val();
         $('#cashDonationDetails').hide();
         }else{
         alert("within else");
-    /*      $.ajax({
+    /!*      $.ajax({
         url: '../profile/pfpsForCashDonations/:eventId='+eventId,
          type: 'GET',
         dataType : 'html',
@@ -103,10 +337,11 @@ var eventId = $('#adminsEvents').val();
           $('#volunteerModalBody').html(xhr.responseText);
           $('#volunteerModalBody').scrollTop(0);
         }
-    });*/
-    /* $('#cashDonationDetails').show();*/
+    });*!/
+    /!* $('#cashDonationDetails').show();*!/
 
-   /* var donationLoad = '';
+    var donationLoad = '';
+    routes.DonationMgmt.participantDetailsForParticularEvent
 
    if(eventId) {
       window.location.href = donationLoad + "?type=eventId&id=" + eventId;
