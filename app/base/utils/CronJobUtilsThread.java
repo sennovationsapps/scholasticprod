@@ -3,6 +3,7 @@ package base.utils;
 import controllers.ReceiptMgmt;
 import models.Donation;
 import models.Transaction;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class CronJobUtilsThread implements Runnable {
 
+    private static final org.slf4j.Logger MAIL_LOGGER = LoggerFactory.getLogger("ScholasticReceiptsLogger");
 
 
     public void run() {
@@ -22,7 +24,10 @@ public class CronJobUtilsThread implements Runnable {
               while(true){
 
 
-                  System.out.println("within CronJobUtilsThread :: "+Thread.currentThread().getName() + "  ");
+                 // System.out.println("within CronJobUtilsThread :: "+Thread.currentThread().getName() + "  ");
+                  MAIL_LOGGER.info("*** Enter within CronJobUtilsThread for tax letter and donation receipt letter :: "+Thread.currentThread().getName() + " ***");
+
+
 
                   String transactionNo = null;
                   //call the transaction table to get the donation id(unique id)
@@ -36,8 +41,10 @@ public class CronJobUtilsThread implements Runnable {
                       Transaction transaction = (Transaction) transactionItr.next();
                       System.out.println("transaction.mailSent :: " + transaction.mailSent);
                       System.out.println("transaction.transid2:: " + transaction.donationTranId);
+                      MAIL_LOGGER.info("*** For transaction number :: " + transaction.donationTranId +" :: mail sent flag status is :: " + transaction.mailSent + " ***");
                       if (transaction.mailSent == false) {
                           System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.donationTranId);
+                         // MAIL_LOGGER.info("*** Enter within CronJobUtilsThread for tax letter and donation receipt letter :: " + Thread.currentThread().getName() + " ***");
                           Donation donation = Donation.findByTransactionNumber(transaction.donationTranId);
                           if(donation.status == Donation.PaymentStatus.CLEARED){
 
@@ -149,6 +156,7 @@ public class CronJobUtilsThread implements Runnable {
                   } catch (Exception e) {
                       System.out.println(e);
                   }
+                  MAIL_LOGGER.info("*** Exit from CronJobUtilsThread for tax letter and donation receipt letter :: "+Thread.currentThread().getName() + " ***");
               }
 
 

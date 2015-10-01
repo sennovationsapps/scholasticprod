@@ -1,5 +1,6 @@
 package controllers;
 
+import akka.actor.Cancellable;
 import com.feth.play.module.mail.Mailer;
 import com.feth.play.module.mail.Mailer.Mail.Body;
 import models.Donation;
@@ -61,7 +62,7 @@ public class ReceiptMgmt extends Controller {
 				.render(donation).toString();
 		ReceiptMgmt.generateEmailReceipt(ReceiptMgmt.getGeneralSubject(donation), message, donation.email);
 		RECEIPT_LOGGER.info("Successfully sent a check received receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] in the amount of [{}]",
-						donation.pfp.id, donation.event.id, donation.id, donation.amount);
+				donation.pfp.id, donation.event.id, donation.id, donation.amount);
 	}
 
 	public static void sendCCReceipt(Donation donation) {
@@ -77,9 +78,10 @@ public class ReceiptMgmt extends Controller {
 	public static void sendCCReceiptForCron(Donation donation) {
 		String message = views.txt.donations.email_cc_receipt
 				.render(donation).toString();
+		RECEIPT_LOGGER.info("*** Before calling emailReceipt for Tax Letter ***");
 		ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Tax Letter", message, donation.email);
-		RECEIPT_LOGGER.info("Successfully sent a cc receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}]",
-				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount);
+		RECEIPT_LOGGER.info("*** Successfully calling emailReceipt for Tax Letter for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}] :: ",
+				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount +" ***");
 	}
 
 
@@ -89,14 +91,16 @@ public class ReceiptMgmt extends Controller {
 	public static void sendCCReceiptForPfp(Donation donation){
 		String message = views.txt.donations.email_cc_pfp_receipt
 				.render(donation).toString();
-		System.out.println("donation.pfp.emergencyContact :: "+donation.pfp.userAdmin.email);
-		System.out.println("message in sendCCReceiptForPfp.."+message);
+		System.out.println("donation.pfp.emergencyContact :: " + donation.pfp.userAdmin.email);
+		System.out.println("message in sendCCReceiptForPfp.." + message);
+		RECEIPT_LOGGER.info("*** Before calling emailReceipt for Donation Receipt Letter ***");
 		ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Donation Receipt Letter", message, donation.pfp.userAdmin.email);
-		RECEIPT_LOGGER.info("Successfully sent a cc receipt for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}]",
-				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount);
+		RECEIPT_LOGGER.info("*** Successfully calling emailReceipt for Donation Receipt Letter for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}] :: ",
+				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount+" ***");
 	}
 
 	//====================mailsent to pfp=================end================21.09.2015===================================//
+
 
 
 	public static Result getCCReceipt(Event event, Donation donation) {
@@ -153,13 +157,16 @@ public class ReceiptMgmt extends Controller {
 			ReceiptMgmt.generateEmailReceipt(subject, message, donation.pfp.userAdmin.email);
 		}
 	}
-	
-	private static void generateEmailReceipt(String subject, String content, String email) {
-		System.out.println("subject in generateEmailReceipt :: "+subject);
-		final Body body = new Body(content);
 
-		Mailer.getDefaultMailer().sendMail(subject, body,
+	private static void generateEmailReceipt(String subject, String content, String email) {
+		System.out.println("subject in generateEmailReceipt :: " + subject);
+		final Body body = new Body(content);
+		RECEIPT_LOGGER.info("*** Before sending mail  ***");
+		/*Mailer.getDefaultMailer().sendMail(subject, body,
+				email);*/
+		Cancellable result = Mailer.getDefaultMailer().sendMail(subject, body,
 				email);
+		RECEIPT_LOGGER.info("*** After sending mail ::"+result.toString()+"::  ***");
 	}
 	
 /*
