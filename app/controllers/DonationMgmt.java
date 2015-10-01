@@ -601,7 +601,7 @@ public class DonationMgmt extends Controller {
 					System.out.println("payment type is credit22");
 					return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 				}
-
+				return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 			}
 			PAYMENT_LOGGER.warn("payment type is credit33");
 			System.out.println("payment type is credit33");
