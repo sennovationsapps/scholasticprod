@@ -594,7 +594,7 @@ public class DonationMgmt extends Controller {
 //				}
 				//Map<String, String> errors = PaymentUtils.validateCreditPayment(response);
 
-//				donationForm.reject("An error has occurred in our submission of your donation, please try your donation again.");
+				donationForm.reject("An error has occurred in our submission of your donation, please try your donation again.");
 				if (donationForm.hasErrors()) {
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
 					PAYMENT_LOGGER.warn("payment type is credit22");
