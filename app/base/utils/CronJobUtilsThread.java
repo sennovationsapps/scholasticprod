@@ -44,10 +44,13 @@ public class CronJobUtilsThread implements Runnable {
                       MAIL_LOGGER.info("*** For transaction number :: " + transaction.donationTranId +" :: mail sent flag status is :: " + transaction.mailSent + " ***");
                       if (transaction.mailSent == false) {
                           System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.donationTranId);
-                         // MAIL_LOGGER.info("*** Enter within CronJobUtilsThread for tax letter and donation receipt letter :: " + Thread.currentThread().getName() + " ***");
+                          // MAIL_LOGGER.info("*** Enter within CronJobUtilsThread for tax letter and donation receipt letter :: " + Thread.currentThread().getName() + " ***");
                           Donation donation = Donation.findByTransactionNumber(transaction.donationTranId);
-                          if(donation.status == Donation.PaymentStatus.CLEARED){
+                          if(donation!=null){
+                              MAIL_LOGGER.info("*** Donation is not null ***");
+                          if (donation.status == Donation.PaymentStatus.CLEARED) {
 
+                              MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
 
                               String creditCardNumber = transaction.accountNumber;
 
@@ -74,6 +77,7 @@ public class CronJobUtilsThread implements Runnable {
 
 
                           }
+                      }
 
 
 
