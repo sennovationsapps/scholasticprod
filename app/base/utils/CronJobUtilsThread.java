@@ -38,6 +38,7 @@ public class CronJobUtilsThread implements Runnable {
 
 
                   while(transactionItr.hasNext()) {
+                      try{
                       Transaction transaction = (Transaction) transactionItr.next();
                       System.out.println("transaction.mailSent :: " + transaction.mailSent);
                       System.out.println("transaction.transid2:: " + transaction.donationTranId);
@@ -54,7 +55,7 @@ public class CronJobUtilsThread implements Runnable {
 
                               String creditCardNumber = transaction.accountNumber;
 
-                              if (creditCardNumber != null) {
+                              if (creditCardNumber != null && creditCardNumber.trim().length()>4) {
                                   creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
                                   System.out.println("creditCardNumber :: " + creditCardNumber);
                                   donation.ccNum = creditCardNumber;
@@ -91,7 +92,13 @@ public class CronJobUtilsThread implements Runnable {
                       receiptMgmt.sendCCReceiptForPfp(donation);
                       System.out.println("after calling sendCCReceiptForPfp");*/
                       //===for testing=========//
+                      }catch(Exception e)
+                      {
+                          MAIL_LOGGER.error("*** Donation.PaymentStatus.CLEARED ***"+e.getMessage());
+                          e.printStackTrace();
+                      }
                   }
+
 
 
 
@@ -155,7 +162,7 @@ public class CronJobUtilsThread implements Runnable {
 
                   try {
                       // thread to sleep for 1000 milliseconds
-                      Thread.currentThread().sleep(3600000);
+                      Thread.currentThread().sleep(600000);
 
                   } catch (Exception e) {
                       e.printStackTrace();
