@@ -158,7 +158,9 @@ public class CronJobUtilsThread implements Runnable {
                       Thread.currentThread().sleep(3600000);
 
                   } catch (Exception e) {
-                      System.out.println(e);
+                      e.printStackTrace();
+                      System.out.println("Error"+ e.getMessage());
+                      MAIL_LOGGER.error("*** Error in CronJobUtilsThread for tax letter and donation receipt letter :: " +e+ " ***");
                   }
                   MAIL_LOGGER.info("*** Exit from CronJobUtilsThread for tax letter and donation receipt letter :: "+Thread.currentThread().getName() + " ***");
               }

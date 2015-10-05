@@ -14,6 +14,7 @@ import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.data.validation.Constraints.MaxLength;
@@ -32,6 +33,8 @@ import java.util.*;
  */
 @Entity
 public class Donation extends Model implements PathBindable<Donation> {
+
+	private static final org.slf4j.Logger MAIL_LOGGER = LoggerFactory.getLogger("ScholasticReceiptsLogger");
 	
 	public static final Finder<Long, Donation>	find	= new Finder<Long, Donation>(Long.class, Donation.class);
 	
@@ -236,9 +239,25 @@ public class Donation extends Model implements PathBindable<Donation> {
 	public static boolean existsByTransactionNumber(String transactionNumber) {
 		return find.where().eq("transactionNumber", transactionNumber).select("id").findRowCount() > 0;
 	}
-	
+
 	public static Donation findByTransactionNumber(String transactionNumber) {
-		return find.where().eq("transactionNumber", transactionNumber).findUnique();
+		System.out.println("within findByTransactionNumber ");
+		Donation donation = null;
+		try{
+			List<Donation> donations = find.where().eq("transactionNumber", transactionNumber).findList();
+			System.out.println("donations : "+donations);
+			if(donations!=null && donations.size()>0){
+				donation = find.where().eq("transactionNumber", transactionNumber).findList().get(0);
+				System.out.println("donation :: "+donation);
+			}
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+			MAIL_LOGGER.error("*** error within findByTransactionNumber ***"+ex.getMessage());
+
+		}
+
+		return donation;
 	}
 	
 	public static List<Donation> findAllByEventId(Long id) {

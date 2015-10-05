@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.ExpressionList;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
@@ -90,12 +91,20 @@ public class Transaction extends Model {
 
 
 
-   public static List<Transaction> findAll() {
-      final List<Transaction> transactions = find.all();
-      if (transactions != null) {
-         return transactions;
-      }
-      return new ArrayList<Transaction>();
-   }
+    public static List<Transaction> findAll() {
+        System.out.println("within findAll ");
+        final ExpressionList<Transaction> transactionExpressionList = find.where().eq("mailSent", false).ne("donationTranId",null).ne("donationTranId","");
+        final List<Transaction> transactions ;
+        if(transactionExpressionList!=null){
+            transactions = transactionExpressionList.findList();
+            if (transactions != null) {
+                System.out.println("transactions :: "+transactions);
+                return transactions;
+            }
+        }
+
+
+        return new ArrayList<Transaction>();
+    }
 
 }
