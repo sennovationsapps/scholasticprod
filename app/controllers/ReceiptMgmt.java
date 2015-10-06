@@ -92,7 +92,7 @@ public class ReceiptMgmt extends Controller {
 		String message = views.txt.donations.email_cc_pfp_receipt
 				.render(donation).toString();
 		System.out.println("donation.pfp.emergencyContact :: " + donation.pfp.userAdmin.email);
-		System.out.println("message in sendCCReceiptForPfp.." + message);
+		//System.out.println("message in sendCCReceiptForPfp.." + message);
 		RECEIPT_LOGGER.info("*** Before calling emailReceipt for Donation Receipt Letter ***");
 		ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Donation Receipt Letter", message, donation.pfp.userAdmin.email);
 		RECEIPT_LOGGER.info("*** Successfully calling emailReceipt for Donation Receipt Letter for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}] :: ",
@@ -159,7 +159,7 @@ public class ReceiptMgmt extends Controller {
 	}
 
 	private static void generateEmailReceipt(String subject, String content, String email) {
-		System.out.println("subject in generateEmailReceipt :: " + subject);
+		//System.out.println("subject in generateEmailReceipt :: " + subject);
 		final Body body = new Body(content);
 		RECEIPT_LOGGER.info("*** Before sending mail  ***");
 		/*Mailer.getDefaultMailer().sendMail(subject, body,

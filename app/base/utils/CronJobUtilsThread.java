@@ -40,11 +40,11 @@ public class CronJobUtilsThread implements Runnable {
                   while(transactionItr.hasNext()) {
                       try{
                       Transaction transaction = (Transaction) transactionItr.next();
-                      System.out.println("transaction.mailSent :: " + transaction.mailSent);
-                      System.out.println("transaction.transid2:: " + transaction.donationTranId);
+                     // System.out.println("transaction.mailSent :: " + transaction.mailSent);
+                    //  System.out.println("transaction.transid2:: " + transaction.donationTranId);
                       MAIL_LOGGER.info("*** For transaction number :: " + transaction.donationTranId +" :: mail sent flag status is :: " + transaction.mailSent + " ***");
                       if (transaction.mailSent == false) {
-                          System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.donationTranId);
+                         // System.out.println("transaction.mailSent == false  : for transactionId :: " + transaction.donationTranId);
                           // MAIL_LOGGER.info("*** Enter within CronJobUtilsThread for tax letter and donation receipt letter :: " + Thread.currentThread().getName() + " ***");
                           Donation donation = Donation.findByTransactionNumber(transaction.donationTranId);
                           if(donation!=null){
@@ -63,14 +63,14 @@ public class CronJobUtilsThread implements Runnable {
 
                               donation.ccName = transaction.ccname;
                               ReceiptMgmt receiptMgmt = new ReceiptMgmt();
-                              System.out.println(("before calling getAndSendCCReceipt"));
+                             // System.out.println(("before calling getAndSendCCReceipt"));
                               receiptMgmt.sendCCReceiptForCron(donation);
                               //System.out.println("result :: " + result);
-                              System.out.println(("after calling getAndSendCCReceipt"));
+                            //  System.out.println(("after calling getAndSendCCReceipt"));
 
-                              System.out.println("before calling sendCCReceiptForPfp...");
+                             // System.out.println("before calling sendCCReceiptForPfp...");
                               receiptMgmt.sendCCReceiptForPfp(donation);
-                              System.out.println("after calling sendCCReceiptForPfp");
+                            //  System.out.println("after calling sendCCReceiptForPfp");
 
                               //update
                               transaction.mailSent = true;
@@ -162,7 +162,7 @@ public class CronJobUtilsThread implements Runnable {
 
                   try {
                       // thread to sleep for 1000 milliseconds
-                      Thread.currentThread().sleep(600000);
+                      Thread.currentThread().sleep(3600000);
 
                   } catch (Exception e) {
                       e.printStackTrace();

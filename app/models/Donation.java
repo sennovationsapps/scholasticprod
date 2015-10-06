@@ -241,14 +241,14 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 
 	public static Donation findByTransactionNumber(String transactionNumber) {
-		System.out.println("within findByTransactionNumber ");
+		//System.out.println("within findByTransactionNumber ");
 		Donation donation = null;
 		try{
 			List<Donation> donations = find.where().eq("transactionNumber", transactionNumber).findList();
-			System.out.println("donations : "+donations);
+			//System.out.println("donations : "+donations);
 			if(donations!=null && donations.size()>0){
 				donation = find.where().eq("transactionNumber", transactionNumber).findList().get(0);
-				System.out.println("donation :: "+donation);
+				//System.out.println("donation :: "+donation);
 			}
 
 		}catch(Exception ex){
