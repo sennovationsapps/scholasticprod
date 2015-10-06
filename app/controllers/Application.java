@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.LoggerFactory;
 import play.Logger;
 import play.Routes;
 import play.data.Form;
@@ -43,6 +44,7 @@ public class Application extends Controller {
 	 * 
 	 * @return the result
 	 */
+	private static final org.slf4j.Logger MAIL_LOGGER = LoggerFactory.getLogger("ScholasticReceiptsLogger");
 	public static Result faqs() {
 		return ok(helpcenter.render(form(ContactUs.class)));
 	}
@@ -60,8 +62,39 @@ public class Application extends Controller {
 	 * Index.
 	 * 
 	 * @return the result
+	 *
+	 *
+	 *
 	 */
+
+
+	public static boolean schedulerTheadStatus = false;
 	public static Result index() {
+
+   //==========================new================06.10.2015======================start===================================//
+		//System.out.println("before calling cronJobUtilsThread..");
+		CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
+
+		System.out.println("schedulerTheadStatus :: "+schedulerTheadStatus);
+
+		if(schedulerTheadStatus == false)
+		{
+			//System.out.println("schedulerTheadStatus == false");
+			MAIL_LOGGER.info("before calling cronJobUtilsThread..");
+			Thread t = new Thread(cronJobUtilsThread);
+			t.setPriority(1);
+
+			t.start();
+			MAIL_LOGGER.info("after calling cronJobUtilsThread..");
+			//System.out.println("after ");
+			schedulerTheadStatus = true;
+
+		}
+		//System.out.println("after calling cronJobUtilsThread..");
+		//==========================new================06.10.2015=======================end====================================//
+
+
+
 		return ok(index.render());
 	}
 
@@ -91,14 +124,14 @@ public class Application extends Controller {
 
 		//=======================new add================start=========================15.09.2015==============================//
 
-		System.out.println("before calling cronJobUtilsThread..");
+		/*System.out.println("before calling cronJobUtilsThread..");
 		CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
 		Thread t = new Thread(cronJobUtilsThread);
 		t.setPriority(1);
 		t.start();
 
 		System.out.println("after calling cronJobUtilsThread..");
-
+*/
 
 
 		/*ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
