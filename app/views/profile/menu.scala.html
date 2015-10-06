@@ -76,12 +76,12 @@
 
 
       @****************start*******************Bulk Cash Donation*******************24.09.2015**********************************@
-@*/*@@*if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN)){
+@if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN)){
   <li>
     <a href="@routes.Application.profileCashDonations()"><i class="sign fa fa-dollar bg-green"></i> Bulk Cash Donation <i class="fa fa-chevron-right pull-right"></i></a>
 
   </li>
-}*/*@
+}
       @*****************end********************Bulk Cash Donation*******************24.09.2015**********************************@
 
 

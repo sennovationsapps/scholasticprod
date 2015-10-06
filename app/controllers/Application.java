@@ -459,24 +459,26 @@ public class Application extends Controller {
 
 
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
+
 	public static Result profileCashDonations(){
 		final User localUser = ControllerUtil.getLocalUser(session());
 		List<Event> events = new ArrayList<Event>();
-if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
-      events = Event.findAllEvents();
+		if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+			events = Event.findAllEvents();
 		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
-	events = Event.findAllByUserId(localUser.id);
+			events = Event.findAllByUserId(localUser.id);
 		}
 		final Form<Donation> donationForm = form(Donation.class);
 		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
 
 		if(events!= null && events.size()>0){
-			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm, null));
+			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm, null, null));
 		}else{
-			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm, null));
+			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm, null, null));
 		}
 
 	}
+
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
 	/**
 	 * Profile donations.
