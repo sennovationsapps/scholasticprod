@@ -523,19 +523,45 @@ public class DonationMgmt extends Controller {
 
 				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 				// return badRequest(createForm.render(event, event.generalFund, donationForm));
-			} else {
+			}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+				System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
+				donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
+				if (donationForm.hasErrors()) {
+					Logger.debug("Has errors {}", donationForm.errorsAsJson());
+					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+				}
+
+			}else if(StringUtils.isEmpty(donationForm.data().get("email1"))){
+				donationForm.reject("email1", "Please enter the valid Email Id.");
+				if (donationForm.hasErrors()) {
+					Logger.debug("Has errors {}", donationForm.errorsAsJson());
+					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+				}
+			}else {
 				System.out.println("within baad req.");
 				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 			}
 		}
+
+
 		if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
 			donationForm.reject("pfp.id", "Please select the Participant that you would like to donate to.  The General Fund donations are made to the Event only and not an individual Participant.");
 			if (donationForm.hasErrors()) {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
-				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, event, pfps, donationForm, donations, donationList));
+				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 			}
 		}
+
+		//========new add=====================start==================//
+		if (StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")) {
+			donationForm.reject("collectionTypes", "Please select the Collection Types.");
+			if (donationForm.hasErrors()) {
+				Logger.debug("Has errors {}", donationForm.errorsAsJson());
+				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+			}
+		}
+		//=======new add======================end==================//
 
 		Event eventForPfp = Event.findById(event.id);
 
@@ -607,6 +633,7 @@ public class DonationMgmt extends Controller {
 			}else{
 				//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 			}
+			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been submitted successfully. ");
 
 		}
 		else if(donation.statusOfBulkCashDonation.equals("0")){
@@ -653,6 +680,7 @@ public class DonationMgmt extends Controller {
 			//final Form<Donation> donationForm1 = form(Donation.class);
 
 			//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
+
 		}
 		return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 	}

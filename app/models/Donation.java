@@ -124,9 +124,10 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 	//=============================start=========================01.10.2015=====================================//
 	@Transient
+
 	public String  collectionTypes;
 	@Transient
-	@Constraints.Required
+
 	public String email1;
 
 	//=============================end===========================01.10.2015=====================================//

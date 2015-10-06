@@ -86,7 +86,7 @@
                             @*****************start**********************************@
 
 
-                            <div class="col-md-12">
+                           @* <div class="col-md-12">
 
 
                                 <nav class="navbar navbar-default" role="navigation">
@@ -101,14 +101,14 @@
                                         <ul class="nav navbar-nav">
                                             <div class="btn-group">
                                                 <a type="button" class="btn navbar-btn btn-default" href="">Add Cash transaction</a>
-                                              @*  <a type="button" class="btn navbar-btn btn-default" href="" onclick="editCashTransaction()">Edit Cash transaction</a>*@
+                                              *@@*  <a type="button" class="btn navbar-btn btn-default" href="" onclick="editCashTransaction()">Edit Cash transaction</a>*@@*
                                             </div>
                                                 &nbsp;&nbsp;
 
                                         </ul>
                                     </div>
                                     </nav>
-                            </div>
+                            </div>*@
 
 
 
@@ -215,6 +215,7 @@
 
                                                                     <select id="collectionTypes" name="collectionTypes" class="form-control" onchange="mergeCollectionTypes();">
 
+                                                                        <option value="select">--select--</option>
                                                                         <option value="INDIVIDUAL">Individual</option>
                                                                         <option value="COMMUNITY_COLLECTION" > Community Collection </option>
 
@@ -455,6 +456,8 @@
                                                     @*<button type="submit"  class="btn btn-primary" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()">AddMoreRows</button>*@
 
                                                     <a href="#" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()" style="color: #000000; text-decoration: underline; text-decoration-color: #000000;">Add More Rows</a>
+                                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <span> <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">submit</button></span>
                                                     <br/>
 
 
@@ -465,69 +468,78 @@
 
 
                                                     <div id = "previousCheckedDonations">
-                                                        @if(donationsForBulkCashDonations!=null && donationsForBulkCashDonations.size>0){
-                                                            <table border="1">
-                                                            @for(donationForBulkCash <- donationsForBulkCashDonations){
+                                                        <div class="wrapper">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                   <div class="col-sm-8">
+
+                                                                    @if(donationsForBulkCashDonations!=null && donationsForBulkCashDonations.size>0){
+                                                            <table class="table table-striped table-hover ">
                                                                 <thead >
-                                                                    <th>ParticipantName</th>
-                                                                    <th style="width: 20px;"></th>
-                                                                    <th>Amount</th>
-                                                                    <th style="width: 20px;"></th>
-                                                                    <th>Collection Type</th>
-                                                                    <th style="width: 20px;"></th>
-                                                                    @if(donationForBulkCash.collectionTypes.equals("INDIVIDUAL")){
-                                                                        <th>Email</th>
-                                                                        <th style="width: 20px;"></th>
-                                                                        <th>Donor Name</th>
-                                                                        <th style="width: 20px;"></th>
-                                                                        <th>Phone No</th>
-                                                                    }
-                                                                    @if(donationForBulkCash.collectionTypes.equals("COMMUNITY_COLLECTION")){
-                                                                        <th>Email</th>
-                                                                        <th style="width: 20px;"></th>
-                                                                        <th>First Name</th>
-                                                                        <th style="width: 20px;"></th>
-                                                                        <th>Last Name</th>
+                                                                    <th class="header">Participant Name</th>
+
+                                                                    <th class="header">Amount</th>
+
+                                                                    <th class="header">Collection Type</th>
 
 
-                                                                    }
+                                                                        <th class="header">Email</th>
+
+                                                                        <th class="header">Donor Name</th>
+
+                                                                        <th class="header">Phone No</th>
+
+
+
+
+                                                                        <th class="header">First Name</th>
+
+                                                                        <th class="header">Last Name</th>
+
+
+
 
                                                                 </thead>
+                                                            @for(donationForBulkCash <- donationsForBulkCashDonations){
+
                                                                     <tr>
                                                                         <td>
                                                                             @Pfp.findById(donationForBulkCash.pfp.id).name
                                                                         </td>
-                                                                        <td style="width: 20px;"></td>
+
                                                                         <td>
                                                                             @donationForBulkCash.amount
                                                                         </td>
-                                                                        <td style="width: 20px;"></td>
+
                                                                         <td>
                                                                         @donationForBulkCash.collectionTypes
                                                                         </td>
-                                                                        <td style="width: 20px;"></td>
+
                                                                         @if(donationForBulkCash.collectionTypes.equals("INDIVIDUAL")){
                                                                             <td>
                                                                             @donationForBulkCash.email1
                                                                             </td>
-                                                                            <td style="width: 20px;"></td>
+
                                                                             <td>
                                                                             @donationForBulkCash.donorName
                                                                             </td>
-                                                                            <td style="width: 20px;"></td>
+
                                                                             <td>
                                                                             @donationForBulkCash.phone
                                                                             </td>
+                                                                            <td> - </td>
+                                                                            <td> - </td>
                                                                         }
                                                                         @if(donationForBulkCash.collectionTypes.equals("COMMUNITY_COLLECTION")){
                                                                             <td>
                                                                             @donationForBulkCash.email
                                                                             </td>
-                                                                            <td style="width: 20px;"></td>
+                                                                            <td> - </td>
+                                                                            <td> - </td>
                                                                             <td>
                                                                             @donationForBulkCash.firstName
                                                                             </td>
-                                                                            <td style="width: 20px;"></td>
+
                                                                             <td>
                                                                             @donationForBulkCash.lastName
                                                                             </td>
@@ -542,7 +554,10 @@
                                                         </table>
 
                                                         }
-
+                                                                   </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
 
@@ -557,7 +572,7 @@
                                                     <br/>
 
 
-                                                    <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">submit</button>
+                                                   @* <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">submit</button>*@
 
 
 
@@ -1134,10 +1149,15 @@ var collectionTypes = $("#collectionTypesText").val();
 		mergeCollectionTypes();
 		}else if(collectionTypes === "INDIVIDUAL"){
 mergeCollectionTypes();
+		}else{
+		$("#collectionTypes").val("select");
 		}
 
 
 //========================end====================================//
+ $("#pfpText").val("");
+//alert("pfpValue :: "+pfpValue);
+
 
 
 
