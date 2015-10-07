@@ -1,55 +1,27 @@
 package models;
 
-import java.net.URL;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
-import models.Donation.DonationType;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Page;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.annotation.EnumValue;
+import controllers.ControllerUtil;
 import models.security.SecurityRole;
 import models.security.User;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.math.NumberUtils;
-import org.h2.tools.Script;
-
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
-import play.data.validation.Constraints.MinLength;
 import play.db.ebean.Model;
 import play.i18n.Messages;
 import play.mvc.PathBindable;
 import security.BaseX;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Page;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.annotation.EnumValue;
-
-import controllers.ControllerUtil;
+import javax.persistence.*;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Event entity managed by JPA
@@ -241,6 +213,32 @@ public class Event extends Model implements PathBindable<Event> {
 		}
 		return new ArrayList<Object>();
 	}
+
+	/***********start**************************07.10.2015**********************************************************/
+
+	public static List<Event> findAllEventsExceptExistingEvent(Event event) {
+		List<Event> events = find.all();
+		if(event!=null){
+			events.remove(event);
+		}
+		return events;
+	}
+
+	public static List<Event> findAllEventsExceptExistingEventByUserId(Event event,Long id) {
+		final Query<Event> events = find.where().eq("userAdmin.id", id).select("id, heroImgUrl, eventEnd, eventStart, slug, status, schoolId, fundraisingEnd, fundraisingStart, goal, name, userAdmin").fetch("userAdmin");
+		List<Event> eventsByUserId = new ArrayList<Event>();
+		if (events != null) {
+			eventsByUserId = events.findList();
+			if(event!=null){
+				eventsByUserId.remove(event);
+			}
+		}
+		//return new ArrayList<Event>();
+		return eventsByUserId;
+	}
+
+
+	/************end***************************07.10.2015**********************************************************/
 
 	public static Event findById(Long id) {
 		return find.byId(id);

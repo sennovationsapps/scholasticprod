@@ -29,7 +29,11 @@
             <div class="col-sm-12">
               <h4 class="hl"><i class="fa fa-map-marker"></i> Reports</h4>
               <hr>
-              @defining(if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {Event.findAllEvents}else{ Event.findAllByUserId(localUser.id)}) { events =>
+
+
+
+
+             @* @defining(if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {Event.findAllEvents}else{ Event.findAllByUserId(localUser.id)}) { events =>
               	@if(events == null || events.isEmpty) {
               		<p>No Events for this user.</p>
               	} else {
@@ -44,8 +48,55 @@
 	              <a class="btn btn-primary" href="#" id="getReports" role="button">Get Reports</a>
 	              </div>
 	            }
-              }
-               @if(event != null) {
+              }*@
+
+
+
+                @if(event!=null && event.id!= null){
+                    @defining(if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {Event.findAllEventsExceptExistingEvent(event)}else{ Event.findAllEventsExceptExistingEventByUserId(event,localUser.id)}) { events =>
+                        @if(events == null || events.isEmpty) {
+                            <select id="adminsEvents" name="adminsEvents" class="form-control">
+
+                                <option value="@event.slug">@event.name</option>
+
+                            </select>
+                            *@@*<p>No Events for this user.</p>*@@*
+                        } else {
+                            <p>Select Event</p>
+                            <div class="form-horizontal">
+                                <select id="adminsEvents" name="adminsEvents" class="form-control">
+                                    <option value="@event.slug">@event.name</option>
+                                    @for(event1 <- events) {
+                                        <option value="@event1.slug">@event1.name</option>
+                                    }
+                                </select>
+                                <br/>
+                                <a class="btn btn-primary" href="#" id="getReports" role="button">Get Reports</a>
+                            </div>
+                        }
+                    }
+                }else{
+                    @defining(if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)) {Event.findAllEvents}else{ Event.findAllByUserId(localUser.id)}) { events =>
+                        @if(events == null || events.isEmpty) {
+                            <p>No Events for this user.</p>
+                        } else {
+                            <p>Select Event</p>
+                            <div class="form-horizontal">
+                                <select id="adminsEvents" name="adminsEvents" class="form-control">
+                                @for(event1 <- events) {
+                                    <option value="@event1.slug">@event1.name</option>
+                                }
+                                </select>
+                                <br/>
+                                <a class="btn btn-primary" href="#" id="getReports" role="button">Get Reports</a>
+                            </div>
+                        }
+                    }
+                }
+
+
+
+                @if(event != null) {
               <div id="reportsByEvent">
               	@profile.profileReportsForm(event)
               </div>

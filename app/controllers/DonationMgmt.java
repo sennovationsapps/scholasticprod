@@ -517,7 +517,167 @@ public class DonationMgmt extends Controller {
 		// System.out.println("donationForm.get() :: "+donationForm.get());
 		System.out.println(("donationForm.data().get(pfp.id) :: " + donationForm.data().get("pfp.id")));
 		if (donationForm.hasErrors()) {
-			Logger.debug("Has errors {}", donationForm.errorsAsJson());
+
+
+
+
+
+
+
+			System.out.println("donationform has errors..");
+			System.out.println("statusss :: "+donationForm.data().get("statusOfBulkCashDonation"));
+
+			if(donationForm.data().get("statusOfBulkCashDonation").equals("1")){
+				if(donationList!=null && donationList.size()>0){
+					System.out.println("pfpId :: "+donationForm.data().get("pfp.id")+" :: collectionTypes :: "+donationForm.data().get("collectionTypes")+":: amount ::"+StringUtils.isEmpty(donationForm.data().get("amount"))+":: email :: "+donationForm.data().get("email1"));
+					if(StringUtils.isEmpty(donationForm.data().get("pfp.id")) && (StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select"))  && (StringUtils.isEmpty(donationForm.data().get("amount")) || donationForm.data().get("amount").equalsIgnoreCase("true"))){
+						System.out.println("email1 :: "+ donationForm.data().get("email1") +" :: email :: "+donationForm.data().get("email"));
+						if(StringUtils.isEmpty(donationForm.data().get("email1")) && StringUtils.isEmpty(donationForm.data().get("email"))){
+							Iterator donationListItr = donationList.iterator();
+							while(donationListItr.hasNext()){
+								Donation donation1 = (Donation)donationListItr.next();
+								donation1.save();
+
+								donationList =  new ArrayList<Donation>();
+								Donation updatedDonation = Donation.findById(donation1.id);
+								System.out.println("after save :: " + donation1.status);
+								// final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
+
+								ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+								System.out.println("event :: " + event);
+								System.out.println("updatedDonation.event :: "+updatedDonation.event);
+
+
+								//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
+
+								//return redirect(routes.ReceiptMgmt.getAndSendCashReceipt(updatedDonation.event, updatedDonation));
+							}
+							final Form<Donation> donationForm2 = form(Donation.class);
+							flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been submitted successfully. ");
+							return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm2, donations, donationList));
+
+						}else{
+							System.out.println("form has values ...");
+							Logger.debug("Has errors {}", donationForm.errorsAsJson());
+							if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
+
+
+
+								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+								// return badRequest(createForm.render(event, event.generalFund, donationForm));
+							}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+								System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
+								donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
+								if (donationForm.hasErrors()) {
+									Logger.debug("Has errors {}", donationForm.errorsAsJson());
+									return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+								}
+
+							}else if(StringUtils.isEmpty(donationForm.data().get("email1"))){
+								donationForm.reject("email1", "Please enter the valid Email Id.");
+								if (donationForm.hasErrors()) {
+									Logger.debug("Has errors {}", donationForm.errorsAsJson());
+									return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+								}
+							}else {
+								System.out.println("within baad req.");
+								//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
+								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							}
+						}
+					}else{
+						System.out.println("form has values111 ...");
+						Logger.debug("Has errors {}", donationForm.errorsAsJson());
+						if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
+
+
+
+							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							// return badRequest(createForm.render(event, event.generalFund, donationForm));
+						}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+							System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
+							donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
+							if (donationForm.hasErrors()) {
+								Logger.debug("Has errors {}", donationForm.errorsAsJson());
+								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							}
+
+						}else if(StringUtils.isEmpty(donationForm.data().get("email1"))){
+							donationForm.reject("email1", "Please enter the valid Email Id.");
+							if (donationForm.hasErrors()) {
+								Logger.debug("Has errors {}", donationForm.errorsAsJson());
+								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							}
+						}else {
+							System.out.println("within baad req.");
+							//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
+							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						}
+					}
+				}else if(donationList!=null && donationList.size() == 0){
+					System.out.println("size of donationList ::"+donationList.size());
+					Logger.debug("Has errors {}", donationForm.errorsAsJson());
+					if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
+
+
+
+						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						// return badRequest(createForm.render(event, event.generalFund, donationForm));
+					}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+						System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
+						donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
+						if (donationForm.hasErrors()) {
+							Logger.debug("Has errors {}", donationForm.errorsAsJson());
+							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						}
+
+					}else if(StringUtils.isEmpty(donationForm.data().get("email1"))){
+						donationForm.reject("email1", "Please enter the valid Email Id.");
+						if (donationForm.hasErrors()) {
+							Logger.debug("Has errors {}", donationForm.errorsAsJson());
+							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						}
+					}else {
+						System.out.println("within baad req.");
+						//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
+						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					}
+				}
+			}else if(donationForm.data().get("statusOfBulkCashDonation").equals("0")){
+				System.out.println("statusOfBulkCashDonation == 0");
+				Logger.debug("Has errors {}", donationForm.errorsAsJson());
+				if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
+
+
+
+					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					// return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+					System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
+					donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
+					if (donationForm.hasErrors()) {
+						Logger.debug("Has errors {}", donationForm.errorsAsJson());
+						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					}
+
+				}else if(StringUtils.isEmpty(donationForm.data().get("email1"))){
+					donationForm.reject("email1", "Please enter the valid Email Id.");
+					if (donationForm.hasErrors()) {
+						Logger.debug("Has errors {}", donationForm.errorsAsJson());
+						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					}
+				}else {
+					System.out.println("within baad req.");
+					//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
+					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+				}
+			}
+
+
+
+
+
+		/*	Logger.debug("Has errors {}", donationForm.errorsAsJson());
 			if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
 
 
@@ -541,7 +701,7 @@ public class DonationMgmt extends Controller {
 				System.out.println("within baad req.");
 				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
-			}
+			}*/
 		}
 
 
