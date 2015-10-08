@@ -534,11 +534,11 @@ public class DonationMgmt extends Controller {
 						System.out.println("email1 :: "+ donationForm.data().get("email1") +" :: email :: "+donationForm.data().get("email"));
 						if(StringUtils.isEmpty(donationForm.data().get("email1")) && StringUtils.isEmpty(donationForm.data().get("email"))){
 							Iterator donationListItr = donationList.iterator();
-							while(donationListItr.hasNext()){
+							/*while(donationListItr.hasNext()){
 								Donation donation1 = (Donation)donationListItr.next();
 								donation1.save();
 
-								donationList =  new ArrayList<Donation>();
+
 								Donation updatedDonation = Donation.findById(donation1.id);
 								System.out.println("after save :: " + donation1.status);
 								// final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
@@ -551,7 +551,8 @@ public class DonationMgmt extends Controller {
 								//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 
 								//return redirect(routes.ReceiptMgmt.getAndSendCashReceipt(updatedDonation.event, updatedDonation));
-							}
+							}*/
+							donationList =  new ArrayList<Donation>();
 							final Form<Donation> donationForm2 = form(Donation.class);
 							flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been submitted successfully. ");
 							return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm2, donations, donationList));
@@ -770,7 +771,19 @@ public class DonationMgmt extends Controller {
 
 			donationList.add(donation);
 
-			if(donationList!= null && donationList.size()>0){
+			//===========new add=================start===================08.10.2015==========================//
+			donation.save();
+			donationList =  new ArrayList<Donation>();
+			Donation updatedDonation = Donation.findById(donation.id);
+			System.out.println("after save :: " + donation.status);
+			final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
+
+			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+			System.out.println("event :: " + event);
+			System.out.println("updatedDonation.event :: " + updatedDonation.event);
+			//===========new add==================end====================08.10.2015==========================//
+
+		/*	if(donationList!= null && donationList.size()>0){
 				Iterator donationListItr = donationList.iterator();
 				while(donationListItr.hasNext()){
 					donation = (Donation)donationListItr.next();
@@ -792,7 +805,7 @@ public class DonationMgmt extends Controller {
 
 			}else{
 				//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
-			}
+			}*/
 			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been submitted successfully. ");
 
 		}
@@ -837,10 +850,23 @@ public class DonationMgmt extends Controller {
 			donation.datePaid = new Date();
 			//Event eventForPfp = Event.findById(event.id);
 			donationList.add(donation);
+
+			//===========new add=================start===================08.10.2015==========================//
+			donation.save();
+
+			Donation updatedDonation = Donation.findById(donation.id);
+			System.out.println("after save :: " + donation.status);
+			final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
+
+			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+			System.out.println("event :: " + event);
+			System.out.println("updatedDonation.event :: " + updatedDonation.event);
+			//===========new add==================end====================08.10.2015==========================//
+
 			//final Form<Donation> donationForm1 = form(Donation.class);
 
 			//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
-
+			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been saved and added successfully. ");
 		}
 		return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 	}
