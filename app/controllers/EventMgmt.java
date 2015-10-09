@@ -1,7 +1,9 @@
 package controllers;
 
+
 import static play.data.Form.form;
 
+import base.utils.Base64;
 import com.feth.play.module.mail.Mailer;
 import com.typesafe.config.ConfigFactory;
 import models.*;
@@ -13,6 +15,10 @@ import views.html.events.viewEvent;
 import views.html.events.pariticipantsAddForm;
 import views.html.events.pariticipantsEditForm;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import models.Pfp.PfpType;
@@ -40,7 +46,7 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
  * Manage a database of events.
  */
 public class EventMgmt extends Controller {
-
+	//private static final org.slf4j.Logger SCHOLASTIC_WEB_LOGGER = LoggerFactory.getLogger("ScholasticWebApplication");
 	/**
 	 * This result directly redirect to application home.
 	 */
@@ -1100,12 +1106,17 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 	@Transactional
 	public static Result save() {
 		final Form<Event> eventForm = form(Event.class).bindFromRequest();
+		System.out.println("*** Image Edit Code Enterrrrrrrrrrrr save *** ");
 		// if(request().body().isMaxSizeExceeded()) {
 		// return badRequest("The uploaded image files were too large.");
 		// }
 		if (eventForm.hasErrors()) {
 			return badRequest(createForm.render(eventForm));
 		}
+		if (eventForm.hasErrors()) {
+			return badRequest(createForm.render(eventForm));
+		}
+		final Event event = eventForm.get();
 //		System.out.println("********************");
 //		System.out.println("********************");
 //		System.out.println(ToStringBuilder.reflectionToString(eventForm));
@@ -1139,7 +1150,7 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 					S3File.getImage("img.default.hero"));
 			eventForm.get().heroImgUrl = S3File.getImage("img.default.hero");
 		}
-		final Http.MultipartFormData.FilePart imgUrlFilePart = body
+		/*final Http.MultipartFormData.FilePart imgUrlFilePart = body
 				.getFile("imgUrl");
 		S3File imgUrlFile = null;
 		if (imgUrlFilePart != null) {
@@ -1221,16 +1232,377 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 				imgUrlFile4.file = imgUrlFilePart4.getFile();
 				eventForm.get().imgUrl4 = imgUrlFile4.getUrl();
 			}
+		}*/
+		//=====================ImageEdit====================24.09.2015===================start===========================================================================//
+		//String filename="imgUrlText0.png";
+		System.out.println("*** Image Edit Code Enterrrrrrrrrrrr *** ");
+		System.out.println("eventForm.get().name===> " +eventForm.get().name);
+		java.util.Date date= new java.util.Date();
+		String formattedDate=new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		System.out.println("=====>"+formattedDate);
+		File imgUrlFilePart0 = new File("zero"+formattedDate+".png");
+		File imgUrlFilePart1 = new File("first"+formattedDate+".png");
+		File imgUrlFilePart2 = new File("second"+formattedDate+".png");
+		File imgUrlFilePart3 = new File("third"+formattedDate+".png");
+		File imgUrlFilePart4 = new File("fourth"+formattedDate+".png");
+		String completeImageData;
+		String imageDataBytes;
+		byte[] data;
+		BufferedOutputStream stream;
+		S3File imgUrlFile = null;
+		try{
+
+			System.out.println(" *** Image Edit Code Enter *** ");
+
+			if(eventForm.get().imgUrlText01!=null && !eventForm.get().imgUrlText01.equals("")) {
+				System.out.println("first");
+				eventForm.get().imgUrlText0 = eventForm.get().imgUrlText0.append(eventForm.get().imgUrlText01);
+			}
+			if(eventForm.get().imgUrlText02!=null && !eventForm.get().imgUrlText02.equals("")) {
+				System.out.println("second");
+				eventForm.get().imgUrlText0 = eventForm.get().imgUrlText0.append(eventForm.get().imgUrlText02);
+			}
+			if(eventForm.get().imgUrlText03!=null && !eventForm.get().imgUrlText03.equals("")) {
+				System.out.println("third");
+				eventForm.get().imgUrlText0 = eventForm.get().imgUrlText0.append(eventForm.get().imgUrlText03);
+			}
+			if(eventForm.get().imgUrlText04!=null && !eventForm.get().imgUrlText04.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText0 = eventForm.get().imgUrlText0.append(eventForm.get().imgUrlText04);
+			}
+			if(eventForm.get().imgUrlText05!=null && !eventForm.get().imgUrlText05.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText0 = eventForm.get().imgUrlText0.append(eventForm.get().imgUrlText05);
+			}
+			//System.out.println("eventForm.get().imgUrlText0===>Change==> " +eventForm.get().imgUrlText0);
+			//System.out.println("eventForm.get().imgUrlText0==> "+eventForm.get().imgUrlText01);
+
+
+			//save image0
+			if(eventForm.get().imgUrlText0!=null && !eventForm.get().imgUrlText0.equals(" ")) {
+				//System.out.println(" *** Image Edit Code first image upload enter eventForm.get().imgUrlText0 *** "+eventForm.get().imgUrlText0);
+				completeImageData = eventForm.get().imgUrlText0.toString();
+				imageDataBytes = completeImageData.substring(completeImageData.indexOf(",") + 1);
+				data = Base64.decode(imageDataBytes);
+				stream = new BufferedOutputStream(new FileOutputStream(imgUrlFilePart0));
+				stream.write(data);
+				stream.close();
+
+				if (imgUrlFilePart0 != null) {
+					imgUrlFile = new S3File();
+					imgUrlFile.name = ControllerUtil.decodeFileName(imgUrlFilePart0.getName());
+					imgUrlFile.file = imgUrlFilePart0;
+					eventForm.get().imgUrl = imgUrlFile.getUrl();
+					System.out.println(" *** Image Edit Code first image uploaded url*** " + eventForm.get().imgUrl);
+				}
+				if (imgUrlFile != null) {
+					System.out.println(" *** Image Edit Code first image upload save *** ");
+					imgUrlFile.save();
+				}
+			}
+			if(eventForm.get().imgUrlText11!=null && !eventForm.get().imgUrlText11.equals("")) {
+				System.out.println("first");
+				eventForm.get().imgUrlText1 = eventForm.get().imgUrlText1.append(eventForm.get().imgUrlText11);
+			}
+			if(eventForm.get().imgUrlText12!=null && !eventForm.get().imgUrlText12.equals("")) {
+				System.out.println("second");
+				eventForm.get().imgUrlText1 = eventForm.get().imgUrlText1.append(eventForm.get().imgUrlText12);
+			}
+			if(eventForm.get().imgUrlText13!=null && !eventForm.get().imgUrlText13.equals("")) {
+				System.out.println("third");
+				eventForm.get().imgUrlText1 = eventForm.get().imgUrlText1.append(eventForm.get().imgUrlText13);
+			}
+			if(eventForm.get().imgUrlText14!=null && !eventForm.get().imgUrlText14.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText1 = eventForm.get().imgUrlText1.append(eventForm.get().imgUrlText14);
+			}
+			if(eventForm.get().imgUrlText15!=null && !eventForm.get().imgUrlText15.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText1 = eventForm.get().imgUrlText1.append(eventForm.get().imgUrlText15);
+			}
+			//save image1
+			if(eventForm.get().imgUrlText1!=null && !eventForm.get().imgUrlText1.equals(" ")) {
+				//System.out.println(" *** Image Edit Code second image upload enter eventForm.get().imgUrlText1 *** "+eventForm.get().imgUrlText1);
+				completeImageData = eventForm.get().imgUrlText1.toString();
+				imageDataBytes = completeImageData.substring(completeImageData.indexOf(",") + 1);
+				data = Base64.decode(imageDataBytes);
+
+				stream = new BufferedOutputStream(
+						new FileOutputStream(imgUrlFilePart1));
+				stream.write(data);
+				stream.close();
+				imgUrlFile = null;
+				if (imgUrlFilePart1 != null) {
+					imgUrlFile = new S3File();
+					imgUrlFile.name = ControllerUtil.decodeFileName(imgUrlFilePart1
+							.getName());
+					imgUrlFile.file = imgUrlFilePart1;
+					eventForm.get().imgUrl1 = imgUrlFile.getUrl();
+					System.out.println(" *** Image Edit Code second image uploaded url*** " + eventForm.get().imgUrl1);
+				}
+				if (imgUrlFile != null) {
+					System.out.println(" *** Image Edit Code second image upload save *** ");
+					imgUrlFile.save();
+				}
+			}
+
+
+
+			if(eventForm.get().imgUrlText21!=null && !eventForm.get().imgUrlText21.equals("")) {
+				System.out.println("first");
+				eventForm.get().imgUrlText2 = eventForm.get().imgUrlText2.append(eventForm.get().imgUrlText21);
+			}
+			if(eventForm.get().imgUrlText22!=null && !eventForm.get().imgUrlText22.equals("")) {
+				System.out.println("second");
+				eventForm.get().imgUrlText2 = eventForm.get().imgUrlText2.append(eventForm.get().imgUrlText22);
+			}
+			if(eventForm.get().imgUrlText23!=null && !eventForm.get().imgUrlText23.equals("")) {
+				System.out.println("third");
+				eventForm.get().imgUrlText2 = eventForm.get().imgUrlText2.append(eventForm.get().imgUrlText23);
+			}
+			if(eventForm.get().imgUrlText24!=null && !eventForm.get().imgUrlText24.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText2 = eventForm.get().imgUrlText2.append(eventForm.get().imgUrlText24);
+			}
+			if(eventForm.get().imgUrlText25!=null && !eventForm.get().imgUrlText25.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText2 = eventForm.get().imgUrlText2.append(eventForm.get().imgUrlText25);
+			}
+			//for imageUrl2
+			if(eventForm.get().imgUrlText2!=null && !eventForm.get().imgUrlText2.equals(" ")) {
+				//System.out.println(" *** Image Edit Code third image upload enter eventForm.get().imgUrlText2 *** "+eventForm.get().imgUrlText2);
+				completeImageData = eventForm.get().imgUrlText2.toString();
+				imageDataBytes = completeImageData.substring(completeImageData.indexOf(",") + 1);
+				data = Base64.decode(imageDataBytes);
+
+				stream = new BufferedOutputStream(
+						new FileOutputStream(imgUrlFilePart2));
+				stream.write(data);
+				stream.close();
+				imgUrlFile = null;
+				if (imgUrlFilePart2 != null) {
+					System.out.println("Amazon");
+
+					imgUrlFile = new S3File();
+					imgUrlFile.name = ControllerUtil.decodeFileName(imgUrlFilePart2
+							.getName());
+					imgUrlFile.file = imgUrlFilePart2;
+					eventForm.get().imgUrl2 = imgUrlFile.getUrl();
+					System.out.println(" *** Image Edit Code third image uploaded url*** " + eventForm.get().imgUrl2);
+				}
+				if (imgUrlFile != null) {
+					System.out.println(" *** Image Edit Code third image upload save *** ");
+					imgUrlFile.save();
+				}
+			}
+
+			if(eventForm.get().imgUrlText31!=null && !eventForm.get().imgUrlText31.equals("")) {
+				System.out.println("first");
+				eventForm.get().imgUrlText3 = eventForm.get().imgUrlText3.append(eventForm.get().imgUrlText31);
+			}
+			if(eventForm.get().imgUrlText32!=null && !eventForm.get().imgUrlText32.equals("")) {
+				System.out.println("second");
+				eventForm.get().imgUrlText3 = eventForm.get().imgUrlText3.append(eventForm.get().imgUrlText32);
+			}
+			if(eventForm.get().imgUrlText33!=null && !eventForm.get().imgUrlText33.equals("")) {
+				System.out.println("third");
+				eventForm.get().imgUrlText3 = eventForm.get().imgUrlText3.append(eventForm.get().imgUrlText33);
+			}
+			if(eventForm.get().imgUrlText34!=null && !eventForm.get().imgUrlText34.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText3 = eventForm.get().imgUrlText3.append(eventForm.get().imgUrlText34);
+			}
+			if(eventForm.get().imgUrlText35!=null && !eventForm.get().imgUrlText35.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText3 = eventForm.get().imgUrlText3.append(eventForm.get().imgUrlText35);
+			}
+
+			//forimageurl3
+			if(eventForm.get().imgUrlText3!=null && !eventForm.get().imgUrlText3.equals(" ")) {
+				//System.out.println(" *** Image Edit Code fourth image upload enter eventForm.get().imgUrlText3 *** "+eventForm.get().imgUrlText3);
+				completeImageData = eventForm.get().imgUrlText3.toString();
+				imageDataBytes = completeImageData.substring(completeImageData.indexOf(",") + 1);
+				data = Base64.decode(imageDataBytes);
+
+				stream = new BufferedOutputStream(
+						new FileOutputStream(imgUrlFilePart3));
+				stream.write(data);
+				stream.close();
+				System.out.println("Go to Close");
+
+				imgUrlFile = null;
+				if (imgUrlFilePart3 != null) {
+					imgUrlFile = new S3File();
+					imgUrlFile.name = ControllerUtil.decodeFileName(imgUrlFilePart3
+							.getName());
+					imgUrlFile.file = imgUrlFilePart3;
+					eventForm.get().imgUrl3 = imgUrlFile.getUrl();
+					System.out.println(" *** Image Edit Code fourth image uploaded url*** " + eventForm.get().imgUrl3);
+				}
+				if (imgUrlFile != null) {
+					System.out.println(" *** Image Edit Code fourth image upload save *** ");
+					imgUrlFile.save();
+				}
+			}
+			if(eventForm.get().imgUrlText41!=null && !eventForm.get().imgUrlText41.equals("")) {
+				System.out.println("first");
+				eventForm.get().imgUrlText4 = eventForm.get().imgUrlText4.append(eventForm.get().imgUrlText41);
+			}
+			if(eventForm.get().imgUrlText42!=null && !eventForm.get().imgUrlText42.equals("")) {
+				System.out.println("second");
+				eventForm.get().imgUrlText4 = eventForm.get().imgUrlText4.append(eventForm.get().imgUrlText42);
+			}
+			if(eventForm.get().imgUrlText43!=null && !eventForm.get().imgUrlText43.equals("")) {
+				System.out.println("third");
+				eventForm.get().imgUrlText4 = eventForm.get().imgUrlText4.append(eventForm.get().imgUrlText43);
+			}
+			if(eventForm.get().imgUrlText44!=null && !eventForm.get().imgUrlText44.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText4 = eventForm.get().imgUrlText4.append(eventForm.get().imgUrlText44);
+			}
+			if(eventForm.get().imgUrlText45!=null && !eventForm.get().imgUrlText45.equals("")) {
+				System.out.println("fourth");
+				eventForm.get().imgUrlText4 = eventForm.get().imgUrlText4.append(eventForm.get().imgUrlText45);
+			}
+
+			//for imageurl4
+			if(eventForm.get().imgUrlText4!=null && !eventForm.get().imgUrlText4.equals(" ")) {
+				//System.out.println(" *** Image Edit Code fifth image upload enter *** eventForm.get().imgUrlText4"+eventForm.get().imgUrlText4);
+				completeImageData = eventForm.get().imgUrlText4.toString();
+				imageDataBytes = completeImageData.substring(completeImageData.indexOf(",") + 1);
+				data = Base64.decode(imageDataBytes);
+				stream = new BufferedOutputStream(
+						new FileOutputStream(imgUrlFilePart4));
+				stream.write(data);
+				stream.close();
+				imgUrlFile = null;
+				if (imgUrlFilePart4 != null) {
+					imgUrlFile = new S3File();
+					imgUrlFile.name = ControllerUtil.decodeFileName(imgUrlFilePart4
+							.getName());
+					imgUrlFile.file = imgUrlFilePart4;
+					eventForm.get().imgUrl4 = imgUrlFile.getUrl();
+					System.out.println(" *** Image Edit Code fifth image uploaded url*** " + eventForm.get().imgUrl4);
+				}
+				if (imgUrlFile != null) {
+					System.out.println(" *** Image Edit Code fifth image upload save *** ");
+					imgUrlFile.save();
+				}
+			}
+
+
+
+		}catch(Exception ex){
+			System.out.println(" *** Exception in  upload image for eventId => " + formattedDate + " exception is :: " + ex.getMessage() + " *** ");
+			//System.out.println("Exception in  upload image for eventId => "+event.id+" exception is :: " +ex.getMessage());
+			ex.printStackTrace();
 		}
+
+		try{
+			if(imgUrlFilePart0!=null && imgUrlFilePart0.length()>0){
+				System.out.println(" *** imgUrlFilePart0 delete *** ");
+				imgUrlFilePart0.delete();
+			}
+			if(imgUrlFilePart1!=null && imgUrlFilePart1.length()>0){
+				System.out.println(" *** imgUrlFilePart1 delete *** ");
+				imgUrlFilePart1.delete();
+			}
+			if(imgUrlFilePart2!=null && imgUrlFilePart2.length()>0){
+				System.out.println(" *** imgUrlFilePart2 delete *** ");
+				imgUrlFilePart2.delete();
+			}
+			if(imgUrlFilePart3!=null && imgUrlFilePart3.length()>0){
+				System.out.println(" *** imgUrlFilePart3 delete *** ");
+				imgUrlFilePart3.delete();
+			}
+			if(imgUrlFilePart4!=null && imgUrlFilePart4.length()>0){
+				System.out.println(" *** imgUrlFilePart4 delete *** ");
+				imgUrlFilePart4.delete();
+			}
+
+		}catch(Exception e){
+			System.out.println(" *** Exception in file delete for upload image for eventId => " + formattedDate + " exception is :: " + e.getMessage() + " *** ");
+			e.printStackTrace();
+
+			//System.out.println("Exception in file delete for upload image for eventId => "+event.id+" exception is :: " +e.getMessage());
+		}
+		 if(eventForm.get().imgUrlText0!=null) {
+			 eventForm.get().imgUrlText0 = null;
+		 }if(eventForm.get().imgUrlText01!=null) {
+			eventForm.get().imgUrlText01 = null;
+		}if(eventForm.get().imgUrlText02!=null) {
+			eventForm.get().imgUrlText02 = null;
+		}if(eventForm.get().imgUrlText03!=null) {
+			eventForm.get().imgUrlText03 = null;
+		}if(eventForm.get().imgUrlText04!=null) {
+			eventForm.get().imgUrlText04 = null;
+		}if(eventForm.get().imgUrlText05!=null) {
+			eventForm.get().imgUrlText05 = null;
+		}
+
+		if(eventForm.get().imgUrlText1!=null) {
+			eventForm.get().imgUrlText1 = null;
+		}if(eventForm.get().imgUrlText11!=null) {
+			eventForm.get().imgUrlText11 = null;
+		}if(eventForm.get().imgUrlText12!=null) {
+			eventForm.get().imgUrlText12 = null;
+		}if(eventForm.get().imgUrlText13!=null) {
+			eventForm.get().imgUrlText13 = null;
+		}if(eventForm.get().imgUrlText14!=null) {
+			eventForm.get().imgUrlText14 = null;
+		}if(eventForm.get().imgUrlText15!=null) {
+			eventForm.get().imgUrlText15 = null;
+		}
+
+
+		if(eventForm.get().imgUrlText2!=null) {
+			eventForm.get().imgUrlText2 = null;
+		}if(eventForm.get().imgUrlText21!=null) {
+			eventForm.get().imgUrlText21 = null;
+		}if(eventForm.get().imgUrlText22!=null) {
+			eventForm.get().imgUrlText22 = null;
+		}if(eventForm.get().imgUrlText23!=null) {
+			eventForm.get().imgUrlText23 = null;
+		}if(eventForm.get().imgUrlText24!=null) {
+			eventForm.get().imgUrlText24 = null;
+		}
+
+		if(eventForm.get().imgUrlText3!=null) {
+			eventForm.get().imgUrlText31 = null;
+		}if(eventForm.get().imgUrlText31!=null) {
+			eventForm.get().imgUrlText32 = null;
+		}if(eventForm.get().imgUrlText32!=null) {
+			eventForm.get().imgUrlText33 = null;
+		}if(eventForm.get().imgUrlText34!=null) {
+			eventForm.get().imgUrlText34 = null;
+		}if(eventForm.get().imgUrlText35!=null) {
+			eventForm.get().imgUrlText35 = null;
+		}
+
+		if(eventForm.get().imgUrlText4!=null) {
+			eventForm.get().imgUrlText4 = null;
+		}if(eventForm.get().imgUrlText41!=null) {
+			eventForm.get().imgUrlText41 = null;
+		}if(eventForm.get().imgUrlText42!=null) {
+			eventForm.get().imgUrlText42 = null;
+		}if(eventForm.get().imgUrlText43!=null) {
+			eventForm.get().imgUrlText43 = null;
+		}if(eventForm.get().imgUrlText44!=null) {
+			eventForm.get().imgUrlText44 = null;
+		}if(eventForm.get().imgUrlText45!=null) {
+			eventForm.get().imgUrlText45 = null;
+		}
+
+
+
+		//=====================ImageEdit====================24.09.2015===================end===========================================================================//
+
 
 		// if(eventForm.get().fundraisingEnd != null) {
 		// eventForm.get().fundraisingEnd =
 		// EventMgmt.setDateToMidnight(eventForm.get().fundraisingEnd);
 		// }
-		if (eventForm.hasErrors()) {
-			return badRequest(createForm.render(eventForm));
-		}
-		final Event event = eventForm.get();
+
 		if (event.userAdmin == null) {
 			event.userAdmin = ControllerUtil.getLocalUser(session());
 		} else if ((event.userAdmin.id == null)
@@ -1257,7 +1629,7 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 		if (heroImgUrlFile != null) {
 			heroImgUrlFile.save();
 		}
-		if (imgUrlFile != null) {
+		/*if (imgUrlFile != null) {
 			imgUrlFile.save();
 		}
 		if (imgUrlFile1 != null) {
@@ -1265,7 +1637,7 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 		}
 		if (imgUrlFile2 != null) {
 			imgUrlFile2.save();
-		}
+		}*/
 		event.dateCreated = new Date();
 		event.save();
 		session(ControllerUtil.FLASH_SUCCESS_KEY, "Event ["
@@ -1520,7 +1892,7 @@ public static Result updateParticipantsForEvent(Event event, Long participantsId
 							+ "]");
 		}
 		return redirect(routes.Application.profileSearchEvents(0, "name",
-						"asc", "", "name"));
+				"asc", "", "name"));
 	}
 
 	/**

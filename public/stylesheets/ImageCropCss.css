@@ -1,0 +1,146 @@
+
+.clear {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: '\0020';
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.clr { clear:both;}
+
+
+
+
+.img_thumbnail img {
+/*max-width:100%;
+height:auto;*/
+width:200px;
+height:200px;
+display:inline-block;
+text-align:center;
+padding-bottom:10px; 
+	}
+
+
+.editImgage_header { font-size:18px; font-weight:bold; padding:10px 0px 10px 0px; margin:0px;}
+
+
+
+.jcrop_example { /*border:1px solid #4d99ee; */background:; border-radius:6px; -moz-border-radius:6px; -ms-border-radius:6px; -o-border-radius:6px; padding-bottom:7px;}
+
+div.file_upload {left: 0px;
+                     position: relative;
+                     /*top: -17px;*/
+                     padding-bottom: 36px;
+                     z-index:1px;
+                     float: right;/* padding: 7px 15px 7px 45px*/;}
+
+
+div.file_upload:before {
+    content: "Upload Images";
+    cursor: pointer;
+     color: #fff;
+    text-align: center;
+	/*background: #0081d2;*/
+   padding:12px 12px 15px 45px;
+    border-radius: 5px;
+    font-weight:600;
+     font-family: arial;
+    line-height: 21px;
+	
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#00b7ea+0,009ec3+100;Blue+3D+%2315 */
+background: #00b7ea; /* Old browsers */
+background: -moz-linear-gradient(top,  #00b7ea 0%, #009ec3 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #00b7ea 0%,#009ec3 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #00b7ea 0%,#009ec3 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #00b7ea 0%,#009ec3 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #00b7ea 0%,#009ec3 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */
+position:relative;
+z-index:4px;
+
+
+	}
+
+.icon-upload-arrow {z-index:6px;background:url(../images/editImages/upload-images.png) 0 0 no-repeat; cursor:pointer;  border:none; text-indent:-999px; display:inline-block; width:30px;height:30px;  position:absolute;top:-5px;left:10px;}
+
+div.file_upload input {
+    cursor: pointer;
+    display: inline;
+    height:40px;
+    opacity: 0;
+    position: absolute; 
+    top:-8px;
+	left:0px;
+    outline: none;
+    width:158px;
+    border:1px solid #000;
+    z-index:5px;
+}
+
+.image-btn-set {padding:10px; border:1px solid #d1d1d1; border-radius:6px; background:#242121;}
+
+
+	
+.img_thumbnail { /*width:19%;*/ margin-right:10px; float:left; border:1px solid #d1d1d1; border-radius:6px; -moz-border-radius:6px; -ms-border-radius:6px; -o-border-radius:6px;padding: 10px; text-align:center; margin-bottom:10px; }
+
+.img_thumbnail:last-child {margin-right:0px;}
+
+.fileName {font-weight:600; color:#143660; display:inline-block; padding:10px 0px; font-size:11px;}	 
+
+.preview-pane { border:1px solid #d1d1d1; border-radius:6px; -moz-border-radius:6px; -ms-border-radius:6px; -o-border-radius:6px;padding: 10px; text-align:center; padding:10px 0px; }
+
+#ImgeEditButton { margin-bottom:10px; margin-top:20px;    margin-left: 17px;}
+
+.icon-edit { background:url(../images/editImages/edit.png) 0 0 no-repeat; border:none; text-indent:-999px; display:inline-block; margin-right:0px !important;}
+
+.icon-delete { background:url(../images/editImages/delete.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block; margin-left:10px !important;}
+
+.icon-crop { background:url(../images/editImages/crop.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block;}
+
+.icon-90 { background:url(../images/editImages/rotate90.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block;}
+
+.icon-180 { background:url(../images/editImages/rotate180.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block;}
+
+.icon-270 { background:url(../images/editImages/rotate270.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block;}
+
+.icon-save { background:url(../images/editImages/save.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block;}
+
+.icon-reset { background:url(../images/editImages/reset.png) 0 0 no-repeat;  border:none; text-indent:-999px; display:inline-block;}
+
+.icons {width:25px; height:72px; outline:none;margin-right:20px; cursor:pointer;}
+
+#getImageForEditDiv {/*border:1px solid #d1d1d1;*/  border-radius:6px; -moz-border-radius:6px; -ms-border-radius:6px; -o-border-radius:6px;     width: 44% !important; margin-bottom:20px;}
+
+.popUpDiv { position:absolute; z-index:3500; top:190%; background:#fff; border:1px solid #565759;  border-radius:6px; -moz-border-radius:6px; -ms-border-radius:6px; -o-border-radius:6px; left: 7%;width: 88%; display:none; padding:10px 10px; box-sizing:border-box;
+	-moz-box-sizing:border-box; -webkit-box-sizing:border-box;} 
+
+.btn-close { background:url(../images/editImages/btnClose.png) 0 0 no-repeat #DC1616; width:30px; height:30px; cursor:pointer; border:none; outline:none; position:absolute; top:-10px; right:-10px; display:inline-block; text-indent:-999px; z-index:100;}
+
+
+.overlay { background:rgba(0,0,0,0.2); z-index:100;}
+
+
+@media (max-width:767px)
+	{
+	.img_thumbnail { width:100%; float:none; margin-bottom:10px;} 
+	
+	.jcrop_example { border:none;}
+	}

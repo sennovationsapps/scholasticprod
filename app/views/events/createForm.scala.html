@@ -5,8 +5,92 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) } 
 
 @main("Create Event") {
-<!-- Main body
+  <!--popUpDiv-->
+
+
+  <h2>Modal Example</h2>
+  <!-- Trigger the modal with a button -->
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg" >
+
+        <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Image</h4>
+        </div>
+        <div class="modal-body" style="max-height: 544px;">
+          <div class="row">
+
+
+
+            <div id="getImageForEditDiv" class="col-md-5">
+              <img src="" id="cropbox1" height=400" width="400"/>
+              <div class="preview-pane" style="margin:5px;display:none;">
+                <label>X1 <input type="text" name="x" id="x" size="4"/></label>
+                <label>Y1 <input type="text" name="y" id="y" size="4"/></label>
+                <label>X2 <input type="text" name="x2" id="x2" size="4"/></label>
+                <label>Y2 <input type="text" name="y2" id="y2" size="4"/></label>
+                <label>W <input type="text" name="w" id="w" size="4"/></label>
+                <label>H <input type="text" name="h" id="h" size="4"/></label>
+              </div>
+            </div>
+
+            <div style="margin:10px;display:none;" id="ImgeEditButton" class="col-md-1">
+            </div>
+
+            <div  id="CanvasDiv" class="col-md-5">
+
+
+              <div >
+
+                <br clear="all">
+                <div id="croppedImageText" style="display:none; position:relative; position: absolute; left: 0%; top: 40%; font-size: 40px;
+                width: 100%; text-align: center; color: #d6d6d6; opacity: 0.5; ">Cropped Image Preview</div>
+                <canvas id="myCanvas" height="370" width="370" style="margin-left:-5px;"></canvas>
+                <canvas id="hideCanvas" style="display:none;"></canvas>
+
+              </div>
+              <img src="" id="ActCropImage" style="display:none;" height=400" width="400"/>
+              <img src="" id="getRotatedImage" style="display:none;" height=400" width="400"/>
+
+            </div><!--end of CanvasDiv -->
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <!--popUpDiv-->
+  <!-- Main body
 ================== -->
+
+  <!-------image edit----------start---------23.09.2015---------->
+
+
+  <script src="@ControllerUtil.getResourceRoute("jquery.Jcrop.js")"></script>
+  <script src="@ControllerUtil.getResourceRoute("ImageCropJS.js")"></script>
+
+
+  <link rel="stylesheet" href="@ControllerUtil.getResourceRoute("jquery.Jcrop.css")"/>
+  <link rel="stylesheet" href="@ControllerUtil.getResourceRoute("ImageCropCss.css")"/>
+
+  <!-------image edit----------start---------23.09.2015---------->
+
+
   <div class="wrapper">
     <div class="section-header">
       <div class="container">
@@ -53,14 +137,105 @@
 	            @text(eventForm("city"), '_label -> "City", 'class -> "form-control")
 	            @text(eventForm("zipCode"), '_label -> "Zip Code",'_showConstraints -> false, 'class -> "form-control", 'placeholder -> "Zip Code (55555 or 55555-4444)", '_info -> "helpHeroImgUrl")
 	            @helper.inputFile(eventForm("heroImgUrl"), '_label -> "Add a picture to the top of you event page (Optional)", 'class -> "form-control", '_info -> "helpHeroImgUrl")
-	            @helper.inputFile(eventForm("imgUrl"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
-                @helper.inputFile(eventForm("imgUrl1"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
-                @helper.inputFile(eventForm("imgUrl2"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
-                @helper.inputFile(eventForm("imgUrl3"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
-                @helper.inputFile(eventForm("imgUrl4"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
-                @helper.textarea(eventForm("content"), '_label -> "Welcome Message", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
-	            
-	            <!-- TODO create a dropdown selection for how many teams to add -->
+
+              <div style="display:none">
+
+                @textarea(eventForm("imgUrlText01"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText02"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText03"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText04"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText05"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @textarea(eventForm("imgUrlText0"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @textarea(eventForm("imgUrlText11"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText12"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText13"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText14"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText15"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @text(eventForm("imgUrlText1"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @textarea(eventForm("imgUrlText21"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText22"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText23"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText24"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText25"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @text(eventForm("imgUrlText2"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @textarea(eventForm("imgUrlText31"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText32"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText33"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText34"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText35"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @text(eventForm("imgUrlText3"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @textarea(eventForm("imgUrlText41"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText42"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText43"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText44"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+                @textarea(eventForm("imgUrlText45"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+                @text(eventForm("imgUrlText4"), '_label -> "Add a smaller image next to your event message (Optional)", 'class -> "form-control", '_info -> "helpImgUrl")
+
+
+
+              </div>
+              </br>
+
+              <div class="col-md-7" style="left: -2%;" ><strong>Add  smaller images next to your event message (Optional)</strong></div>
+              <div class="file_upload">
+                <span class="icon-upload-arrow"></span>
+                <input type="file" id="files" name="files" multiple accept="image/*">
+              </div>
+              <div class="row">
+
+
+                <div class="jcrop_example clearfix col-lg-12 col-sm-12 col-md-12">
+
+
+
+                  <div id="accordion" class="accordion">
+
+                    <div class="sample_1 clearfix">
+
+
+
+
+
+
+                      <div class="row">
+                        <div id="selectedFiles" class="col-lg-12"></div>
+
+
+                      </div>
+
+                      <div style="margin-bottom:10px;">
+                        <div style="overflow: hidden; width: 200px; height: 200px;display:none;">
+                          <h4>Preview pane:</h4>
+                          <img id="preview" src=""/>
+                        </div>
+                      </div>
+
+
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+
+
+
+
+                <!-------image edit----------end---------23.09.2015-->
+              @helper.textarea(eventForm("content"), '_label -> "Welcome Message", 'class -> "form-control", '_wysiwyg -> true, '_info -> "helpContent")
+
+                <!-- TODO create a dropdown selection for how many teams to add -->
 	            <!-- TODO create a selection of preconfigured pages to be generated -->
                <button type="submit" class="btn btn-green" id="createEvent">Create this event</button>&nbsp;&nbsp;
                <a href="@routes.Application.profile()" class="btn btn-default" type="button">Cancel</a>
@@ -216,6 +391,10 @@
   @events.samples()
 <script src="@ControllerUtil.getResourceRoute("scEventAdmin.min.js")"></script>
   <script>
+  $("#createEvent").click(function(){
+  finalUpload();
+               // $('form#eventForm').submit();
+           });
 /*
 $("#xdsoft_datetimepicker").onmousewheel = function() {
     stopWheel();

@@ -74,6 +74,9 @@ public class Event extends Model implements PathBindable<Event> {
 	public URL imgUrl3;
 	public URL imgUrl4;
 
+
+
+
 	@Constraints.Required
 	public String name;
 
@@ -90,7 +93,100 @@ public class Event extends Model implements PathBindable<Event> {
 	public String title;
 
 	public int total;
-	
+
+
+	@Transient
+	public StringBuffer imgUrlText0;
+
+	@Transient
+	public StringBuffer imgUrlText01;
+
+	@Transient
+	public StringBuffer imgUrlText02;
+
+	@Transient
+	public StringBuffer imgUrlText03;
+
+	@Transient
+	public StringBuffer imgUrlText04;
+
+	@Transient
+	public StringBuffer imgUrlText05;
+
+	@Transient
+	public StringBuffer imgUrlText1;
+
+	@Transient
+	public StringBuffer imgUrlText11;
+
+	@Transient
+	public StringBuffer imgUrlText12;
+
+	@Transient
+	public StringBuffer imgUrlText13;
+
+	@Transient
+	public StringBuffer imgUrlText14;
+
+	@Transient
+	public StringBuffer imgUrlText15;
+
+	@Transient
+	public StringBuffer imgUrlText2;
+
+	@Transient
+	public StringBuffer imgUrlText21;
+
+	@Transient
+	public StringBuffer imgUrlText22;
+
+	@Transient
+	public StringBuffer imgUrlText23;
+
+	@Transient
+	public StringBuffer imgUrlText24;
+
+	@Transient
+	public StringBuffer imgUrlText25;
+
+	@Transient
+	public StringBuffer imgUrlText3;
+
+	@Transient
+	public StringBuffer imgUrlText31;
+
+	@Transient
+	public StringBuffer imgUrlText32;
+
+	@Transient
+	public StringBuffer imgUrlText33;
+
+	@Transient
+	public StringBuffer imgUrlText34;
+
+	@Transient
+	public StringBuffer imgUrlText35;
+
+	@Transient
+	public StringBuffer imgUrlText4;
+
+	@Transient
+	public StringBuffer imgUrlText41;
+
+	@Transient
+	public StringBuffer imgUrlText42;
+
+	@Transient
+	public StringBuffer imgUrlText43;
+
+	@Transient
+	public StringBuffer imgUrlText44;
+
+	@Transient
+	public StringBuffer imgUrlText45;
+
+
+
 	@OneToOne
 	@JoinColumn(name = "generalPfpId")
 	public Pfp generalFund;
