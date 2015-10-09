@@ -164,6 +164,7 @@ public class ReceiptMgmt extends Controller {
 		String subject = "Scholastic Challenge - You have been donated in cash";
 		String message = views.txt.donations.email_cash_eventManager_receipt
 				.render(donation).toString();
+		System.out.println("event manager :: "+donation.event.userAdmin.email);
 
 			ReceiptMgmt.generateEmailReceipt(subject, message, donation.event.userAdmin.email);
 

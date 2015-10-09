@@ -297,18 +297,18 @@
                                                         @*******start******community collection**********@
 
 
-
+@*
                                                         <div id="wellForCommunityCollection" class="well">
                                                             <center><legend class="legend_hightlight">Donor Information</legend></center>
                                                             @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
                                                             @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
-                                                           @* @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")*@
+                                                           *@@* @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")*@@*
 
-                                                          @*  <div style ="display :none;">
+                                                          *@@*  <div style ="display :none;">
                                                             @helper.inputText(donationForm("collectionTypes"), '_label -> "collectionTypes", 'id -> "collectionTypesText", 'class -> "form-control")
 
                                                             </div>
-*@
+*@@*
 
 
 
@@ -318,7 +318,7 @@
                                                             <div style ="display :none;">
                                                             @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
 
-                                                            </div>
+                                                            </div>*@
 
                                                             @******phno format*************01.09.2015***************start*****@
 
@@ -367,7 +367,7 @@
 
                                                             @* *@@**@@*@@**@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@**@@*
                                                             @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
-                                                        </div>
+                                                       @* </div>*@
 
                                                         @*********end******community collection**********@
 
