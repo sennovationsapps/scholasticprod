@@ -530,9 +530,9 @@ public class DonationMgmt extends Controller {
 			if(donationForm.data().get("statusOfBulkCashDonation").equals("1")){
 				if(donationList!=null && donationList.size()>0){
 					System.out.println("pfpId :: "+donationForm.data().get("pfp.id")+" :: collectionTypes :: "+donationForm.data().get("collectionTypes")+":: amount ::"+StringUtils.isEmpty(donationForm.data().get("amount"))+":: email :: "+donationForm.data().get("email1"));
-					if(StringUtils.isEmpty(donationForm.data().get("pfp.id")) && (StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select"))  && (StringUtils.isEmpty(donationForm.data().get("amount")) || donationForm.data().get("amount").equalsIgnoreCase("true"))){
+					if(StringUtils.isEmpty(donationForm.data().get("pfp.id"))  && (StringUtils.isEmpty(donationForm.data().get("amount")) || donationForm.data().get("amount").equalsIgnoreCase("true"))){
 						System.out.println("email1 :: "+ donationForm.data().get("email1") +" :: email :: "+donationForm.data().get("email"));
-						if(StringUtils.isEmpty(donationForm.data().get("email1")) && StringUtils.isEmpty(donationForm.data().get("email"))){
+						if( StringUtils.isEmpty(donationForm.data().get("email"))){
 							Iterator donationListItr = donationList.iterator();
 							/*while(donationListItr.hasNext()){
 								Donation donation1 = (Donation)donationListItr.next();
@@ -566,7 +566,8 @@ public class DonationMgmt extends Controller {
 
 								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 								// return badRequest(createForm.render(event, event.generalFund, donationForm));
-							}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+							}
+							/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 								System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
 								donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
 								if (donationForm.hasErrors()) {
@@ -580,7 +581,8 @@ public class DonationMgmt extends Controller {
 									Logger.debug("Has errors {}", donationForm.errorsAsJson());
 									return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 								}
-							}else {
+							}*/
+							else {
 								System.out.println("within baad req.");
 								//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
@@ -595,7 +597,8 @@ public class DonationMgmt extends Controller {
 
 							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 							// return badRequest(createForm.render(event, event.generalFund, donationForm));
-						}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+						}
+						/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 							System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
 							donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
 							if (donationForm.hasErrors()) {
@@ -609,7 +612,8 @@ public class DonationMgmt extends Controller {
 								Logger.debug("Has errors {}", donationForm.errorsAsJson());
 								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 							}
-						}else {
+						}*/
+						else {
 							System.out.println("within baad req.");
 							//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
@@ -624,7 +628,8 @@ public class DonationMgmt extends Controller {
 
 						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						// return badRequest(createForm.render(event, event.generalFund, donationForm));
-					}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+					}
+					/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 						System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
 						donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
 						if (donationForm.hasErrors()) {
@@ -638,7 +643,8 @@ public class DonationMgmt extends Controller {
 							Logger.debug("Has errors {}", donationForm.errorsAsJson());
 							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						}
-					}else {
+					}*/
+					else {
 						System.out.println("within baad req.");
 						//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
@@ -653,7 +659,8 @@ public class DonationMgmt extends Controller {
 
 					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 					// return badRequest(createForm.render(event, event.generalFund, donationForm));
-				}else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
+				}
+				/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 					System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
 					donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
 					if (donationForm.hasErrors()) {
@@ -667,7 +674,8 @@ public class DonationMgmt extends Controller {
 						Logger.debug("Has errors {}", donationForm.errorsAsJson());
 						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 					}
-				}else {
+				}*/
+				else {
 					System.out.println("within baad req.");
 					//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
@@ -715,13 +723,13 @@ public class DonationMgmt extends Controller {
 		}
 
 		//========new add=====================start==================//
-		if (StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")) {
+		/*if (StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")) {
 			donationForm.reject("collectionTypes", "Please select the Collection Types.");
 			if (donationForm.hasErrors()) {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
 				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 			}
-		}
+		}*/
 		//=======new add======================end==================//
 
 		Event eventForPfp = Event.findById(event.id);
@@ -740,7 +748,7 @@ public class DonationMgmt extends Controller {
 			}
 			donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();
 			System.out.println("invoiceNumber :: "+donation.invoiceNumber);
-			if(donation.collectionTypes.equalsIgnoreCase("COMMUNITY_COLLECTION")){
+			/*if(donation.collectionTypes.equalsIgnoreCase("COMMUNITY_COLLECTION")){
 				donation.phone = " ";
 			}else{
 				donation.phone = ControllerUtil.stripPhone(donation.phone);
@@ -758,7 +766,7 @@ public class DonationMgmt extends Controller {
 
 			if(donation.collectionTypes.equalsIgnoreCase("COMMUNITY_COLLECTION")){
 				donation.donorName = "Community Collection";
-			}
+			}*/
 			if (StringUtils.isEmpty(donation.donorName) && StringUtils.isNotEmpty(donation.donorMessage)) {
 				donation.donorName = "Anonymous";
 			}
@@ -777,10 +785,11 @@ public class DonationMgmt extends Controller {
 			Donation updatedDonation = Donation.findById(donation.id);
 			System.out.println("after save :: " + donation.status);
 			final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
-
 			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
-			System.out.println("event :: " + event);
-			System.out.println("updatedDonation.event :: " + updatedDonation.event);
+
+			ReceiptMgmt.sendCashDonationMsgToEventManager(updatedDonation);
+			//System.out.println("event :: " + event);
+			//System.out.println("updatedDonation.event :: " + updatedDonation.event);
 			//===========new add==================end====================08.10.2015==========================//
 
 		/*	if(donationList!= null && donationList.size()>0){
@@ -820,7 +829,7 @@ public class DonationMgmt extends Controller {
 			}
 			donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();
 			System.out.println("invoiceNumber :: " + donation.invoiceNumber);
-			if (donation.collectionTypes.equalsIgnoreCase("COMMUNITY_COLLECTION")) {
+			/*if (donation.collectionTypes.equalsIgnoreCase("COMMUNITY_COLLECTION")) {
 				donation.phone = " ";
 			} else {
 				donation.phone = ControllerUtil.stripPhone(donation.phone);
@@ -838,10 +847,14 @@ public class DonationMgmt extends Controller {
 
 			if (donation.collectionTypes.equalsIgnoreCase("COMMUNITY_COLLECTION")) {
 				donation.donorName = "Community Collection";
-			}
-			if (StringUtils.isEmpty(donation.donorName) && StringUtils.isNotEmpty(donation.donorMessage)) {
+			}*/
+			System.out.println("dobnor name :: "+donation.donorName);
+			if(StringUtils.isEmpty(donation.donorName)){
 				donation.donorName = "Anonymous";
 			}
+			/*if (StringUtils.isEmpty(donation.donorName) && StringUtils.isNotEmpty(donation.donorMessage)) {
+				donation.donorName = "Anonymous";
+			}*/
 
 			donation.donationType = DonationType.GENERAL;
 			donation.paymentType = PaymentType.CASH;
@@ -856,11 +869,13 @@ public class DonationMgmt extends Controller {
 
 			Donation updatedDonation = Donation.findById(donation.id);
 			System.out.println("after save :: " + donation.status);
+			System.out.println("after save the donation Id is :: "+donation.id);
 			final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
-
 			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
-			System.out.println("event :: " + event);
-			System.out.println("updatedDonation.event :: " + updatedDonation.event);
+
+			ReceiptMgmt.sendCashDonationMsgToEventManager(updatedDonation);
+			//System.out.println("event :: " + event);
+			//System.out.println("updatedDonation.event :: " + updatedDonation.event);
 			//===========new add==================end====================08.10.2015==========================//
 
 			//final Form<Donation> donationForm1 = form(Donation.class);
@@ -868,6 +883,7 @@ public class DonationMgmt extends Controller {
 			//return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been saved and added successfully. ");
 		}
+		//donationList = Donation.findAllCashDonationsByEventIdAndCleared(eventForPfp.id);
 		return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 	}
 
@@ -1389,6 +1405,7 @@ public class DonationMgmt extends Controller {
 		//return ok(test.render(donations));
 		donations = new ArrayList<Donation>();
 		donationList = new ArrayList<Donation>();
+		//donationList = Donation.findAllCashDonationsByEventIdAndCleared(eventId);
 		return ok(views.html.donations.ProfileCashDonations.render(localUser, events, event, pfps, donationForm, donations, donationList));
 		//return ok(test.render(localUser,events, event, pfps, donationForm, donations));
 

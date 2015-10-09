@@ -32,7 +32,7 @@
                 <div class="col-sm-8 col-md-9">
                     <div class="row">
 
-                            <h4 class="hl"><i class="fa fa-map-marker"></i> Cash Handling Requirement</h4>
+                            <h4 class="hl"><i class="fa fa-map-marker"></i> Add Cash Donations </h4>
                             <hr>
 
 
@@ -153,17 +153,17 @@
                                                         <table>
                                                             <tr>
                                                                 <td><b>Select Participants</b></td>
-                                                                <td width ="20px;">
+                                                                <td width ="50px;">
 
-                                                                </td>
-                                                                <td><b>Amount</b></td>
-                                                                <td width ="20px;">
+                                                                </td >
+                                                                <td width ="350px;"><b>Amount</b></td>
+                                                                @*<td width ="20px;">
 
-                                                                </td>
-                                                                <td><b>Cash Collection Types</b></td>
+                                                            </td>*@
+                                                                @*<td><b>Cash Collection Types</b></td>*@
                                                             </tr>
                                                             <tr>
-                                                                <td>
+                                                                <td width ="350px;">
                                                                 @*/*@@**@@*if(pfp.pfpType == Pfp.PfpType.GENERAL) {
                                                                     @select(
                                                                         donationForm("pfp.id"),
@@ -199,18 +199,18 @@
                                                                     </select>
 
                                                                 </td>
-                                                                <td width ="20px;">
+                                                                <td width ="50px;">
 
                                                                 </td>
-                                                                <td>
+                                                                <td width ="350px;">
 
                                                                     <br />
                                                                 @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
                                                                 </td>
-                                                                <td width ="20px;">
+                                                                @*<td width ="20px;">
 
-                                                                </td>
-                                                                <td>
+                                                                </td>*@
+                                                                @*<td>
 
 
                                                                     <select id="collectionTypes" name="collectionTypes" class="form-control" onchange="mergeCollectionTypes();">
@@ -221,7 +221,7 @@
 
                                                                     </select>
 
-                                                                </td>
+                                                                </td>*@
                                                             </tr>
                                                         </table>
 
@@ -302,13 +302,13 @@
                                                             <center><legend class="legend_hightlight">Donor Information</legend></center>
                                                             @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
                                                             @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
-                                                            @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")
+                                                           @* @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")*@
 
-                                                            <div style ="display :none;">
+                                                          @*  <div style ="display :none;">
                                                             @helper.inputText(donationForm("collectionTypes"), '_label -> "collectionTypes", 'id -> "collectionTypesText", 'class -> "form-control")
 
                                                             </div>
-
+*@
 
 
 
@@ -380,22 +380,22 @@
                                                             <center><legend class="legend_hightlight">Donor Information</legend></center>
                                                            @*/@helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
                                                             @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")/*@
-                                                            @helper.inputText(donationForm("email1"), '_label -> "Email",'_id -> "emailForIndividual", 'class -> "form-control")
+                                                           @* @helper.inputText(donationForm("email1"), '_label -> "Email",'_id -> "emailForIndividual", 'class -> "form-control")*@
 
                                                              @*<div style = "display :none">
                                                              @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForIndividual", 'class -> "form-control")
 
                                                              </div>*@
-
+                                                            @checkbox(donationForm("agreeToPolicy"), '_label -> "Make my donation Anonymous", '_labelSide -> "right",'id -> "anonymous")
                                                             @helper.inputText(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control",'id -> "donorname")
 
-                                                            <div style ="display :none;">
+                                                            @*<div style ="display :none;">
                                                             @helper.inputText(donationForm("collectionTypes"), '_label -> "collectionTypes", 'id -> "collectionTypesText", 'class -> "form-control")
 
-                                                            </div>
+                                                            </div>*@
 
 
-
+                                                            @helper.inputText(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
 
                                                             <div style ="display :none;">
                                                             @helper.inputText(donationForm("statusOfBulkCashDonation"), '_label -> "pfpId", 'id -> "statusOfBulkCashDonation", 'class -> "form-control")
@@ -407,6 +407,9 @@
                                                             @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
 
                                                             </div>
+
+
+                                                            @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")
 
                                                             @******phno format*************01.09.2015***************start*****@
 
@@ -453,11 +456,11 @@
                                                     }
 
 
-                                                    <button type="submit"  class="btn btn-primary" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()">Save and Add</button>
+                                                    <button type="submit"  class="btn btn-primary" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()">Save</button>
 
                                                     @*<a href="#" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()" style="color: #000000; text-decoration: underline; text-decoration-color: #000000;">Save and Add</a>*@
                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <span> <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">Save</button></span>
+                                                  @*  <span> <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">Save</button></span>*@
                                                     <br/>
 
 
@@ -480,21 +483,25 @@
 
                                                                     <th class="header">Amount</th>
 
-                                                                    <th class="header">Collection Type</th>
+                                                                  @*  <th class="header">Collection Type</th>*@
 
 
-                                                                        <th class="header">Email</th>
+
 
                                                                         <th class="header">Donor Name</th>
+
+                                                                        <th class="header">Donor Message</th>
+
+                                                                        <th class="header">Email</th>
 
                                                                         <th class="header">Phone No</th>
 
 
 
 
-                                                                        <th class="header">First Name</th>
+                                                                      @*  <th class="header">First Name</th>
 
-                                                                        <th class="header">Last Name</th>
+                                                                        <th class="header">Last Name</th>*@
 
 
 
@@ -512,12 +519,30 @@
                                                                         </td>
 
                                                                         <td>
-                                                                        @donationForBulkCash.collectionTypes
+                                                                        @donationForBulkCash.donorName
                                                                         </td>
 
-                                                                        @if(donationForBulkCash.collectionTypes.equals("INDIVIDUAL")){
+
+                                                                        <td>
+                                                                        @donationForBulkCash.donorMessage
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                        @donationForBulkCash.email
+                                                                        </td>
+
+                                                                        <td>
+                                                                        @donationForBulkCash.phone
+                                                                        </td>
+
+                                                                        @*<td>
+                                                                        @donationForBulkCash.collectionTypes
+                                                                        </td>
+*@
+                                                                        @*/*@@*if(donationForBulkCash.collectionTypes.equals("INDIVIDUAL")){
                                                                             <td>
-                                                                            @donationForBulkCash.email1
+                                                                            @donationForBulkCash.email
                                                                             </td>
 
                                                                             <td>
@@ -545,7 +570,7 @@
                                                                             </td>
 
 
-                                                                        }
+                                                                        }*/*@
 
                                                                     </tr>
 
@@ -1135,6 +1160,7 @@ $("#wellForCommunityCollection").hide();
 $("#editCashTransaction").hide();
 
 //========================start=================================//
+/*
 var collectionTypes = $("#collectionTypesText").val();
 		//alert("collectionTypesText "+collectionTypes);
 		$("#collectionTypes").val(collectionTypes);
@@ -1152,6 +1178,7 @@ mergeCollectionTypes();
 		}else{
 		$("#collectionTypes").val("select");
 		}
+*/
 
 
 //========================end====================================//
@@ -1275,7 +1302,7 @@ mergeStatus();
 
 
 		}*/
-     function mergeCollectionTypes(){
+  /*   function mergeCollectionTypes(){
 		var collectionTypes = $("#collectionTypes").val();
 		//alert("collectionTypes "+collectionTypes);
 		$("#collectionTypesText").val(collectionTypes);
@@ -1295,7 +1322,7 @@ $("#wellForCommunityCollection").hide();
 
 
 		}
-
+*/
 
 
        function mergePfp(){
@@ -1386,16 +1413,16 @@ $("#wellForCommunityCollection").hide();
                  $("#areaCode").val("123");
                  $("#phonePre").val("456");
                  $("#phoneSuf").val("7890");
-                 var email=$("#email").val();
-                  $("#email1").val(email);
+                 /*var email=$("#email").val();
+                  $("#email1").val(email);*/
 
                 }
                 else if(collectionTypes === "INDIVIDUAL"){
-                var email=$("#emailForIndividual").val();
+                /*var email=$("#emailForIndividual").val();
                 var email=$("#email1").val();
                 //alert("email for individual :: "+email);
 
-                $("#email").val(email);
+                $("#email").val(email);*/
                 //alert(" $(#email).val(email) :: "+ $("#email").val());
 
                 }
@@ -1428,6 +1455,26 @@ $("#wellForCommunityCollection").hide();
        //  alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
           $('form#donateForm').submit();
       }
+
+
+
+
+      //====================new add for anonymous===========================start===============09.10.2015===========================//
+
+      $("#anonymous").click(function () {
+
+      if ($(this).prop('checked')) {
+       $('#donorname').val('Anonymous')
+        }
+        else {
+       //do nothing
+        $('#donorname').val(null)
+        }
+
+})
+
+
+//====================new add for anonymous===============================end=================09.10.2015===========================//
 
     </script>
 }

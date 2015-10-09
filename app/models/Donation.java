@@ -123,13 +123,13 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 
 	//=============================start=========================01.10.2015=====================================//
-	@Transient
+	/*@Transient
 
 	public String  collectionTypes;
 	@Transient
 
 	public String email1;
-
+*/
 	//=============================end===========================01.10.2015=====================================//
 
 	//=====================02.10.2015================================start======================================================//
@@ -304,6 +304,26 @@ public class Donation extends Model implements PathBindable<Donation> {
 		return new ArrayList<Donation>();
 	}
 
+
+
+
+
+
+	/******start*******getting cleared and cash donations*************09.10.2015**************************/
+	public static List<Donation> findAllCashDonationsByEventIdAndCleared(Long id) {
+		String sortBy = "dateCreated";
+		String order = "desc";
+		final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2").eq("payment_type","3")
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp").fetch("event").orderBy(sortBy + " " + order);
+		if (donations != null) {
+			return donations.findList();
+		}
+		return new ArrayList<Donation>();
+	}
+
+
+	/*******end********getting cleared and cash donations*************09.10.2015**************************/
 	//// findDonationPaymentCleared Added by  Suvadeep Datta
 
 	public static List<Donation> findDonationPaymentCleared(Long id) {
