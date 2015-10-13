@@ -934,7 +934,13 @@ marquee.stop();
 
                                             <td>
 
-                                                <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  style="height:85px; width:150px; "onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                                @if(donationvalue.webUrl.contains("https:") || donationvalue.webUrl.contains("http:")){
+                                                    <a href = "@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  style="height:85px; width:150px; "onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                                }else{
+                                                    <a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  style="height:85px; width:150px; "onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                                }
+
+                                                @*<a href = "https://@donationvalue.webUrl" target="_blank"><img id = "one" src="@donationvalue.imgUrl"  style="height:85px; width:150px; "onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>*@
                                             </td>
                                             <td style="width: 20px;">
 
@@ -965,7 +971,12 @@ marquee.stop();
                                     @if(imgUrllink !=1) {
                                         @if(donationvalue.webUrl!=null){
                                             <td>
-                                                <a href = "https://@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" style="height:85px; width:150px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                                @if(donationvalue.webUrl.contains("https:") || donationvalue.webUrl.contains("http:")){
+                                                    <a href = "@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" style="height:85px; width:150px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                                }else{
+                                                    <a href = "https://@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" style="height:85px; width:150px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>
+                                                }
+                                                @*<a href = "https://@donationvalue.webUrl" target="_blank"> <img id = "one" src="@donationvalue.imgUrl" style="height:85px; width:150px;" onclick="getWebUrlOnImage()" alt="Percent" class="img-responsive" alt="Percent" height="100px"></a>*@
                                             </td>
                                             <td style="width: 20px;">
 

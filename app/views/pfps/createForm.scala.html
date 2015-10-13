@@ -39,7 +39,7 @@
           			@text(pfpForm("userAdmin.email"), '_label -> "Pfp Admin", 'class -> "form-control")	
           	}
             @text(pfpForm("name"), '_label -> "Name for Personal Fundraising Page", 'class -> "form-control", 'placeholder -> "Name (i.e., Jason T., Thomspon Family, Jason Thompson)", '_info -> "helpPfpName")
-            @text(pfpForm("goal"), '_label -> "Fundraising Goal", 'class -> "form-control", '_addon -> "$", 'placeholder -> "250", '_info -> "helpGoal")
+            @text(pfpForm("goal"), '_label -> "Fundraising Goal (Whole dollars only. Do not add cents)", 'class -> "form-control", '_addon -> "$", 'placeholder -> "250 - This is an Example. Please enter your goal.", '_info -> "helpGoal")
             @text(pfpForm("emergencyContact"), '_label -> "Emergency Contact", 'class -> "form-control", '_addon -> "glyphicon-user", 'placeholder -> "Name")
 
 
@@ -90,7 +90,8 @@
             )
             <input type="hidden" name="saveAndAdd" value="false" id="saveAndAdd"/>
             <button type="submit" class="btn btn-green" id="saveBtn">Save PFP</button>&nbsp;&nbsp;
-            <button type="button" class="btn btn-default" id="saveAndAddBtn">Add Another PFP</button>&nbsp;&nbsp;
+           @*<button type="button" class="btn btn-default" id="saveAndAddBtn">Add Another PFP</button>&nbsp;&nbsp;*@
+        <button type="button" class="btn btn-green" id="saveAndAddBtn">Add Another PFP</button>&nbsp;&nbsp;
             <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
     }
 </div>

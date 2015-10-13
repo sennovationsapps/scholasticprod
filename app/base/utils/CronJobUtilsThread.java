@@ -38,6 +38,7 @@ public class CronJobUtilsThread implements Runnable {
 
 
                   while(transactionItr.hasNext()) {
+                      try{
                       Transaction transaction = (Transaction) transactionItr.next();
                       System.out.println("transaction.mailSent :: " + transaction.mailSent);
                       System.out.println("transaction.transid2:: " + transaction.donationTranId);
@@ -82,7 +83,11 @@ public class CronJobUtilsThread implements Runnable {
 
 
                       }
-
+                  }catch(Exception e)
+                  {
+                      MAIL_LOGGER.error("*** Donation.PaymentStatus.CLEARED ***"+e.getMessage());
+                      e.printStackTrace();
+                  }
 
                       //===for testing=========//
                       /*ReceiptMgmt receiptMgmt = new ReceiptMgmt();

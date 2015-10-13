@@ -1,4 +1,5 @@
-@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null,donationForm: Form[Donation], donations: List[Donation]=null)
+@import models.security.UserPermission
+@(localUser: models.security.User = null,events: List[Event]=null,eventForPfp : Event=null,pfps: List[Pfp]=null,donationForm: Form[Donation], donations: List[Donation]=null, donationsForBulkCashDonations : List[Donation]=null)
 
 @import helper._
 
@@ -22,6 +23,7 @@
             </div>
         </div>
         @general.alerts()
+
         <div class="container">
             <div class="row">
                 @profile.menu(localUser)
@@ -30,7 +32,7 @@
                 <div class="col-sm-8 col-md-9">
                     <div class="row">
 
-                            <h4 class="hl"><i class="fa fa-map-marker"></i> Cash Handling Requirement</h4>
+                            <h4 class="hl"><i class="fa fa-map-marker"></i> Add Cash Donations </h4>
                             <hr>
 
 
@@ -84,7 +86,7 @@
                             @*****************start**********************************@
 
 
-                            <div class="col-md-12">
+                           @* <div class="col-md-12">
 
 
                                 <nav class="navbar navbar-default" role="navigation">
@@ -99,20 +101,20 @@
                                         <ul class="nav navbar-nav">
                                             <div class="btn-group">
                                                 <a type="button" class="btn navbar-btn btn-default" href="">Add Cash transaction</a>
-                                                <a type="button" class="btn navbar-btn btn-default" href="">Edit Cash transaction</a>
+                                              *@@*  <a type="button" class="btn navbar-btn btn-default" href="" onclick="editCashTransaction()">Edit Cash transaction</a>*@@*
                                             </div>
                                                 &nbsp;&nbsp;
 
                                         </ul>
                                     </div>
                                     </nav>
-                            </div>
+                            </div>*@
 
 
 
 
 
-                                    <div class="wrapper">
+                                    <div class="wrapper" id = "addCashTransaction">
                                         @* <div class="section-header">
                                         <div class="container">
                                         <div class="row">
@@ -128,27 +130,41 @@
                                                     <!-- Contact us form -->
                                                 <div class="col-sm-8">
 
+
                                                     <hr>
                                                     @general.alerts()
+                                                    @if(donationForm.hasErrors) {
+                                                        <div class="alert alert-dismissable alert-danger">
+                                                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                            @Messages("form.has.errors")<br/>
+                                                            @for(key <- donationForm.errors().keySet()) {
+                                                                @for(error <- donationForm.errors().get(key)) {
+                                                                    <br/> @Messages(error.message())
+                                                                }
+                                                            }
+                                                        </div>
+                                                    }
 
-                                                    @form(controllers.routes.DonationMgmt.save(eventForPfp), 'id -> "donateForm") {
+
+
+                                                    @form(controllers.routes.DonationMgmt.validateandStoreDonationByCash(eventForPfp), 'id -> "donateForm") {
                                                         <input type="hidden" id="event_name" name="event.name" value="@eventForPfp.name"/>
 
                                                         <table>
                                                             <tr>
                                                                 <td><b>Select Participants</b></td>
-                                                                <td width ="20px;">
+                                                                <td width ="50px;">
 
-                                                                </td>
-                                                                <td><b>Amount</b></td>
-                                                                <td width ="20px;">
+                                                                </td >
+                                                                <td width ="350px;"><b>Amount</b></td>
+                                                                @*<td width ="20px;">
 
-                                                                </td>
-                                                                <td><b>Status</b></td>
+                                                            </td>*@
+                                                                @*<td><b>Cash Collection Types</b></td>*@
                                                             </tr>
                                                             <tr>
-                                                                <td>
-                                                                @*/*@@*if(pfp.pfpType == Pfp.PfpType.GENERAL) {
+                                                                <td width ="350px;">
+                                                                @*/*@@**@@*if(pfp.pfpType == Pfp.PfpType.GENERAL) {
                                                                     @select(
                                                                         donationForm("pfp.id"),
                                                                         options(Pfp.findByEventIdMap(eventForPfp)),
@@ -158,63 +174,90 @@
                                                                     )
                                                                 } else {
                                                                     <input type="hidden" name="pfp.id" value="@pfp.id"/>
-                                                                }*/*@
+                                                                }*/*@@*
+
+                                                                   *@@* <br />*@
 
 
 
 
-                                                                    <select id="adminsEvents" name="adminsEvents" class="form-control">
+                                                                   @* @select(
+                                                                        donationForm("pfp.id"),
+                                                                        options(Pfp.findByEventIdMap(eventForPfp)),
+                                                                        '_label -> "nolabel",
+                                                                        '_default -> "-- Select Participant --",
+                                                                        '_showConstraints -> false, 'class -> "form-control"
+                                                                    )
+
+                                                                    <input type="hidden" name="pfp.id" value="@pfp.id"/>*@
+                                                                    <select id="pfpForEvent" name="pfpForEvent" class="form-control" onchange="mergePfp();">
                                                                         <option value="selectPfpsForEvent">--select--</option>
                                                                         @for(pfp <- pfps) {
                                                                             <option value="@pfp.id" >@pfp.name</option>
 
                                                                         }
                                                                     </select>
-                                                                </td>
-                                                                <td width ="20px;">
 
                                                                 </td>
-                                                                <td>
+                                                                <td width ="50px;">
+
+                                                                </td>
+                                                                <td width ="350px;">
 
                                                                     <br />
                                                                 @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
                                                                 </td>
-                                                                <td width ="20px;">
+                                                                @*<td width ="20px;">
 
-                                                                </td>
-                                                                <td>
+                                                                </td>*@
+                                                                @*<td>
 
 
-                                                                    <select id="status" name="status" class="form-control" >
+                                                                    <select id="collectionTypes" name="collectionTypes" class="form-control" onchange="mergeCollectionTypes();">
 
-                                                                        <option value="APPROVED">Approved</option>
-                                                                        <option value="PENDING" >Pending</option>
-                                                                        <option value="CLEARED" >Cleared</option>
-                                                                        <option value="REFUNDED" >Refunded</option>
+                                                                        <option value="select">--select--</option>
+                                                                        <option value="INDIVIDUAL">Individual</option>
+                                                                        <option value="COMMUNITY_COLLECTION" > Community Collection </option>
+
                                                                     </select>
 
-                                                                </td>
+                                                                </td>*@
                                                             </tr>
                                                         </table>
 
-                                                        <div id="well" class="well">
+                                                        @*<div id="well" class="well">
 
 
 
 
 
-                                                                <!--@checkbox(donationForm("agreeToPolicy"), '_label -> "Give this amount monthly for the duration of this event", '_labelSide -> "right")-->
-                                                        </div>
+                                                        </div>*@
                                                         <br/>
-                                                        <div id="well" class="well">
-                                                            <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                                        <div id="well" class="well"style="display: none;">
+                                                           @* <center><legend class="legend_hightlight">Donor Information</legend></center>
                                                             @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
                                                             @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
                                                             @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
 
+                                                            <div style ="display :none;">
+                                                            @helper.inputText(donationForm("collectionTypes"), '_label -> "collectionTypes", 'id -> "collectionTypesText", 'class -> "form-control")
+
+                                                            </div>
+
+
+
+
+
+
+
+                                                            <div style ="display :none;">
+                                                            @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
+
+                                                            </div>*@
+
                                                             @******phno format*************01.09.2015***************start*****@
 
-                                                            <div style="display:none;">
+                                                           @* <div style ="display :none;">
                                                             @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
 
                                                             </div>
@@ -242,21 +285,331 @@
                                                                     </tr>
                                                                 </table>
                                                             </div>
+*@
+                                                            @******phno format*************01.09.2015***************end*****@
+
+                                                            @* *@@**@@*@@**@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@**@@*
+                                                            @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+                                                        </div>
+
+
+
+                                                        @*******start******community collection**********@
+
+
+@*
+                                                        <div id="wellForCommunityCollection" class="well">
+                                                            <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                                            @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                                                            @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                                                           *@@* @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")*@@*
+
+                                                          *@@*  <div style ="display :none;">
+                                                            @helper.inputText(donationForm("collectionTypes"), '_label -> "collectionTypes", 'id -> "collectionTypesText", 'class -> "form-control")
+
+                                                            </div>
+*@@*
+
+
+
+
+
+
+                                                            <div style ="display :none;">
+                                                            @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
+
+                                                            </div>*@
+
+                                                            @******phno format*************01.09.2015***************start*****@
+
+                                                            @*<div style ="display :none;">
+                                                            @helper.inputText(donationForm("phone"), '_label -> "PhoneForCommunity", 'id -> "phNoCommunity", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                            </div>
+                                                            <div style = "display: none;">
+                                                            @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                            </div>
+                                                            <div style = "display: none;">
+
+                                                            @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                            </div>
+                                                            <div style = "display: none;">
+                                                            @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                            </div>*@
+                                                            @*<div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                                                            <div>
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>
+                                                                        @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                                        </td>
+                                                                        <td> - </td>
+                                                                        <td>
+                                                                        @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                        </td>
+                                                                        <td> - </td>
+                                                                        <td>
+                                                                        @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>*@
 
                                                             @******phno format*************01.09.2015***************end*****@
 
-                                                            @* *@@*@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@*
-                                                            @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+                                                            @* *@@**@@*@@**@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@**@@*
+                                                            @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+                                                       @* </div>*@
+
+                                                        @*********end******community collection**********@
+
+
+                                                        @*******start******individual collection**********@
+
+
+
+                                                        <div id="wellForIndividualCollection" class="well">
+                                                            <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                                           @*/@helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                                                            @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")/*@
+                                                           @* @helper.inputText(donationForm("email1"), '_label -> "Email",'_id -> "emailForIndividual", 'class -> "form-control")*@
+
+                                                             @*<div style = "display :none">
+                                                             @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForIndividual", 'class -> "form-control")
+
+                                                             </div>*@
+                                                            @checkbox(donationForm("agreeToPolicy"), '_label -> "Make my donation Anonymous", '_labelSide -> "right",'id -> "anonymous")
+                                                            @helper.inputText(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control",'id -> "donorname")
+
+                                                            @*<div style ="display :none;">
+                                                            @helper.inputText(donationForm("collectionTypes"), '_label -> "collectionTypes", 'id -> "collectionTypesText", 'class -> "form-control")
+
+                                                            </div>*@
+
+
+                                                            @helper.inputText(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
+
+                                                            <div style ="display :none;">
+                                                            @helper.inputText(donationForm("statusOfBulkCashDonation"), '_label -> "pfpId", 'id -> "statusOfBulkCashDonation", 'class -> "form-control")
+
+                                                            </div>
+
+
+                                                            <div style ="display :none;">
+                                                            @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
+
+                                                            </div>
+
+
+                                                            @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")
+
+                                                            @******phno format*************01.09.2015***************start*****@
+
+                                                            <div style ="display :none;">
+                                                            @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                            </div>
+                                                            <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                                                            <div>
+                                                            <table>
+                                                            <tr>
+                                                            <td>
+                                                            @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                            </td>
+                                                            <td> - </td>
+                                                            <td>
+                                                            @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                            </td>
+                                                            <td> - </td>
+                                                            <td>
+                                                            @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                            </td>
+                                                            </tr>
+                                                            </table>
+                                                            </div>
+
+                                                            @******phno format*************01.09.2015***************end*****@
+
+                                                            @* *@@**@@*@@**@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@**@@*
+                                                            @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
                                                         </div>
-                                                        <br/>
+
+                                                        @*********end******individual collection**********@
 
 
-                                                        <br/><br/><br/>
-
-                                                        <br/>
+                                                      @* <button type="submit"  class="btn btn-primary" id = "addMoreRowsSubmit" onclick="abc()">AddMoreRows</button>*@
 
                                                     }
+
+
+                                                    <button type="submit"  class="btn btn-primary" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()">Save</button>
+
+                                                    @*<a href="#" id = "addMoreRowsSubmit" onclick="addMoreRowsSubmit()" style="color: #000000; text-decoration: underline; text-decoration-color: #000000;">Save and Add</a>*@
+                                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  @*  <span> <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">Save</button></span>*@
+                                                    <br/>
+
+
+                                                    <br/><br/><br/>
+
+                                                    <br/>
+
+
+
+                                                    <div id = "previousCheckedDonations">
+                                                        <div class="wrapper">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                   <div class="col-sm-8">
+
+                                                                    @if(donationsForBulkCashDonations!=null && donationsForBulkCashDonations.size>0){
+                                                            <table class="table table-striped table-hover ">
+                                                                <thead >
+                                                                    <th class="header">Participant Name</th>
+
+                                                                    <th class="header">Amount</th>
+
+                                                                  @*  <th class="header">Collection Type</th>*@
+
+
+
+
+                                                                        <th class="header">Donor Name</th>
+
+                                                                        <th class="header">Donor Message</th>
+
+                                                                        <th class="header">Email</th>
+
+                                                                        <th class="header">Phone No</th>
+
+
+
+
+                                                                      @*  <th class="header">First Name</th>
+
+                                                                        <th class="header">Last Name</th>*@
+
+
+
+
+                                                                </thead>
+                                                            @for(donationForBulkCash <- donationsForBulkCashDonations){
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            @Pfp.findById(donationForBulkCash.pfp.id).name
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @donationForBulkCash.amount
+                                                                        </td>
+
+                                                                        <td>
+                                                                        @donationForBulkCash.donorName
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                        @donationForBulkCash.donorMessage
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                        @donationForBulkCash.email
+                                                                        </td>
+
+                                                                        <td>
+                                                                        @donationForBulkCash.phone
+                                                                        </td>
+
+                                                                        @*<td>
+                                                                        @donationForBulkCash.collectionTypes
+                                                                        </td>
+*@
+                                                                        @*/*@@*if(donationForBulkCash.collectionTypes.equals("INDIVIDUAL")){
+                                                                            <td>
+                                                                            @donationForBulkCash.email
+                                                                            </td>
+
+                                                                            <td>
+                                                                            @donationForBulkCash.donorName
+                                                                            </td>
+
+                                                                            <td>
+                                                                            @donationForBulkCash.phone
+                                                                            </td>
+                                                                            <td> - </td>
+                                                                            <td> - </td>
+                                                                        }
+                                                                        @if(donationForBulkCash.collectionTypes.equals("COMMUNITY_COLLECTION")){
+                                                                            <td>
+                                                                            @donationForBulkCash.email
+                                                                            </td>
+                                                                            <td> - </td>
+                                                                            <td> - </td>
+                                                                            <td>
+                                                                            @donationForBulkCash.firstName
+                                                                            </td>
+
+                                                                            <td>
+                                                                            @donationForBulkCash.lastName
+                                                                            </td>
+
+
+                                                                        }*/*@
+
+                                                                    </tr>
+
+
+                                                            }
+                                                        </table>
+
+                                                        }
+                                                                   </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    @*******start***********************02.10.2015***********************************@
+
+                                                    <br/>
+
+
+                                                    <br/><br/><br/>
+
+                                                    <br/>
+
+
+                                                   @* <button type="submit"  class="btn btn-primary" id = "submit" onclick="submitButton()">submit</button>*@
+
+
+
+                                                    @********end************************02.10.2015***********************************@
+
+
                                                 </div>
+
+
+
+
+
 
                                                     <!-- Right column -->
 
@@ -264,12 +617,498 @@
                                         </div>
                                     </div>
 
+
+                            @***********start*******for edit transaction*@
+
+                            <div class="wrapper" id = "editCashTransaction">
+
+                                @general.alerts()
+                                <div class="container">
+                                    <div class="row">
+                                        @profile.menu(ControllerUtil.getLocalUser(session()))
+                                            <!-- Avatar & social links -->
+                                        <div class="col-sm-8 col-md-9">
+                                                <!-- EVENTS -->
+                                            <div class="row">
+                                                <div class="col-sm-12">
+
+
+                                                @if(donations.size ==0) {
+
+                                                    <div class="well">
+                                                        <em>No results based on search criteria</em>
+                                                    </div>
+
+                                                } else {
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped table-hover ">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th><a href = "#">Pfp name</a></th>
+                                                                    <th><a href = "#">Donor name</a></th>
+                                                                    <th><a href="#">Type</a></th>
+                                                                    <th><a href = "#">Status</a></th>
+                                                                    <th><a href = "#">Amount</a></th>
+                                                                    <th class="actions header">Actions</th>
+                                                                    @**
+                                                                    @header("total", "Donation Total")
+                                                                    <th class="percentage header ">Percentage</th>
+                                                                    **@
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @for(donation <- donations) {
+                                                                @if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT) || models.Event.daysUntilEvent(donation.event.fundraisingEnd) >= 0) {
+                                                                    @form(routes.DonationMgmt.updateInline(donation.event, if(donation.pfp == null) {null} else {donation.pfp}, donation.id), 'role -> "form", 'class -> "form-inline", 'id -> {"donateForm" + donation.id}) {
+                                                                        <tr><td><a href="@routes.DonationMgmt.get(donation.event, donation.id)" name="donationLink">@donation.pfp.name</a></td>
+                                                                            <td>@donation.donorName</td>
+                                                                            <td><select id="paymentType" name="paymentType" class="form-control" readonly="readonly">
+                                                                                <option value="CREDIT" @if(donation.paymentType == Donation.PaymentType.CREDIT){ selected}>Credit</option>
+                                                                                <option value="CHECK" @if(donation.paymentType == Donation.PaymentType.CHECK){ selected}>Check</option>
+                                                                                <option value="CASH" @if(donation.paymentType == Donation.PaymentType.CASH){ selected}>Cash</option>
+                                                                            </select>
+                                                                            </td>
+                                                                            <td><select id="status" name="status" class="form-control" @if(donation.paymentType == Donation.PaymentType.CREDIT && !ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN) && !ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)) {disabled="disabled"}>
+                                                                                <option value="APPROVED" @if(donation.status == Donation.PaymentStatus.APPROVED){ selected}>Approved</option>
+                                                                                <option value="PENDING" @if(donation.status == Donation.PaymentStatus.PENDING){ selected}>Pending</option>
+                                                                                <option value="CLEARED" @if(donation.status == Donation.PaymentStatus.CLEARED){ selected}>Cleared</option>
+                                                                                <option value="REFUNDED" @if(donation.status == Donation.PaymentStatus.REFUNDED){ selected}>Refunded</option>
+                                                                            </select>
+                                                                            </td>
+                                                                            <td><input type="text" id="amount" name="amount" value="@donation.amount" class="form-control" @if(donation.paymentType == Donation.PaymentType.CREDIT) {disabled="disabled"}></td>
+                                                                                <!-- TODO - Fix this, it is not showing the Refund button -->
+                                                                            <td>@if(donation.paymentType != Donation.PaymentType.CREDIT || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN)) {<button class="btn btn-default" type="submit">Save</button>&nbsp;<a href="@routes.DonationMgmt.edit(donation.event, donation.pfp, donation.id)" class="btn btn-default" type="button">Edit</a>}@if(donation.paymentType == Donation.PaymentType.CREDIT && donation.status == Donation.PaymentStatus.CLEARED) {<a href="@routes.DonationMgmt.refund(donation.event, donation.pfp, donation.id)" class="btn btn-default refundBtn" type="button">Refund</a>}</td>
+                                                                        </tr>
+                                                                    }
+                                                                } else {
+                                                                    <tr>
+                                                                        <td><a href="@routes.DonationMgmt.get(donation.event, donation.id)">@donation.pfp.name</a></td>
+                                                                        <td>@donation.donorName</td>
+                                                                        <td>@donation.paymentType.value</td>
+                                                                        <td>@donation.status.value</td>
+                                                                        <td>@donation.amount</td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+
+                                                }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @************end*******for edit transaction*@
+                            @******start************for add more rows*****************************30.09.2015*******@
+
+
+
+
+                               @* <div class="wrapper" id = "addExtraCashTransaction">
+                                    *@@* <div class="section-header">
+                                    <div class="container">
+                                    <div class="row">
+                                    <div class="col-md-12">
+                                    <!-- Remove the .animated class if you don't want things to move -->
+                                    <h1 class="animated slideInLeft"><span>Create Donation</span></h1>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>*@@*
+                                    <div class="container">
+                                        <div class="row">
+                                                <!-- Contact us form -->
+                                            <div class="col-sm-8">
+
+
+                                                <hr>
+                                                @general.alerts()
+                                                @if(donationForm.hasErrors) {
+                                                    <div class="alert alert-dismissable alert-danger">
+                                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                        @Messages("form.has.errors")<br/>
+                                                        @for(key <- donationForm.errors().keySet()) {
+                                                            @for(error <- donationForm.errors().get(key)) {
+                                                                <br/> @Messages(error.message())
+                                                            }
+                                                        }
+                                                    </div>
+                                                }
+
+
+
+                                                @form(controllers.routes.DonationMgmt.saveDonationByCash(eventForPfp)) {
+                                                    <input type="hidden" id="event_name" name="event.name" value="@eventForPfp.name"/>
+
+                                                    <table>
+                                                        <tr>
+                                                            <td><b>Select Participants</b></td>
+                                                            <td width ="20px;">
+
+                                                            </td>
+                                                            <td><b>Amount</b></td>
+                                                            <td width ="20px;">
+
+                                                            </td>
+                                                            <td><b>Status</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                *@@*/*@@**@@**@@**@@*if(pfp.pfpType == Pfp.PfpType.GENERAL) {
+                                                                @select(
+                                                                donationForm("pfp.id"),
+                                                                options(Pfp.findByEventIdMap(eventForPfp)),
+                                                                '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
+                                                                '_default -> "-- Select Participant --",
+                                                                '_showConstraints -> false, 'class -> "form-control"
+                                                                )
+                                                                } else {
+                                                                <input type="hidden" name="pfp.id" value="@pfp.id"/>
+                                                                }*/*@@**@@*
+
+                                                                *@@**@@* <br />*@@*
+
+
+
+
+                                                                *@@* @select(
+                                                                donationForm("pfp.id"),
+                                                                options(Pfp.findByEventIdMap(eventForPfp)),
+                                                                '_label -> "nolabel",
+                                                                '_default -> "-- Select Participant --",
+                                                                '_showConstraints -> false, 'class -> "form-control"
+                                                                )
+
+                                                                <input type="hidden" name="pfp.id" value="@pfp.id"/>*@@*
+                                                                <select id="pfpForEvent" name="pfpForEvent" class="form-control" onchange="mergePfp();">
+                                                                    <option value="selectPfpsForEvent">--select--</option>
+                                                                    @for(pfp <- pfps) {
+                                                                        <option value="@pfp.id" >@pfp.name</option>
+
+                                                                    }
+                                                                </select>
+
+                                                            </td>
+                                                            <td width ="20px;">
+
+                                                            </td>
+                                                            <td>
+
+                                                                <br />
+                                                                @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+                                                            </td>
+                                                            <td width ="20px;">
+
+                                                            </td>
+                                                            <td>
+
+
+                                                                <select id="status" name="status" class="form-control" onchange="mergeStatus();">
+
+                                                                    <option value="APPROVED">Approved</option>
+                                                                    <option value="PENDING" >Pending</option>
+                                                                    <option value="CLEARED" >Cleared</option>
+                                                                    <option value="REFUNDED" >Refunded</option>
+                                                                </select>
+
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                    *@@*<div id="well" class="well">
+
+
+
+
+
+                                                    </div>*@@*
+                                                    <br/>
+                                                    <div id="well" class="well">
+                                                        <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                                        @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                                                        @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                                                        @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+
+                                                        <div style ="display :none;">
+                                                        @helper.inputText(donationForm("status"), '_label -> "Status", 'id -> "statusText", 'class -> "form-control")
+
+                                                        </div>
+
+                                                        <div style ="display :none;">
+                                                        @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
+
+                                                        </div>
+
+                                                        *@@******phno format*************01.09.2015***************start*****@@*
+
+                                                        <div style ="display :none;">
+                                                        @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                        </div>
+                                                        <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                                                        <div>
+                                                            <table>
+                                                                <tr>
+                                                                    <td>
+                                                                    @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                                    </td>
+                                                                    <td> - </td>
+                                                                    <td>
+                                                                    @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                    </td>
+                                                                    <td> - </td>
+                                                                    <td>
+                                                                    @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+
+                                                        *@@******phno format*************01.09.2015***************end*****@@*
+
+                                                        *@@* *@@**@@**@@**@@*@@**@@**@@**@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@**@@**@@**@@*
+                                                        @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@@*
+                                                    </div>
+
+
+                                                    <button type="submit"  class="btn btn-primary">Submit</button>
+                                                    <br/>
+
+
+                                                    <br/><br/><br/>
+
+                                                    <br/>
+
+                                                }
+                                            </div>
+
+                                                <!-- Right column -->
+
+                                        </div>
+                                    </div>
+                                </div>*@
+
+
+                             <div id ="addMoreRowsForCashTransaction">
+
+
+                               @*  <div class="wrapper" id = "addCashTransaction">
+                                     *@@* <div class="section-header">
+                                     <div class="container">
+                                     <div class="row">
+                                     <div class="col-md-12">
+                                     <!-- Remove the .animated class if you don't want things to move -->
+                                     <h1 class="animated slideInLeft"><span>Create Donation</span></h1>
+                                     </div>
+                                     </div>
+                                     </div>
+                                     </div>*@@*
+                                     <div class="container">
+                                         <div class="row">
+                                                 <!-- Contact us form -->
+                                             <div class="col-sm-8">
+
+                                                 <hr>
+                                                 @general.alerts()
+
+                                                 @form(controllers.routes.DonationMgmt.saveDonationByCash(eventForPfp), 'id -> "donateForm") {
+                                                     <input type="hidden" id="event_name" name="event.name" value="@eventForPfp.name"/>
+
+                                                     <table>
+                                                         <tr>
+                                                             <td><b>Select Participants</b></td>
+                                                             <td width ="20px;">
+
+                                                             </td>
+                                                             <td><b>Amount</b></td>
+                                                             <td width ="20px;">
+
+                                                             </td>
+                                                             <td><b>Status</b></td>
+                                                         </tr>
+                                                         <tr>
+                                                             <td>
+                                                                 *@@*/*@@**@@*if(pfp.pfpType == Pfp.PfpType.GENERAL) {
+                                                                 @select(
+                                                                 donationForm("pfp.id"),
+                                                                 options(Pfp.findByEventIdMap(eventForPfp)),
+                                                                 '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
+                                                                 '_default -> "-- Select Participant --",
+                                                                 '_showConstraints -> false, 'class -> "form-control"
+                                                                 )
+                                                                 } else {
+                                                                 <input type="hidden" name="pfp.id" value="@pfp.id"/>
+                                                                 }*/*@@*
+
+                                                                 <br />
+
+
+
+
+                                                                 *@@* @select(
+                                                                 donationForm("pfp.id"),
+                                                                 options(Pfp.findByEventIdMap(eventForPfp)),
+                                                                 '_label -> "nolabel",
+                                                                 '_default -> "-- Select Participant --",
+                                                                 '_showConstraints -> false, 'class -> "form-control"
+                                                                 )
+
+                                                                 <input type="hidden" name="pfp.id" value="@pfp.id"/>*@@*
+                                                                 <select id="pfpForEvent" name="pfpForEvent" class="form-control" onchange="mergePfp();">
+                                                                     <option value="selectPfpsForEvent">--select--</option>
+                                                                     @for(pfp <- pfps) {
+                                                                         <option value="@pfp.id" >@pfp.name</option>
+
+                                                                     }
+                                                                 </select>
+                                                             </td>
+                                                             <td width ="20px;">
+
+                                                             </td>
+                                                             <td>
+
+                                                                 <br />
+                                                                 @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+                                                             </td>
+                                                             <td width ="20px;">
+
+                                                             </td>
+                                                             <td>
+
+
+                                                                 <select id="status" name="status" class="form-control" onchange="mergeStatus();">
+
+                                                                     <option value="APPROVED">Approved</option>
+                                                                     <option value="PENDING" >Pending</option>
+                                                                     <option value="CLEARED" >Cleared</option>
+                                                                     <option value="REFUNDED" >Refunded</option>
+                                                                 </select>
+
+                                                             </td>
+                                                         </tr>
+                                                     </table>
+
+                                                     <div id="well" class="well">
+
+
+
+
+
+                                                    </div>
+                                                     <br/>
+                                                     <div id="well" class="well">
+                                                         <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                                         @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                                                         @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                                                         @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+
+                                                         <div style="display:none;">
+                                                         @helper.inputText(donationForm("status"), '_label -> "Status", 'id -> "statusText", 'class -> "form-control")
+
+                                                         </div>
+
+                                                         <div style="display:none;">
+                                                         @helper.inputText(donationForm("pfp.id"), '_label -> "Status", 'id -> "pfpText", 'class -> "form-control")
+
+                                                         </div>
+
+                                                         *@@******phno format*************01.09.2015***************start*****@@*
+
+                                                         <div style="display:none;">
+                                                         @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                         </div>
+                                                         <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                                                         <div>
+                                                             <table>
+                                                                 <tr>
+                                                                     <td>
+                                                                     @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                                                     </td>
+                                                                     <td> - </td>
+                                                                     <td>
+                                                                     @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                     </td>
+                                                                     <td> - </td>
+                                                                     <td>
+                                                                     @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                                                     </td>
+                                                                 </tr>
+                                                             </table>
+                                                         </div>
+
+                                                         *@@******phno format*************01.09.2015***************end*****@@*
+
+                                                         *@@* *@@**@@*@@**@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@**@@*
+                                                         @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@@*
+                                                     </div>
+
+
+                                                     <button type="button" class="btn btn-primary" id="payByCash" >Submitttt</button>
+                                                     <br/>
+
+
+                                                     <br/><br/><br/>
+
+                                                     <br/>
+
+                                                 }
+                                             </div>
+
+                                                 <!-- Right column -->
+
+                                         </div>
+                                     </div>
+                                 </div>*@
+
+
+                             </div>
+
+                            @*******end*************for add more rows*****************************30.09.2015*******@
+
+                           @* <div class="wrapper">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+
+                                                <a href = "#" id = "addMoreRows" onclick="addMoreRows();">Add More Rows</a>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+
+
+
                         </div>
 
 
                         @*****************end**************************************@
 
                     }
+
+
 
 
 
@@ -295,35 +1134,100 @@
 
     </div>
 
+
   </div>
 
 
 
     <script>
-        @defining(Event.getDefaultEvent()) { defaultEvent =>
-  $('#createDonation').click(function(){
-  	var donationLoad = '@routes.DonationMgmt.create(defaultEvent)';
-    window.location.href = donationLoad.replace("@defaultEvent.slug", $('#adminsEvents').val());
-  });
-  }
+
     </script>
     <script>
+function addMoreRowsSubmit(){
+            //  alert("on click on addmore rows");
 
+         $('#statusOfBulkCashDonation').val("0");
+        // alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
+          $('form#donateForm').submit();
+             }
+             function aqbc(){
+           //  alert("jjjj");
+             }
 $(document).ready(function(){
-alert("document.redy");
-/*$('#cashDonationDetails').hide();*/
+//alert("document.ready........");
+//$('#addCashTransaction').hide();
+$("#wellForCommunityCollection").hide();
+$("#editCashTransaction").hide();
+
+//========================start=================================//
+/*
+var collectionTypes = $("#collectionTypesText").val();
+		//alert("collectionTypesText "+collectionTypes);
+		$("#collectionTypes").val(collectionTypes);
+
+
+		if(collectionTypes==null || collectionTypes == ""){
+		$("#collectionTypes").val('---select---');
+		}
+
+	//	alert("collectionTypes text : "+$("#collectionTypes").val());
+		if(collectionTypes === "COMMUNITY_COLLECTION"){
+		mergeCollectionTypes();
+		}else if(collectionTypes === "INDIVIDUAL"){
+mergeCollectionTypes();
+		}else{
+		$("#collectionTypes").val("select");
+		}
+*/
+
+
+//========================end====================================//
+ $("#pfpText").val("");
+//alert("pfpValue :: "+pfpValue);
+
+
+
+
+
+/*$("#phNo").hide();*/
+var phNoValue = $("#phNo").val();
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+/*if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}*/
+
+
 });
 
 
-/*function getDetailsForEvent(){
+
+function addMoreRows(){
+//alert("addMorerows................................");
+var getDiv=$('#addCashTransaction').html();
+//alert(getDiv);
+ $("#addCashTransaction").show();
+ $("#addMoreRowsForCashTransaction").append(getDiv);
+ //$(document.body).append('<div id="helloDiv">this is test</div>');
+
+}
+
+function getDetailsForEvent(){
 var eventId = $('#adminsEvents').val();
-    alert("eventId :: "+eventId);
+    //alert("eventId :: "+eventId);
    if(eventId === 'select'){
-        alert("within eventId >>>");
+        //alert("within eventId >>>");
         $('#cashDonationDetails').hide();
         }else{
-        alert("within else");
-    /!*      $.ajax({
+        //alert("within else");
+    /*      $.ajax({
         url: '../profile/pfpsForCashDonations/:eventId='+eventId,
          type: 'GET',
         dataType : 'html',
@@ -337,20 +1241,240 @@ var eventId = $('#adminsEvents').val();
           $('#volunteerModalBody').html(xhr.responseText);
           $('#volunteerModalBody').scrollTop(0);
         }
-    });*!/
-    /!* $('#cashDonationDetails').show();*!/
+    });*/
+    /* $('#cashDonationDetails').show();*/
 
-    var donationLoad = '';
-    routes.DonationMgmt.participantDetailsForParticularEvent
+    var donationLoad = '@routes.DonationMgmt.participantDetailsForParticularEvent';
+
 
    if(eventId) {
+   //alert("eventId :: "+eventId);
       window.location.href = donationLoad + "?type=eventId&id=" + eventId;
    }
 
 
         }
+}
+
+
+function editCashTransaction(){
+//alert("on editCashTransaction");
+$("#addCashTransaction").hide();
+//alert("after hide..");
+$("#editCashTransaction").show();
+}
+
+
+
+ /*$('form#donateForm').submit(function(){
+           //  $('#payByCreditCardDiv').hide();
+                alert("within submit...");
+	   		/!*$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+		    $('#payByCreditCardButton').attr('disabled', 'disabled');
+		    $('#payByCheckButton').attr('disabled', 'disabled');
+		    $('#payByCashButton').attr('disabled', 'disabled');*!/
+
+
+		    mergeStatus();
+
+		});*/
+
+/*function onCashSubmit(eventId){
+alert("oncash submit : "+eventId);
+mergeStatus();
+  var donationLoad = '';
+
+  /*routes.DonationMgmt.saveDonationByCash*/
+
+
+  /* if(eventId) {
+      window.location.href = donationLoad + "?type=eventId&id=" + eventId;
+   }
 }*/
 
+
+		/*function mergeStatus(){
+		var status = $("#status").val();
+		alert("status "+status);
+		$("#statusText").val(status);
+		alert("status text : "+$("#statusText").val());
+		//var pfp = $("#pfpForEvent").val();
+
+
+		}*/
+  /*   function mergeCollectionTypes(){
+		var collectionTypes = $("#collectionTypes").val();
+		//alert("collectionTypes "+collectionTypes);
+		$("#collectionTypesText").val(collectionTypes);
+		//alert("collectionTypesText text : "+$("#collectionTypesText").val());
+		if(collectionTypes === "COMMUNITY_COLLECTION")
+{
+//alert("within COMMUNITY_COLLECTION");
+$("#wellForCommunityCollection").show();
+$("#wellForIndividualCollection").hide();
+}		//var pfp = $("#pfpForEvent").val();
+if(collectionTypes === "INDIVIDUAL")
+{
+//alert("within individual");
+$("#wellForIndividualCollection").show();
+$("#wellForCommunityCollection").hide();
+}		//var pfp = $("#pfpForEvent").val();
+
+
+		}
+*/
+
+
+       function mergePfp(){
+       var pfpId = $("#pfpForEvent").val();
+       //alert("pfpId :: "+pfpId);
+      $("#pfpText").val(pfpId);
+      //alert("pfp text : "+ $("#pfpText").val());
+
+       }
+    </script>
+
+
+
+
+<script>
+
+    function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+    /*if(currentFormId.equals("phoneSuf")){
+    $("#phoneSuf").onkeyup();
+    }*/
+    patternMatchForPhone(currentFormId);
+
+    if(document.getElementById(currentFormId).value.length==afterNumChars) {
+    document.getElementById(nextFormId).focus();
+    }
+
+    mergeTotalPhNo();
+    }
+
+    function mergeTotalPhNo(){
+    //alert("within keyup");
+    patternMatchForPhone('phoneSuf');
+    var totalPhValue;
+    var length1 = $("#areaCode").val().length;
+    var length2 = $("#phonePre").val().length;
+    var length3 = $("#phoneSuf").val().length;
+
+    if(length1==3 && length2 ==3 &&length3 == 4){
+    totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+    $("#phNo").val(totalPhValue);
+    //alert($("#phNo").val());
+    }else{
+    totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+    $("#phNo").val(totalPhValue);
+
+    }
+
+    //alert("totalPhValue :: "+ $("#phNo").val());
+
+
+    }
+
+    //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+<script>
+    function patternMatchForPhone(id){
+
+    var phPattern = /^([0-9])+$/;
+    var phValue =document.getElementById(id).value;
+    //alert(phValue );
+    //alert(phValue.match(phPattern));
+    if(phValue.match(phPattern)==null){
+    //alert("before "+phValue);
+     phValue = phValue.substring(0,phValue.length-1);
+    // alert("after "+phValue);
+     }
+     id = "#"+id;
+     // alert("id :: "+id);
+     $(id).val(phValue);
+
+     //alert(" $(id).val"+ $(id).val);
+    //alert(ph)
+
+     //document.getElementById(id).HTML(phValue);
+
+    }
+</script>
+
+
+    <script>
+          $('form#donateForm').submit(function(){
+           //  $('#payByCreditCardDiv').hide();
+               // alert("within submit...");
+                var collectionTypes = $("#collectionTypes").val();
+                if(collectionTypes === "COMMUNITY_COLLECTION"){
+                 $("#phNo").val("1234567890");
+                 $("#areaCode").val("123");
+                 $("#phonePre").val("456");
+                 $("#phoneSuf").val("7890");
+                 /*var email=$("#email").val();
+                  $("#email1").val(email);*/
+
+                }
+                else if(collectionTypes === "INDIVIDUAL"){
+                /*var email=$("#emailForIndividual").val();
+                var email=$("#email1").val();
+                //alert("email for individual :: "+email);
+
+                $("#email").val(email);*/
+                //alert(" $(#email).val(email) :: "+ $("#email").val());
+
+                }
+               /* $("#phNo").val(totalPhValue);
+	   		$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+		    $('#payByCreditCardButton').attr('disabled', 'disabled');
+		    $('#payByCheckButton').attr('disabled', 'disabled');
+		    $('#payByCashButton').attr('disabled', 'disabled');*/
+		});
+
+
+	/*	$('#addMoreRowsSubmit').onclick(function(){*/
+
+
+		/*})*/
+
+
+		/*$('#submit').onclick(function(){
+
+        alert("on click on submit");
+
+         $('#statusOfBulkCashDonation').val("1");
+         alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
+          $('form#donateForm').submit();
+		})*/
+      function submitButton(){
+     // alert("on click on submit");
+
+         $('#statusOfBulkCashDonation').val("1");
+       //  alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
+          $('form#donateForm').submit();
+      }
+
+
+
+
+      //====================new add for anonymous===========================start===============09.10.2015===========================//
+
+      $("#anonymous").click(function () {
+
+      if ($(this).prop('checked')) {
+       $('#donorname').val('Anonymous')
+        }
+        else {
+       //do nothing
+        $('#donorname').val(null)
+        }
+
+})
+
+
+//====================new add for anonymous===============================end=================09.10.2015===========================//
 
     </script>
 }

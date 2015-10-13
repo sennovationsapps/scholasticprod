@@ -1,0 +1,32 @@
+@(donation: Donation)
+
+
+
+
+
+    A cash donation was posted to your event
+    @if(donation!=null){
+        @if(donation.pfp!=null &&  donation.pfp.name!=null ){
+            To the Fundraising Page of: @donation.pfp.name
+        }
+        @if(donation.donorName!=null){
+            From the donor name of: @donation.donorName
+        }
+        @if(donation.amount!=null){
+            In the Amount of: @donation.amount
+        }
+        @if(donation.dateCreated!=null){
+            On this Date and time:  @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+

@@ -158,6 +158,21 @@ public class ReceiptMgmt extends Controller {
 		}
 	}
 
+
+
+
+	/*********start********send mail to event manager for cash donation************09.10.2015**********/
+	public static void sendCashDonationMsgToEventManager(Donation donation) {
+		String subject = "Scholastic Challenge - You have been donated in cash";
+		String message = views.txt.donations.email_cash_eventManager_receipt
+				.render(donation).toString();
+		System.out.println("event manager :: "+donation.event.userAdmin.email);
+
+		ReceiptMgmt.generateEmailReceipt(subject, message, donation.event.userAdmin.email);
+
+	}
+	/**********end*********send mail to event manager for cash donation************09.10.2015**********/
+
 	private static void generateEmailReceipt(String subject, String content, String email) {
 		System.out.println("subject in generateEmailReceipt :: " + subject);
 		final Body body = new Body(content);

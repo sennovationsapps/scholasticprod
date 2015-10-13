@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.LoggerFactory;
 import play.Logger;
 import play.Routes;
 import play.data.Form;
@@ -43,6 +44,9 @@ public class Application extends Controller {
 	 * 
 	 * @return the result
 	 */
+
+	private static final org.slf4j.Logger MAIL_LOGGER = LoggerFactory.getLogger("ScholasticReceiptsLogger");
+
 	public static Result faqs() {
 		return ok(helpcenter.render(form(ContactUs.class)));
 	}
@@ -61,7 +65,39 @@ public class Application extends Controller {
 	 * 
 	 * @return the result
 	 */
+
+	public static boolean schedulerTheadStatus = false;
+
+
 	public static Result index() {
+
+
+
+
+		//==========================new================06.10.2015======================start===================================//
+		//System.out.println("before calling cronJobUtilsThread..");
+		CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
+
+		System.out.println("schedulerTheadStatus :: "+schedulerTheadStatus);
+
+		if(schedulerTheadStatus == false)
+		{
+			//System.out.println("schedulerTheadStatus == false");
+			MAIL_LOGGER.info("before calling cronJobUtilsThread..");
+			Thread t = new Thread(cronJobUtilsThread);
+			t.setPriority(1);
+
+			t.start();
+			MAIL_LOGGER.info("after calling cronJobUtilsThread..");
+			//System.out.println("after ");
+			schedulerTheadStatus = true;
+
+		}
+		//System.out.println("after calling cronJobUtilsThread..");
+		//==========================new================06.10.2015=======================end====================================//
+
+
+
 		return ok(index.render());
 	}
 
@@ -88,6 +124,7 @@ public class Application extends Controller {
 	@SubjectPresent
 	public static Result profile() {
 
+/*
 
 		//=======================new add================start=========================15.09.2015==============================//
 
@@ -101,7 +138,8 @@ public class Application extends Controller {
 
 
 
-		/*ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
+		*/
+/*ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
 		ses.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
@@ -120,11 +158,13 @@ public class Application extends Controller {
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-*/
+*//*
+
 
 
 
 		//=======================new add================end=========================15.09.2015==============================//
+*/
 
 
 		final User localUser = ControllerUtil.getLocalUser(session());
@@ -426,24 +466,26 @@ public class Application extends Controller {
 
 
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
+
 	public static Result profileCashDonations(){
 		final User localUser = ControllerUtil.getLocalUser(session());
 		List<Event> events = new ArrayList<Event>();
-if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
-      events = Event.findAllEvents();
+		if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+			events = Event.findAllEvents();
 		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
-	events = Event.findAllByUserId(localUser.id);
+			events = Event.findAllByUserId(localUser.id);
 		}
 		final Form<Donation> donationForm = form(Donation.class);
 		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
 
 		if(events!= null && events.size()>0){
-			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm, null));
+			return ok(ProfileCashDonations.render(localUser, events, null , null,donationForm, null, null));
 		}else{
-			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm, null));
+			return ok(ProfileCashDonations.render(localUser, null, null, null, donationForm, null, null));
 		}
 
 	}
+
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
 	/**
 	 * Profile donations.
