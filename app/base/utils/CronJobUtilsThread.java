@@ -160,7 +160,7 @@ public class CronJobUtilsThread implements Runnable {
 
                   try {
                       // thread to sleep for 1000 milliseconds
-                      Thread.currentThread().sleep(600000);
+                      Thread.currentThread().sleep(3600000);
 
                   } catch (Exception e) {
                       e.printStackTrace();
