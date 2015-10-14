@@ -406,10 +406,12 @@
                                                             <div style ="display :none;">
                                                             @helper.inputText(donationForm("pfp.id"), '_label -> "pfpId", 'id -> "pfpText", 'class -> "form-control")
 
-                                                            </div>
+                                                            </div >
 
+                                                             <div style ="display :none;">
+                                                             @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")
+                                                             </div>
 
-                                                            @helper.inputText(donationForm("email"), '_label -> "Email",'_id -> "emailForCommunity", 'class -> "form-control")
 
                                                             @******phno format*************01.09.2015***************start*****@
 
@@ -417,13 +419,13 @@
                                                             @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
 
                                                             </div>
-                                                            <div><b>Enter Phone Number( Required )</b></div>
+                                                            @*<div><b>Enter Phone Number( Required )</b></div>*@
 
 
 
 
 
-                                                            <div>
+                                                            <div style ="display :none;">
                                                             <table>
                                                             <tr>
                                                             <td>
@@ -492,9 +494,9 @@
 
                                                                         <th class="header">Donor Message</th>
 
-                                                                        <th class="header">Email</th>
+                                                                      @*  <th class="header">Email</th>
 
-                                                                        <th class="header">Phone No</th>
+                                                                        <th class="header">Phone No</th>*@
 
 
 
@@ -528,13 +530,13 @@
                                                                         </td>
 
 
-                                                                        <td>
+                                                                       @* <td>
                                                                         @donationForBulkCash.email
                                                                         </td>
 
                                                                         <td>
                                                                         @donationForBulkCash.phone
-                                                                        </td>
+                                                                        </td>*@
 
                                                                         @*<td>
                                                                         @donationForBulkCash.collectionTypes
@@ -1407,12 +1409,20 @@ $("#wellForCommunityCollection").hide();
           $('form#donateForm').submit(function(){
            //  $('#payByCreditCardDiv').hide();
                // alert("within submit...");
+               var atSign = String.fromCharCode(64);
+               //alert("atSign :: "+atSign);
                 var collectionTypes = $("#collectionTypes").val();
-                if(collectionTypes === "COMMUNITY_COLLECTION"){
                  $("#phNo").val("1234567890");
                  $("#areaCode").val("123");
                  $("#phonePre").val("456");
                  $("#phoneSuf").val("7890");
+                 $("#email").val("rimi"+atSign+"g.c");
+                // alert("emai to submit :: "+$("#email").val());
+                if(collectionTypes === "COMMUNITY_COLLECTION"){
+                /* $("#phNo").val("1234567890");
+                 $("#areaCode").val("123");
+                 $("#phonePre").val("456");
+                 $("#phoneSuf").val("7890");*/
                  /*var email=$("#email").val();
                   $("#email1").val(email);*/
 

@@ -1079,6 +1079,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static Page<Donation> page(int page, int pageSize, String sortBy, String order, String filter, String fieldName, User localUser) {
+		//System.out.println("filter : "+filter);
 		String queryField = "donorName";
 		if (StringUtils.equals("donorName", fieldName)
 				|| StringUtils.equals("transactionNumber", fieldName)
@@ -1113,10 +1114,19 @@ public class Donation extends Model implements PathBindable<Donation> {
 		if(localUser != null) {
 			query.eq("event.userAdmin.id", localUser.id);									
 		}
+		//System.out.println("query :: "+query);
+		/*System.out.println("final output :: "+query.select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber")
+				.fetch("pfp","name").fetch("event", "name")
+				.orderBy(sortBy + " " + order)
+				.findPagingList(pageSize).setFetchAhead(false).getPage(page).getList());*/
 		return query.select("id, amount, donorName, pfp.id, pfp.name, transactionNumber, ccDigits, paymentType, status, event.id, event.name, invoiceNumber")
 							.fetch("pfp").fetch("event")
 							.orderBy(sortBy + " " + order)
-							.findPagingList(pageSize).setFetchAhead(false).getPage(page);	
+							.findPagingList(pageSize).setFetchAhead(false).getPage(page);
+		/*return query.select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber")
+				.fetch("pfp","name").fetch("event", "name")
+				.orderBy(sortBy + " " + order)
+				.findPagingList(pageSize).setFetchAhead(false).getPage(page);*/
 	}
 	
 	public enum PaymentStatus {
