@@ -1,33 +1,22 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Query;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
 import play.data.validation.Constraints;
-import play.data.validation.ValidationError;
 import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 import play.db.ebean.Model;
 import play.i18n.Messages;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Query;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Volunteers extends Model {
@@ -129,4 +118,11 @@ public class Volunteers extends Model {
 				.fetch("shifts");
 		return queryVolunteers.findList();
 	}
+	//========start======rimi volunteer of event logic=========15.10.2015================================//
+	public static boolean findDuplicateRegistrationOfVolunteerForSameEvent(String firstName, String lastName,String email, Long eventId ){
+		System.out.println("within findDuplicateDonationToSameDonor....email :: "+email);
+		return find.where().eq("eventid",eventId).select("id").findRowCount() > 0;
+		//return find.where().eq("id", id).select("id, heroImgUrl, eventEnd, eventStart, slug, status, schoolId, fundraisingEnd, fundraisingStart, goal, name, userAdmin, generalFund").fetch("userAdmin").fetch("generalFund").findUnique();
+	}
+	//========end======rimi volunteer of event logic=========15.10.2015================================//
 }

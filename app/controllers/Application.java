@@ -552,15 +552,16 @@ public class Application extends Controller {
 	@SubjectPresent
 	public static Result profileSearchEvents(int page, String sortBy, String order,
 					String filter, String fieldName) {
+		System.out.println("fieldName :: "+fieldName);
 		User localUser = ControllerUtil.getLocalUser(session());
 		if(localUser.isEventAdmin()) {
 			return ok(profileSearchEvents.render(
 							Event.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser), sortBy,
-							order, filter));
+							order, filter, fieldName));
 		} else if(localUser.isRootAdmin() || localUser.isSysAdmin()) {
 			return ok(profileSearchEvents.render(
 							Event.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null), sortBy,
-							order, filter));			
+							order, filter, fieldName));
 		} else {
 			return redirect(routes.Application.profile());
 		}
@@ -576,15 +577,16 @@ public class Application extends Controller {
 	@SubjectPresent
 	public static Result profileSearchDonations(int page, String sortBy, String order,
 					String filter, String fieldName) {
+		System.out.println("fieldName :: "+fieldName);
 		User localUser = ControllerUtil.getLocalUser(session());
 		if(localUser.isEventAdmin()) {
 			return ok(profileSearchDonations.render(
 							Donation.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser), sortBy,
-							order, filter));
+							order, filter, fieldName));
 		} else if(localUser.isRootAdmin() || localUser.isSysAdmin()) {
 			return ok(profileSearchDonations.render(
 							Donation.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null), sortBy,
-							order, filter));			
+							order, filter, fieldName));
 		} else {
 			return redirect(routes.Application.profile());
 		}
@@ -600,15 +602,16 @@ public class Application extends Controller {
 	@SubjectPresent
 	public static Result profileSearchPfps(int page, String sortBy, String order,
 					String filter, String fieldName) {
+		System.out.println("fieldName :: "+fieldName);
 		User localUser = ControllerUtil.getLocalUser(session());
 		if(localUser.isEventAdmin() || localUser.isPfpAdmin()) {
 			return ok(profileSearchPfps.render(
 							Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser), sortBy,
-							order, filter));
+							order, filter, fieldName));
 		} else if(localUser.isRootAdmin() || localUser.isSysAdmin()) {
 			return ok(profileSearchPfps.render(
 							Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null), sortBy,
-							order, filter));			
+							order, filter, fieldName));
 		} else {
 			return redirect(routes.Application.profile());
 		}

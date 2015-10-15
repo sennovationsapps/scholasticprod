@@ -275,7 +275,7 @@ public class EventMgmt extends Controller {
 				Pfp.page(page, 0, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser),
 			   /*Pfp.page(0, 0, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser),*/
 			   sortBy,
-			   order, filter,donationList1,imgUrl));
+			   order, filter,donationList1,imgUrl, null));
    }else{
 	   return ok(viewEvent.render(event,
 			   isOpen,
@@ -286,7 +286,7 @@ public class EventMgmt extends Controller {
 				/*Pfp.page(page, 0, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser),*/
 			   null,
 			   sortBy,
-			   order, filter,donationList1,imgUrl));
+			   order, filter,donationList1,imgUrl, null));
    }
 
 
@@ -378,6 +378,7 @@ public class EventMgmt extends Controller {
 	public static Result profileSearchPfpsEvents(Event event,int page, String sortBy, String order,
 												 String filter, String fieldName) {
 		System.out.println("within profileSearchPfpsEvents");
+		System.out.println("fieldName :: "+fieldName);
 		if (event.isIdOnly()) {
 			event = Event.findById(event.id);
 		}
@@ -524,7 +525,7 @@ public class EventMgmt extends Controller {
 					Pfp.pageForParticularEvent(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null, event.id),
 					sortBy,
 					order,
-					filter, donationList, imgUrl));
+					filter, donationList, imgUrl, fieldName));
 			/*return ok(viewEvent.render(
 					Pfp.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser), sortBy,
 					order, filter));  */
@@ -540,7 +541,7 @@ public class EventMgmt extends Controller {
 					(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
 					Pfp.pageForParticularEvent(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null, event.id),
 					sortBy,
-					order, filter, donationList, imgUrl));
+					order, filter, donationList, imgUrl, fieldName));
 
 
 
@@ -575,7 +576,7 @@ public class EventMgmt extends Controller {
 				(Map<Long, Donation.DonationsByTeam>) donations.get("team"),
 				Pfp.pageForParticularEvent(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null, event.id),
 				sortBy,
-				order, filter, donationList, imgUrl));
+				order, filter, donationList, imgUrl, fieldName));
 	}
 		//========use this search option for user not logged in===================26.08.2015==========end==================//
 	}

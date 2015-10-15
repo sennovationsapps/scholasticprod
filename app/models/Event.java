@@ -1,55 +1,27 @@
 package models;
 
-import java.net.URL;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
-import models.Donation.DonationType;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Page;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.annotation.EnumValue;
+import controllers.ControllerUtil;
 import models.security.SecurityRole;
 import models.security.User;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.math.NumberUtils;
-import org.h2.tools.Script;
-
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
-import play.data.validation.Constraints.MinLength;
 import play.db.ebean.Model;
 import play.i18n.Messages;
 import play.mvc.PathBindable;
 import security.BaseX;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.Page;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.annotation.EnumValue;
-
-import controllers.ControllerUtil;
+import javax.persistence.*;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Event entity managed by JPA
@@ -394,6 +366,7 @@ public class Event extends Model implements PathBindable<Event> {
 	 */
 	public static Page<Event> page(int page, int pageSize, String sortBy,
 			String order, String filter, String fieldName, User localUser) {
+		System.out.println("filter : "+filter);
 		String queryField = "name";
 		if (StringUtils.equals("name", fieldName)
 				|| StringUtils.equals("schoolId", fieldName)) {
@@ -422,6 +395,13 @@ public class Event extends Model implements PathBindable<Event> {
 		if(localUser != null) {
 			query.eq("userAdmin.id", localUser.id);									
 		}
+		System.out.println("query :: " + query + " : page : " + page + " : filter : " + filter + " : queryField : " + queryField);
+		//int pageValue = 0;
+		System.out.println("pageValue : " + page);
+		System.out.println("final output :: "+query
+				.orderBy(sortBy + " " + order).select("id, eventEnd, eventStart, status, schoolId, fundraisingEnd, fundraisingStart, goal, name, userAdmin").fetch("userAdmin").findPagingList(pageSize)
+				.setFetchAhead(false).getPage(page).getTotalRowCount()+ " : page :"+page  + " : sortBy : " + sortBy
+				+ " : order : " + order);
 		return query
 					.orderBy(sortBy + " " + order).select("id, eventEnd, eventStart, status, schoolId, fundraisingEnd, fundraisingStart, goal, name, userAdmin").fetch("userAdmin").findPagingList(pageSize)
 					.setFetchAhead(false).getPage(page);

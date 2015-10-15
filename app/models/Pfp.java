@@ -1,56 +1,33 @@
 package models;
 
-import java.lang.reflect.Array;
-import java.net.URL;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-import com.avaje.ebean.Ebean;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import models.Donation.DonationType;
-import models.Event.PublishStatus;
-import models.security.SecurityRole;
-import models.security.User;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.math.NumberUtils;
-
-import play.i18n.Messages;
-import play.mvc.PathBindable;
-import play.data.validation.Constraints;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.*;
-import play.db.ebean.Model;
-import scala.Function1;
-import scala.util.Either;
-import security.BaseX;
 import base.utils.DateUtils;
 import base.utils.SortUtils;
-
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.annotation.EnumValue;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import controllers.ControllerUtil;
+import models.security.SecurityRole;
+import models.security.User;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.math.NumberUtils;
+import play.data.validation.Constraints;
+import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
+import play.db.ebean.Model;
+import play.i18n.Messages;
+import play.mvc.PathBindable;
+import security.BaseX;
+
+import javax.persistence.*;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Event entity managed by JPA
@@ -171,7 +148,9 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 	}
 	
 	public static Pfp findByIdWithMin(Long id) {
-		return find.where().eq("id", id).select("id, name, goal, event.id, event.name, pfpType, team.id, team.name, userAdmin").fetch("userAdmin").fetch("event").fetch("team").findUnique();
+		/*return find.where().eq("id", id).select("id, name, goal, event.id, event.name, pfpType, team.id, team.name, userAdmin").fetch("userAdmin").fetch("event").fetch("team").findUnique();*/
+		return find.where().eq("id", id).select("id, name, goal, pfpType, userAdmin").fetch("userAdmin").fetch("event","name").fetch("team","name").findUnique();
+
 	}
 
 	public static Long findEventIdByPfpId(Long pfpId) {
@@ -322,6 +301,7 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 
 	public static Page<Pfp> page(int page, int pageSize, String sortBy,
 					String order, String filter, String fieldName, User localUser) {
+		System.out.println("filter : "+filter);
 		String queryField = "name";
 		if (StringUtils.equals("name", fieldName)
 						|| StringUtils.equals("name", fieldName)) {
@@ -344,8 +324,22 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 						query.eq("userAdmin.id", localUser.id);
 					}														
 				}
-				return query.select("id, name, goal, event.id, event.name, pfpType, team.id, team.name, userAdmin")
+				/*return query.select("id, name, goal, event.id, event.name, pfpType, team.id, team.name, userAdmin")
 				.fetch("userAdmin").fetch("event").fetch("team")
+				.orderBy(sortBy + " " + order).findPagingList(pageSize)
+				.setFetchAhead(false).getPage(page);*/
+
+		System.out.println("query :: " + query + " : page : " + page + " : filter : " + filter + " : queryField : " + queryField);
+		//int pageValue = 0;
+		System.out.println("pageValue : " + page);
+		System.out.println("final output :: "+query.select("id, name, goal, pfpType, userAdmin")
+				.fetch("userAdmin").fetch("event", "name").fetch("team", "name")
+				.orderBy(sortBy + " " + order).findPagingList(pageSize)
+				.setFetchAhead(false).getPage(page).getTotalRowCount()+ " : page :"+page  + " : sortBy : " + sortBy
+				+ " : order : " + order);
+
+		return query.select("id, name, goal, pfpType, userAdmin")
+				.fetch("userAdmin").fetch("event","name").fetch("team","name")
 				.orderBy(sortBy + " " + order).findPagingList(pageSize)
 				.setFetchAhead(false).getPage(page);
 			}
@@ -358,6 +352,7 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 
 	public static Page<Pfp> pageForParticularEvent(int page, int pageSize, String sortBy,
 												   String order, String filter, String fieldName, User localUser, Long eventId) {
+		System.out.println("filter : "+filter);
 		String queryField = "name";
 		if (StringUtils.equals("name", fieldName)
 				|| StringUtils.equals("name", fieldName)) {
@@ -381,12 +376,20 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 				query.eq("userAdmin.id", localUser.id);
 			}
 		}
-		System.out.println("----names--- "+query.select("id, name, pfpType")
+		System.out.println("query :: " + query + " : page : " + page + " : filter : " + filter + " : queryField : " + queryField);
+		//int pageValue = 0;
+		System.out.println("pageValue : " + page);
+		System.out.println("final output :: "+query.select("id, name, goal, pfpType, userAdmin")
+				.fetch("userAdmin").fetch("event","name").fetch("team","name")
+				.orderBy(sortBy + " " + order).findPagingList(pageSize)
+				.setFetchAhead(false).getPage(page).getTotalRowCount()+ " : page :"+page  + " : sortBy : " + sortBy
+				+ " : order : " + order);
+		/*return query.select("id, name, goal, event.id, event.name, pfpType, team.id, team.name, userAdmin")
 				.fetch("userAdmin").fetch("event").fetch("team")
 				.orderBy(sortBy + " " + order).findPagingList(pageSize)
-				.setFetchAhead(false).getPage(page));
-		return query.select("id, name, goal, event.id, event.name, pfpType, team.id, team.name, userAdmin")
-				.fetch("userAdmin").fetch("event").fetch("team")
+				.setFetchAhead(false).getPage(page);*/
+		return query.select("id, name, goal, pfpType, userAdmin")
+				.fetch("userAdmin").fetch("event","name").fetch("team","name")
 				.orderBy(sortBy + " " + order).findPagingList(pageSize)
 				.setFetchAhead(false).getPage(page);
 	}
@@ -409,6 +412,10 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 						}
 		final Query<Pfp> queryPfps = pfps.select("id, name, dateCreated, goal, emergencyContact, emergencyContactPhone, pfpType, team.id, team.name, event.id, event.name, userAdmin.id, userAdmin.firstName, userAdmin.lastName, userAdmin.email, userAdmin.phone")
 						.fetch("team").fetch("event").fetch("userAdmin");
+
+		/*final Query<Pfp> queryPfps = pfps.select("id, name, dateCreated, goal, emergencyContact, emergencyContactPhone, pfpType")
+				.fetch("team","name").fetch("event","name").fetch("userAdmin","firstName").fetch("userAdmin","lastName").fetch("userAdmin","email").fetch("userAdmin","phone");*/
+
 		if (queryPfps != null) {
 			return queryPfps.findList();
 		}

@@ -1,0 +1,24 @@
+@(verificationUrl: String, volunteer: Volunteer)
+@if(volunteer!=null){
+    Hi @volunteer.firstName @volunteer.lastName
+
+
+        Thank you for signing up for the following volunteer position.
+        @if(volunteer.shift!=null){
+            @if(volunteer.shift.name!=null){
+                @volunteer.shift.name
+            }
+            @if(volunteer.shift.date!=null){
+                @volunteer.shift.date.format("E, MMMMM d, yyyy")
+            }
+            @if(volunteer.shift.startTime!=null && volunteer.shift.endTime!=null){
+                @volunteer.shift.startTime.format("h:mm a") - @volunteer.shift.endTime.format("h:mm a")
+            }
+        }
+
+}
+
+
+    Sincerely,
+
+    The Scholastic Challenge Team

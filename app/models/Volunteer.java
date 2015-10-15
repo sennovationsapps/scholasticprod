@@ -1,21 +1,15 @@
 package models;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
 import play.data.validation.Constraints;
 import play.data.validation.Constraints.MaxLength;
+import play.data.validation.Constraints.Pattern;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
-import play.data.validation.Constraints.Pattern;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Volunteer extends Model {
@@ -86,5 +80,15 @@ public class Volunteer extends Model {
 	public static Volunteer findById(Long id) {
 		return find.byId(id);
 	}
+
+	//========start======rimi volunteer of event logic=========15.10.2015================================//
+	public static boolean findDuplicateRegistrationOfVolunteerForSameShift(String firstName, String lastName,String email, Long shiftId ){
+		System.out.println("within findDuplicateDonationToSameDonor....email :: "+email + " :: firstName :: "+firstName+" :: lastName :: "+lastName+" :: shiftId :: "+shiftId);
+		System.out.println("the status :: "+find.where().eq("first_name",firstName).eq("last_name",lastName).eq("email",email).eq("shift_id",shiftId).select("id").findList());
+		return find.where().eq("first_name",firstName).eq("last_name",lastName).eq("email",email).eq("shift_id",shiftId).select("id").findRowCount() > 1;
+		//return find.where().eq("id", id).select("id, heroImgUrl, eventEnd, eventStart, slug, status, schoolId, fundraisingEnd, fundraisingStart, goal, name, userAdmin, generalFund").fetch("userAdmin").fetch("generalFund").findUnique();
+	}
+	//========end======rimi volunteer of event logic=========15.10.2015================================//
+
 
 }

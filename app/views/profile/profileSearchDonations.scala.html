@@ -1,4 +1,4 @@
-@(currentPage: com.avaje.ebean.Page[Donation], currentSortBy: String, currentOrder: String, currentFilter: String)
+@(currentPage: com.avaje.ebean.Page[Donation], currentSortBy: String, currentOrder: String, currentFilter: String, filterType: String)
 
 @import models.security._
 
@@ -24,7 +24,7 @@
     }
     
     // Generate the link
-    routes.Application.profileSearchDonations(newPage, sortBy, order, currentFilter)
+    routes.Application.profileSearchDonations(newPage, sortBy, order, currentFilter, filterType)
     
 }
 
@@ -165,6 +165,7 @@
         <div id="pagination">
             <ul class="pager">
                 <li class="previous@if(!currentPage.hasPrev) { disabled}"><a href="@if(currentPage.hasPrev) {@link(currentPage.getPageIndex - 1, null)}">&larr; Previous</a></li>
+
                 <li class="next@if(!currentPage.hasNext) { disabled}"><a href="@if(currentPage.hasNext) {@link(currentPage.getPageIndex + 1, null)}">Next &rarr;</a></li>
             </ul>
         </div>

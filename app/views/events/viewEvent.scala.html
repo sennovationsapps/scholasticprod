@@ -1,4 +1,4 @@
-@(event: Event, isEventOpen: Boolean, canParticipate: Boolean, canManage: Boolean, pfpDonations: Map[Long, Donation.DonationsByPfp], teamDonations: Map[Long, Donation.DonationsByTeam],currentPage: com.avaje.ebean.Page[Pfp]=null, currentSortBy: String=null, currentOrder: String=null, currentFilter: String=null,donation: List[Donation]=null,imgUrllink: Integer)
+@(event: Event, isEventOpen: Boolean, canParticipate: Boolean, canManage: Boolean, pfpDonations: Map[Long, Donation.DonationsByPfp], teamDonations: Map[Long, Donation.DonationsByTeam],currentPage: com.avaje.ebean.Page[Pfp]=null, currentSortBy: String=null, currentOrder: String=null, currentFilter: String=null,donation: List[Donation]=null,imgUrllink: Integer,filterType: String)
 @import  views.html.events.modalVolunteer;
 
 
@@ -28,7 +28,7 @@
     }
 
     // Generate the link
-    routes.EventMgmt.profileSearchPfpsEvents(event,newPage, sortBy, order, currentFilter)
+    routes.EventMgmt.profileSearchPfpsEvents(event,newPage, sortBy, order, currentFilter, filterType)
 
 }
 

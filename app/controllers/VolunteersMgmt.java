@@ -161,7 +161,7 @@ public class VolunteersMgmt extends Controller {
 	 * @return the result
 	 */
 	public static Result get(Event event, Long pageId) {
-		System.out.println("within get ::"+event+" <pageId> "+pageId);
+		//System.out.println("within get ::"+event+" <pageId> "+pageId);
 	if (event.isIdOnly()) {
 			event = Event.findByIdWithMin(event.id);
 		}
@@ -186,12 +186,12 @@ public class VolunteersMgmt extends Controller {
 			System.out.println("");
 			final Map<String, Map<Long, ?>> donations = Donation.getTotalAdminDonations(event);
 			final boolean isOpen = Event.isEventOpen(event);
-			System.out.println("event "+event);
-			System.out.println("volunteers "+volunteers);
-			System.out.println("isOpen "+isOpen);
-			System.out.println("Event.canParticipate(localUser, isOpen) "+Event.canParticipate(localUser, isOpen));
-			System.out.println("donations.get.pfp "+(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"));
-			System.out.println("donations.get.team"+(Map<Long, Donation.DonationsByTeam>)donations.get("team"));
+			//System.out.println("event "+event);
+			//System.out.println("volunteers "+volunteers);
+			//System.out.println("isOpen "+isOpen);
+			//System.out.println("Event.canParticipate(localUser, isOpen) "+Event.canParticipate(localUser, isOpen));
+			//System.out.println("donations.get.pfp "+(Map<Long, Donation.DonationsByPfp>)donations.get("pfp"));
+			//System.out.println("donations.get.team"+(Map<Long, Donation.DonationsByTeam>)donations.get("team"));
 			return ok(viewVolunteers.render(event, volunteers,
 					isOpen, Event.canParticipate(localUser, isOpen),
 					Event.canManage(localUser, event),
@@ -290,6 +290,7 @@ public class VolunteersMgmt extends Controller {
 	 */
 	@Transactional
 	public static Result saveShiftVolunteer(Event event, Long shiftId) {
+		System.out.println("within save volunteer");
 		if (event.isIdOnly()) {
 			event = Event.findByIdWithMin(event.id);
 		}
@@ -316,23 +317,51 @@ public class VolunteersMgmt extends Controller {
 		final boolean isMailSecured = play.Play.application().configuration()
 				.getBoolean("mail.secured");
 
-		final Body body = new Body(views.txt.volunteers.verify_email.render(
-				routes.VolunteersMgmt.activateShiftVolunteer(event, shiftId,
-						volunteer.id).absoluteURL(request(), isMailSecured),
-				volunteer).toString(), views.html.volunteers.verify_email
-				.render(routes.VolunteersMgmt.activateShiftVolunteer(event,
-						shiftId, volunteer.id).absoluteURL(request(),
-						isMailSecured), volunteer).toString());
+//==============================start==============15.10.2015======================checking of email==================================//
+		boolean isduplicateRegistration = Volunteer.findDuplicateRegistrationOfVolunteerForSameShift(volunteer.firstName, volunteer.lastName, volunteer.email, shiftId);
+		System.out.println("isduplicateRegistration :: "+isduplicateRegistration);
 
-		Mailer.getDefaultMailer().sendMail(
-				"Volunteer Activation from Scholastic Challenge", body,
-				volunteer.email);
+		if(isduplicateRegistration == true){
+			final Body body1 = 	 new Body(views.txt.volunteers.registration_email.render(
+					routes.VolunteersMgmt.activateShiftVolunteer(event, shiftId,
+							volunteer.id).absoluteURL(request(), isMailSecured),
+					volunteer).toString(), views.html.volunteers.registration_email
+					.render(routes.VolunteersMgmt.activateShiftVolunteer(event,
+							shiftId, volunteer.id).absoluteURL(request(),
+							isMailSecured), volunteer).toString());
+			Mailer.getDefaultMailer().sendMail(
+					"Volunteer Registration from Scholastic Challenge", body1,
+					volunteer.email);
 
-		flash(ControllerUtil.FLASH_SUCCESS_KEY,
-				"An email has been sent to ["
-						+ volunteerForm.get().email
-						+ "] to activate as a Volunteer.  The activation will expire after "
-						+ Shift.EXPIRATION_TIME + " hours.");
+			flash(ControllerUtil.FLASH_SUCCESS_KEY,
+					"An email has been sent to ["
+							+ volunteerForm.get().email
+							+ "] to register as a Volunteer.  This email is already activated as volunteer "
+							);
+		}else if(isduplicateRegistration == false){
+			final Body body = new Body(views.txt.volunteers.verify_email.render(
+					routes.VolunteersMgmt.activateShiftVolunteer(event, shiftId,
+							volunteer.id).absoluteURL(request(), isMailSecured),
+					volunteer).toString(), views.html.volunteers.verify_email
+					.render(routes.VolunteersMgmt.activateShiftVolunteer(event,
+							shiftId, volunteer.id).absoluteURL(request(),
+							isMailSecured), volunteer).toString());
+
+			Mailer.getDefaultMailer().sendMail(
+					"Volunteer Activation from Scholastic Challenge", body,
+					volunteer.email);
+
+			flash(ControllerUtil.FLASH_SUCCESS_KEY,
+					"An email has been sent to ["
+							+ volunteerForm.get().email
+							+ "] to activate as a Volunteer.  The activation will expire after "
+							+ Shift.EXPIRATION_TIME + " hours.");
+		}
+
+
+
+//==============================start==============15.10.2015======================checking of email==================================//
+
 
 		return VolunteersMgmt.get(event, shift.volunteers.id);
 	}

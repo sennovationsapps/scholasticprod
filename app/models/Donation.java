@@ -288,9 +288,12 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static List<Donation> findAllByEventIdMin(Long id) {
-		final Query<Donation> donations = find.where().eq("event.id", id)
+		/*final Query<Donation> donations = find.where().eq("event.id", id)
 						.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+						.fetch("pfp").fetch("event");*/
+		final Query<Donation> donations = find.where().eq("event.id", id)
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name");
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -298,9 +301,12 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static List<Donation> findAllByEventIdAndCleared(Long id) {
-		final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2")
+		/*final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2")
 						.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+						.fetch("pfp").fetch("event");*/
+		final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2")
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name");
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -311,9 +317,14 @@ public class Donation extends Model implements PathBindable<Donation> {
 	public static List<Donation> findAllCashDonationsByEventIdAndCleared(Long id) {
 		String sortBy = "dateCreated";
 		String order = "desc";
-		final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2").eq("payment_type","3")
+		/*final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2").eq("payment_type","3")
 				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-				.fetch("pfp").fetch("event").orderBy(sortBy + " " + order);
+				.fetch("pfp").fetch("event").orderBy(sortBy + " " + order);*/
+
+		final Query<Donation> donations = find.where().eq("event.id", id).eq("status", "2").eq("payment_type","3")
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name").orderBy(sortBy + " " + order);
+
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -336,10 +347,14 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static List<Donation> findAllByEventIdAndDateRange(Long id, Date from, Date to) {
-		final Query<Donation> donations = find.where().eq("event.id", id).gt("dateCreated", from)
+		/*final Query<Donation> donations = find.where().eq("event.id", id).gt("dateCreated", from)
 						.le("dateCreated", to)
 						.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+						.fetch("pfp").fetch("event");*/
+		final Query<Donation> donations = find.where().eq("event.id", id).gt("dateCreated", from)
+				.le("dateCreated", to)
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name");
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -351,10 +366,16 @@ public class Donation extends Model implements PathBindable<Donation> {
 		if (StringUtils.isEmpty(paymentType)) {
 			return Donation.findAllByEventIdAndDateRange(id, from, to);
 		}
-		final Query<Donation> donations = find.where().eq("event.id", id).eq("paymentType", paymentType)
+		/*final Query<Donation> donations = find.where().eq("event.id", id).eq("paymentType", paymentType)
 						.gt("dateCreated", from).le("dateCreated", to)
 						.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+						.fetch("pfp").fetch("event");*/
+
+		final Query<Donation> donations = find.where().eq("event.id", id).eq("paymentType", paymentType)
+				.gt("dateCreated", from).le("dateCreated", to)
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name");
+
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -365,10 +386,16 @@ public class Donation extends Model implements PathBindable<Donation> {
 		if (StringUtils.isEmpty(paymentType)) {
 			return Donation.findAllByEventIdAndCleared(id);
 		}
-		final Query<Donation> donations = find.where().eq("event.id", id).eq("paymentType", paymentType)
+		/*final Query<Donation> donations = find.where().eq("event.id", id).eq("paymentType", paymentType)
 						.eq("status", "2")
 						.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+						.fetch("pfp").fetch("event");*/
+
+		final Query<Donation> donations = find.where().eq("event.id", id).eq("paymentType", paymentType)
+				.eq("status", "2")
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name");
+
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -379,10 +406,15 @@ public class Donation extends Model implements PathBindable<Donation> {
 		if (StringUtils.isEmpty(paymentType)) {
 			return Donation.findAllByEventIdMin(id);
 		}
-		final Query<Donation> donations = find.where()
+		/*final Query<Donation> donations = find.where()
 						.eq("event.id", id).eq("paymentType", paymentType)
 						.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, event.name, pfp.name, donation.pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+						.fetch("pfp").fetch("event");*/
+		final Query<Donation> donations = find.where()
+				.eq("event.id", id).eq("paymentType", paymentType)
+				.select("id, firstName, lastName, zipCode, email, phone, donationType, datePaid, paymentType, status, amount, donation.pfp.team.name, transactionNumber")
+				.fetch("pfp","name").fetch("event","name");
+
 		if (donations != null) {
 			return donations.findList();
 		}
@@ -404,8 +436,11 @@ public class Donation extends Model implements PathBindable<Donation> {
 						if(options.containsKey("toDate")) {
 							donations.lt("dateCreated", DateUtils.parseDate(options.get("toDate")).get());	
 						}
+		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
+						.fetch("pfp").fetch("event");*/
 		final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
-						.fetch("pfp").fetch("event");
+				.fetch("pfp").fetch("event");
+
 		if(StringUtils.isEmpty(options.get("totalByPfp"))) {
 			queryDonations.orderBy("pfp.id");
 		}
@@ -588,7 +623,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 
 			//	donationByPfp.paymentType	=	PaymentType.get(row.getInteger("donation_type")+"");
-				System.out.println("donationByPfp.paymentType :: "+donationByPfp.paymentType);
+				//System.out.println("donationByPfp.paymentType :: "+donationByPfp.paymentType);
 
 
 
@@ -887,7 +922,10 @@ public class Donation extends Model implements PathBindable<Donation> {
 	//==========================findByTransactionNo=================end======================15.09.2015========================//
 	
 	public static Donation findByIdWithMin(Long id) {
-		return find.where().eq("id", id).select("id, amount, donorName, pfp.id, pfp.name, transactionNumber, ccDigits, paymentType, status, event.id, event.name, invoiceNumber").fetch("pfp").fetch("event").findUnique();
+		/*return find.where().eq("id", id).select("id, amount, donorName, pfp.id, pfp.name, transactionNumber, ccDigits, paymentType, status, event.id, event.name, invoiceNumber").fetch("pfp").fetch("event").findUnique();*/
+
+		return find.where().eq("id", id).select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber").fetch("pfp","name").fetch("event","name").findUnique();
+
 	}
 	
 	public static List<Donation> findByPfpId(Long id) {
@@ -1079,7 +1117,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static Page<Donation> page(int page, int pageSize, String sortBy, String order, String filter, String fieldName, User localUser) {
-		//System.out.println("filter : "+filter);
+		System.out.println("filter : "+filter);
 		String queryField = "donorName";
 		if (StringUtils.equals("donorName", fieldName)
 				|| StringUtils.equals("transactionNumber", fieldName)
@@ -1114,19 +1152,27 @@ public class Donation extends Model implements PathBindable<Donation> {
 		if(localUser != null) {
 			query.eq("event.userAdmin.id", localUser.id);									
 		}
+		System.out.println("query :: " + query + " : page : " + page + " : filter : " + filter + " : queryField : " + queryField);
+		//int pageValue = 0;
+		System.out.println("pageValue : " + page);
+		System.out.println("final output :: "+query.select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber")
+				.fetch("pfp", "name").fetch("event", "name")
+				.orderBy(sortBy + " " + order)
+				.findPagingList(pageSize).setFetchAhead(false).getPage(page).getTotalRowCount()+ " : page :"+page  + " : sortBy : " + sortBy
+				+ " : order : " + order);
 		//System.out.println("query :: "+query);
 		/*System.out.println("final output :: "+query.select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber")
 				.fetch("pfp","name").fetch("event", "name")
 				.orderBy(sortBy + " " + order)
 				.findPagingList(pageSize).setFetchAhead(false).getPage(page).getList());*/
-		return query.select("id, amount, donorName, pfp.id, pfp.name, transactionNumber, ccDigits, paymentType, status, event.id, event.name, invoiceNumber")
+		/*return query.select("id, amount, donorName, pfp.id, pfp.name, transactionNumber, ccDigits, paymentType, status, event.id, event.name, invoiceNumber")
 							.fetch("pfp").fetch("event")
 							.orderBy(sortBy + " " + order)
-							.findPagingList(pageSize).setFetchAhead(false).getPage(page);
-		/*return query.select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber")
+							.findPagingList(pageSize).setFetchAhead(false).getPage(page);*/
+		return query.select("id, amount, donorName, transactionNumber, ccDigits, paymentType, status, invoiceNumber")
 				.fetch("pfp","name").fetch("event", "name")
 				.orderBy(sortBy + " " + order)
-				.findPagingList(pageSize).setFetchAhead(false).getPage(page);*/
+				.findPagingList(pageSize).setFetchAhead(false).getPage(page);
 	}
 	
 	public enum PaymentStatus {

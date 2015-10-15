@@ -1,4 +1,4 @@
-@(currentPage: com.avaje.ebean.Page[Event], currentSortBy: String, currentOrder: String, currentFilter: String)
+@(currentPage: com.avaje.ebean.Page[Event], currentSortBy: String, currentOrder: String, currentFilter: String, filterType: String)
 
 @import models.security._
 
@@ -24,7 +24,7 @@
     }
     
     // Generate the link
-    routes.Application.profileSearchEvents(newPage, sortBy, order, currentFilter)
+    routes.Application.profileSearchEvents(newPage, sortBy, order, currentFilter, filterType)
     
 }
 
