@@ -93,6 +93,7 @@ public class Volunteers extends Model {
 	
 
 	public static Volunteers findAllByEventIdAndOptions(Long id, Map<String, String> options) {
+		System.out.println("with findAllByEventIdAndOptions....");
 		final ExpressionList<Volunteers> volunteers = find.where()
 						.eq("eventid", id);
 //						if(options.containsKey("fromDate")) {
@@ -103,6 +104,9 @@ public class Volunteers extends Model {
 //						}
 		final Query<Volunteers> queryVolunteers = volunteers.select("id, eventid, volunteer.id, volunteer.firstName, volunteer.lastName, volunteer.mobile, volunteer.phone, volunteer.email, volunteer.note, shift.id, shift.date, shift.name, shift.startTime, shift.endTime, shift.volunteerCount")
 						.fetch("shifts");
+
+		/*final Query<Volunteers> queryVolunteers = volunteers.select("id, eventid, volunteer.id, volunteer.firstName, volunteer.lastName, volunteer.mobile, volunteer.phone, volunteer.email, volunteer.note")
+				.fetch("shifts","shift").fetch("shift","date").fetch("shift","name").fetch("shift","start_time").fetch("shift","end_time").fetch("shift","volunteer_count");*/
 		return queryVolunteers.findUnique();
 	}
 

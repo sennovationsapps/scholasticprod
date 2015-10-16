@@ -422,6 +422,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	}
 	
 	public static List<Donation> findAllByEventIdAndOptions(Long id, Map<String, String> options) {
+		System.out.println("within findAllByEventIdAndOptions...");
 		final ExpressionList<Donation> donations = find.where()
 						.eq("event.id", id);
 						if(options.containsKey("paymentType") && StringUtils.isNotEmpty(options.get("paymentType"))) {
@@ -438,8 +439,10 @@ public class Donation extends Model implements PathBindable<Donation> {
 						}
 		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
 						.fetch("pfp").fetch("event");*/
-		final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
-				.fetch("pfp").fetch("event");
+		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
+				.fetch("pfp").fetch("event");*/
+		final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, transactionNumber")
+				.fetch("pfp","name").fetch("pfp","team").fetch("pfp.team","name").fetch("event","name");
 
 		if(StringUtils.isEmpty(options.get("totalByPfp"))) {
 			queryDonations.orderBy("pfp.id");

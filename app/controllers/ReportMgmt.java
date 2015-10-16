@@ -148,6 +148,7 @@ public class ReportMgmt extends Controller {
 			@Group(SecurityRole.EVENT_ASSIST) })
 	@SubjectPresent(content = "/login")
 	public static Result adminPfpsReport(Event event) throws IOException {
+		System.out.println("within adminPfpsReport...");
 		Map<String, String> requestData = Form.form().bindFromRequest().data();
 		if(StringUtils.isEmpty(requestData.get("pfpType"))) {
 			requestData.remove("pfpType");

@@ -214,6 +214,36 @@ public class Event extends Model implements PathBindable<Event> {
 		return new ArrayList<Object>();
 	}
 
+
+
+
+	/***********start**************************07.10.2015**********************************************************/
+
+	public static List<Event> findAllEventsExceptExistingEvent(Event event) {
+		List<Event> events = find.all();
+		if(event!=null){
+			events.remove(event);
+		}
+		return events;
+	}
+
+	public static List<Event> findAllEventsExceptExistingEventByUserId(Event event,Long id) {
+		final Query<Event> events = find.where().eq("userAdmin.id", id).select("id, heroImgUrl, eventEnd, eventStart, slug, status, schoolId, fundraisingEnd, fundraisingStart, goal, name, userAdmin").fetch("userAdmin");
+		List<Event> eventsByUserId = new ArrayList<Event>();
+		if (events != null) {
+			eventsByUserId = events.findList();
+			if(event!=null){
+				eventsByUserId.remove(event);
+			}
+		}
+		//return new ArrayList<Event>();
+		return eventsByUserId;
+	}
+
+
+	/************end***************************07.10.2015**********************************************************/
+
+
 	public static Event findById(Long id) {
 		return find.byId(id);
 	}

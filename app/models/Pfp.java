@@ -410,11 +410,11 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 						if(options.containsKey("pfpType") && StringUtils.isNotEmpty(options.get("pfpType"))) {
 							pfps.eq("pfpType", options.get("pfpType"));	
 						}
-		final Query<Pfp> queryPfps = pfps.select("id, name, dateCreated, goal, emergencyContact, emergencyContactPhone, pfpType, team.id, team.name, event.id, event.name, userAdmin.id, userAdmin.firstName, userAdmin.lastName, userAdmin.email, userAdmin.phone")
-						.fetch("team").fetch("event").fetch("userAdmin");
+		/*final Query<Pfp> queryPfps = pfps.select("id, name, dateCreated, goal, emergencyContact, emergencyContactPhone, pfpType, team.id, team.name, event.id, event.name, userAdmin.id, userAdmin.firstName, userAdmin.lastName, userAdmin.email, userAdmin.phone")
+						.fetch("team").fetch("event").fetch("userAdmin");*/
 
-		/*final Query<Pfp> queryPfps = pfps.select("id, name, dateCreated, goal, emergencyContact, emergencyContactPhone, pfpType")
-				.fetch("team","name").fetch("event","name").fetch("userAdmin","firstName").fetch("userAdmin","lastName").fetch("userAdmin","email").fetch("userAdmin","phone");*/
+		final Query<Pfp> queryPfps = pfps.select("id, name, dateCreated, goal, emergencyContact, emergencyContactPhone, pfpType")
+				.fetch("team","name").fetch("event","name").fetch("userAdmin","firstName").fetch("userAdmin","lastName").fetch("userAdmin","email").fetch("userAdmin","phone");
 
 		if (queryPfps != null) {
 			return queryPfps.findList();
