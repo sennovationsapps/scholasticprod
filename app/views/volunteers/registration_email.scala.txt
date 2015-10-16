@@ -15,9 +15,7 @@
                 @volunteer.shift.startTime.format("h:mm a") - @volunteer.shift.endTime.format("h:mm a")
             }
         }
-
 }
-
 
     Sincerely,
 
