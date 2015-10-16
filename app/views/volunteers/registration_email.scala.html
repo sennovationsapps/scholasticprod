@@ -1,16 +1,35 @@
 @(verificationUrl: String, volunteer: Volunteer)
 
-Hi @volunteer.firstName @volunteer.lastName,
+  <div>
+      <p>Hi @volunteer.firstName @volunteer.lastName,</p>
+    <br />
+    <br />
+    <p>
+        Thank you for signing up for the following volunteer position.
+        <br />
 
 
-    Thank you for signing up for the following volunteer position.
-            @volunteer.shift.name
-            @volunteer.shift.date.format("E, MMMMM d, yyyy")
-            @volunteer.shift.startTime.format("h:mm a") - @volunteer.shift.endTime.format("h:mm a")
+                @volunteer.shift.name
+
+            <br />
+
+                @volunteer.shift.date.format("E, MMMMM d, yyyy")
+
+            <br />
+
+                @volunteer.shift.startTime.format("h:mm a") - @volunteer.shift.endTime.format("h:mm a")
 
 
+
+
+    </p>
+    <br />
+
+
+<p>
+    <br />
     Sincerely,
-
+    <br />
     The Scholastic Challenge Team
-
-
+</p>
+  </div>
