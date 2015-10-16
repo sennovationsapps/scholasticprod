@@ -3,6 +3,7 @@
     Hi @volunteer.firstName @volunteer.lastName,
 
 
+
         Thank you for signing up for the following volunteer position.
 
                 @volunteer.shift.name
@@ -10,6 +11,7 @@
                 @volunteer.shift.date.format("E, MMMMM d, yyyy")
 
                 @volunteer.shift.startTime.format("h:mm a") - @volunteer.shift.endTime.format("h:mm a")
+
 
 
 
