@@ -1,21 +1,23 @@
 package controllers;
 
+
+
+
+import base.utils.PaymentGatewayUtil;
 import base.utils.PaymentUtils;
 import base.utils.WorldPayUtils;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
-import models.Donation;
+import models.*;
 import models.Donation.DonationType;
 import models.Donation.PaymentStatus;
 import models.Donation.PaymentType;
-import models.Event;
-import models.Pfp;
 import models.Pfp.PfpType;
-import models.SponsorItem;
 import models.aws.S3File;
 import models.security.SecurityRole;
 import models.security.User;
+import net.authorize.sim.Fingerprint;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -29,6 +31,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import views.html.donations.*;
 import views.html.profile.profileDonationsReconcile;
+import views.html.profile.profileMain;
+import views.html.profile.profileDonationsCreate;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -47,6 +51,42 @@ import static play.data.Form.form;
 public class DonationMgmt extends Controller {
 	
 	private static final org.slf4j.Logger PAYMENT_LOGGER = LoggerFactory.getLogger("ScholasticDonationsLogger");
+
+
+	/*******************   08.01.2016  start ***********************/
+//	private static final String API_LOGIN_ID ="5Cdy5N57";//my cred test mode account credential
+//	 private static final String TRANSACTION_KEY = "726SBegW3a42w4p8";//my test mode account credential
+	private static final String API_LOGIN_ID ="43f5zNUB";//scholastic cred test mode account credential
+	private static final String TRANSACTION_KEY = "9L9H43Kny8s347z4";//scholastic mode account credential
+	/*private String getPaymentFormFields(String paymentGatewayamountAmount,String digitalWalletAmount,String serviceTax)throws Exception {
+		String url="";
+		try {
+			System.out.println("New Enter in  getPaymentFormFields");
+
+			Random randomGenerator = new Random();
+			int randomSequence = randomGenerator.nextInt(1000);
+			Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence, paymentGatewayamountAmount);
+			 url="https://test.authorize.net/gateway/transact.dll?"+
+					"x_fp_sequence="+randomSequence+
+					"&x_fp_timestamp="+fingerprint.getTimeStamp()+
+					"&x_fp_hash="+fingerprint.getFingerprintHash()+
+					"&x_version=3.1"+
+					"&x_method=CC"+
+					"&x_type=AUTH_CAPTURE"+
+					"&x_amount=0.1"+
+					"&x_login="+API_LOGIN_ID+
+					"&x_description=Scholastic"+
+					"&x_show_form=PAYMENT_FORM"+
+					"&x_relay_response=true";
+
+
+		}catch (Exception e){
+			System.out.println();
+		}
+		redirect(url);
+	}*/
+
+	/*******************   08.01.2016  end ***********************/
 	
 	/**
 	 * This result directly redirect to application home.
@@ -965,7 +1005,7 @@ public class DonationMgmt extends Controller {
 
 	@Transactional
 	public static Result save(Event event) {
-
+		String	url="";
 		PAYMENT_LOGGER.warn("within save");
 		System.out.println("within save....");
 		if (event.isIdOnly()) {
@@ -1043,7 +1083,10 @@ public class DonationMgmt extends Controller {
 			}
 			else{*/
 			donation.status = PaymentStatus.APPROVED;
-			donation.transactionNumber = UUID.randomUUID().toString();
+			/*donation.transactionNumber = UUID.randomUUID().toString();*****comment out***15.01.2016**/
+			Random randomGenerator1 = new Random();
+			int randomSequence1 = randomGenerator1.nextInt(1000);
+			donation.transactionNumber = String.valueOf(randomSequence1);
 			PAYMENT_LOGGER.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
 					donation.ccDigits, donation.transactionNumber, donation.amount);
 			try {
@@ -1075,7 +1118,7 @@ public class DonationMgmt extends Controller {
 			PAYMENT_LOGGER.warn("payment type is credit33");
 			System.out.println("payment type is credit33");
 			//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
-	    String WorldPlayUrl=null;
+	   /* String WorldPlayUrl=null;
 		try {
 			WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 		} catch (BadPaddingException e) {
@@ -1095,7 +1138,45 @@ public class DonationMgmt extends Controller {
 		}
 		System.out.println("within validateAndSendCreditInfo now URL sdfdsfsfsfsdfsdfsdfsdfdsfdsfsdfsdfdsf"+WorldPlayUrl);
 
-		return redirect(WorldPlayUrl);
+		return redirect(WorldPlayUrl);*/
+			/**********start********authorize.net**********************************************08.01.2016******************/
+			try {
+				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
+				/*Random randomGenerator1 = new Random();
+				int randomSequence1 = randomGenerator1.nextInt(1000);*/
+
+				Random randomGenerator = new Random();
+				int randomSequence = randomGenerator.nextInt(1000);
+				Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence,String.valueOf(donation.amount));
+				//url="https://test.authorize.net/gateway/transact.dll?"+
+				url="https://secure.authorize.net/gateway/transact.dll?"+
+						"x_fp_sequence="+fingerprint.getSequence()+
+						"&x_fp_timestamp="+fingerprint.getTimeStamp()+
+						"&x_fp_hash="+fingerprint.getFingerprintHash()+
+						"&x_version=3.1"+
+						"&x_method=CC"+
+						"&x_type=AUTH_CAPTURE"+
+						"&x_login="+API_LOGIN_ID+
+						"&x_description=Scholastic"+
+						"&x_show_form=PAYMENT_FORM"+
+						"&x_relay_response=true"+
+						"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png"+
+
+						"&x_donation_transaction_number="+donation.transactionNumber+
+						"&x_amount="+String.valueOf(donation.amount)+
+						"&x_event_id="+event.id+
+						"&x_pfp_id="+donation.pfp.id+
+						"&x_donation_payment_status="+donation.status+
+						"&x_email_id="+donation.email+
+				"&x_invoice_num="+donation.transactionNumber;
+				System.out.println("url"+url);
+				//return redirect(url);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("within validateAndSendCreditInfo now Authorize URLEEEEEEEEEEEEEEEEEEEEEEEEEE =>>>>>>>>>>>>>>>"+url);
+			return redirect(url);
+			/**********end********authorize.net**********************************************08.01.2016******************/
 			//return redirect("https://trans.worldpay.us/cgi-bin/WebPay.cgi?formid=574301A941C9A095E474EF84D558739DC1AD0EE09278E5E321CB1E4970121245&sessionid=62A6DC8C9A988EA9");
 		//}
 
@@ -1349,9 +1430,9 @@ public class DonationMgmt extends Controller {
 //		System.out.println("World Pay Credit Card Name"+wp.ccname);
 		DynamicForm requestData = Form.form().bindFromRequest();
 		System.out.println("Request from worldpay"+customdata);
-		System.out.println("Request form worldpay"+requestData.get("customdata"));
+		System.out.println("Request form worldpay" + requestData.get("customdata"));
 
-		return ok("Hello in the worldPayPostBack"+requestData.get("customdata"));
+		return ok("Hello in the worldPayPostBack" + requestData.get("customdata"));
 
 	}
 
@@ -1686,5 +1767,506 @@ public class DonationMgmt extends Controller {
 		return redirect(routes.Application.profileSearchDonations(0, "dateCreated",
 						"asc", "", "dateCreated"));
 	}
+
+
+
+
+	/**** --------------------Start Code Authorize.net-------11.01.2016- start---------------------*****/
+	/*public static Result getResponseFromAuthorize(){
+		System.out.println("Enter getResponseFromAuthorizeeee");
+
+		String paymentStatus="Failed";
+		//Map<String,String[]> valForDecrypt=request().queryString();
+		//System.out.println("valForDecrypt"+valForDecrypt.toString());
+		net.authorize.sim.Result result = net.authorize.sim.Result.createResult(API_LOGIN_ID, API_LOGIN_ID, request().queryString());
+
+	*//*x_response_code
+	1—Approved
+	2—Declined
+	3—Error
+	4—Held for Review*//*
+		System.out.println("result.getResponseMap().get(x_response_code)"+result.getResponseMap().get("x_response_code"));
+		System.out.println("result.getResponseMap().get(x_trans_id)"+result.getResponseMap().get("x_trans_id"));
+		System.out.println("result.getResponseMap().get(x_account_number)" + result.getResponseMap().get("x_account_number"));
+		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + result.getResponseMap().get("x_donation_transaction_number"));
+		System.out.println("result.getResponseMap().get(x_email_id)" + result.getResponseMap().get("x_email_id"));
+
+		final Form<Donation> donationForm = form(Donation.class);
+		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
+		if(result.getResponseMap().get("x_response_code").equals("1")){
+			donation.status=PaymentStatus.CLEARED;
+			paymentStatus="Payment Done successfully";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("2")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("3")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("4")){
+			donation.status=PaymentStatus.PENDING;
+			paymentStatus="Payment Pending";
+		}
+		donation.ccNum=result.getResponseMap().get("x_account_number");
+		donation.update();
+		System.out.println("Donation table saved");
+	*//*"&x_donation_transaction_number="+donation.transactionNumber+
+			"&x_amount="+String.valueOf(donation.amount)+
+			"&x_event_id="+event.id+
+			"&x_pfp_id="+donation.pfp.id+
+			"&x_donation_payment_status="+donation.status+
+			"&x_email_id="+donation.email;*//*
+		try{
+			Transaction transaction = Transaction.class.newInstance() ;
+	*//*Transaction transaction = Transaction.findByDonationTranId();*//*
+			transaction.accountNumber = result.getResponseMap().get("x_account_number");
+			transaction.donationTranId=result.getResponseMap().get("x_donation_transaction_number");
+			transaction.email=result.getResponseMap().get("x_email_id");
+			transaction.mailSent=false;
+			transaction.reason=result.getResponseMap().get("x_response_code");
+			transaction.transid=result.getResponseMap().get("x_trans_id");
+			transaction.ccname="lll";
+			transaction.rcode="";
+			transaction.authcode="";
+			transaction.activityCheck=false;
+
+
+
+
+
+
+
+	*//*transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber*//*
+
+
+			transaction.save();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+		System.out.println("Transaction Table saved");
+		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
+		return ok(profileDonationsCreate.render(ControllerUtil
+				.getLocalUser(session()), null));
+	}
+*/
+
+
+
+
+	public static Result getResponseFromAuthorize(){
+		System.out.println("Enter getResponseFromAuthorizeeee");
+
+		String paymentStatus="Failed";
+		//Map<String,String[]> valForDecrypt=request().queryString();
+		//System.out.println("valForDecrypt"+valForDecrypt.toString());
+		net.authorize.sim.Result result = net.authorize.sim.Result.createResult(API_LOGIN_ID, API_LOGIN_ID, request().queryString());
+
+	/*x_response_code
+	1—Approved
+	2—Declined
+	3—Error
+	4—Held for Review*/
+		System.out.println("result.getResponseMap().get(x_response_code)"+result.getResponseMap().get("x_response_code"));
+		System.out.println("result.getResponseMap().get(x_trans_id)"+result.getResponseMap().get("x_trans_id"));
+		System.out.println("result.getResponseMap().get(x_account_number)" + result.getResponseMap().get("x_account_number"));
+		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + result.getResponseMap().get("x_donation_transaction_number"));
+		System.out.println("result.getResponseMap().get(x_email_id)" + result.getResponseMap().get("x_email_id"));
+            /****new add***start**/
+       /* String transactionNo = result.getResponseMap().get("x_donation_transaction_number");
+		String responseTransId = result.getResponseMap().get("x_trans_id");
+
+        PaymentGatewayUtil paymentGatewayUtil = new PaymentGatewayUtil();
+		System.out.println("before calling GetSettledBatchList");
+		List<String> settledBatchListId =(List<String>)paymentGatewayUtil.GetSettledBatchList(API_LOGIN_ID,TRANSACTION_KEY);
+         if(settledBatchListId!=null && settledBatchListId.size()>0){
+			 Iterator settledBatchListIdItr = settledBatchListId.iterator();
+			 while(settledBatchListIdItr.hasNext()){
+				 String settledBatchId = (String)settledBatchListIdItr.next();
+				 System.out.println("before calling get transaction list");
+				 List<String> settledTransIdList = (List)paymentGatewayUtil.getTransactionList(API_LOGIN_ID, TRANSACTION_KEY, settledBatchId);
+			     Iterator settledTransIdListItr = settledTransIdList.iterator();
+				 while(settledTransIdListItr.hasNext()){
+					 String setteledTransId = (String)settledTransIdListItr.next();
+
+					 if(responseTransId.equals(setteledTransId)){
+						 System.out.println("responseTransId.equals(setteledTransId)");
+						 updateDonationAndTransactionOnSetteledTransaction(result, responseTransId);
+						 break;
+					 }else{
+						 setUnsetteledTransId(transactionNo, responseTransId);
+					 }
+
+
+				 }
+
+
+
+			 }
+
+		 }*/
+		/****new add***end**/
+		final Form<Donation> donationForm = form(Donation.class);
+		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
+		if(result.getResponseMap().get("x_response_code").equals("1")){
+			donation.status=PaymentStatus.CLEARED;
+			paymentStatus="Payment Done successfully";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("2")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("3")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("4")){
+			donation.status=PaymentStatus.PENDING;
+			paymentStatus="Payment Pending";
+		}
+		donation.ccNum=result.getResponseMap().get("x_account_number");
+		donation.update();
+		System.out.println("Donation table saved");
+
+		try{
+			Transaction transaction = Transaction.class.newInstance() ;
+	/*Transaction transaction = Transaction.findByDonationTranId();*/
+			transaction.accountNumber = result.getResponseMap().get("x_account_number");
+			transaction.donationTranId=result.getResponseMap().get("x_donation_transaction_number");
+			transaction.email=result.getResponseMap().get("x_email_id");
+			transaction.mailSent=false;
+			transaction.reason=result.getResponseMap().get("x_response_code");
+			transaction.transid=result.getResponseMap().get("x_trans_id");
+			transaction.ccname="lll";
+			transaction.rcode="";
+			transaction.authcode="";
+			transaction.activityCheck=false;
+
+
+
+
+
+
+
+
+
+
+			transaction.save();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+		System.out.println("Transaction Table saved");
+		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
+		return ok(profileDonationsCreate.render(ControllerUtil
+				.getLocalUser(session()), null));
+	}
+public static HashMap transIdForTransactionNo = new HashMap();
+  public static void setUnsetteledTransId(String transactionNo,String responseTransId){
+	  transIdForTransactionNo.put(transactionNo,responseTransId);
+  }
+	public static void getUnsetteledTransId(String transactionNo){
+		String responseTransId = (String)transIdForTransactionNo.get(transactionNo);
+		/****new add***start**/
+		//String transactionNo = result.getResponseMap().get("x_donation_transaction_number");
+		//StresponseTransId = result.getResponseMap().get("x_trans_id");
+		net.authorize.sim.Result result = net.authorize.sim.Result.createResult(API_LOGIN_ID, API_LOGIN_ID, request().queryString());
+		PaymentGatewayUtil paymentGatewayUtil = new PaymentGatewayUtil();
+		System.out.println("before calling GetSettledBatchList");
+		List<String> settledBatchListId =(List<String>)paymentGatewayUtil.GetSettledBatchList(API_LOGIN_ID,TRANSACTION_KEY);
+		if(settledBatchListId!=null && settledBatchListId.size()>0){
+			Iterator settledBatchListIdItr = settledBatchListId.iterator();
+			while(settledBatchListIdItr.hasNext()){
+				String settledBatchId = (String)settledBatchListIdItr.next();
+				System.out.println("before calling get transaction list");
+				List<String> settledTransIdList = (List)paymentGatewayUtil.getTransactionList(API_LOGIN_ID, TRANSACTION_KEY, settledBatchId);
+				Iterator settledTransIdListItr = settledTransIdList.iterator();
+				while(settledTransIdListItr.hasNext()){
+					String setteledTransId = (String)settledTransIdListItr.next();
+
+					if(responseTransId.equals(setteledTransId)){
+						System.out.println("responseTransId.equals(setteledTransId)");
+						updateDonationAndTransactionOnSetteledTransaction1(result, responseTransId);
+						break;
+					}else{
+						setUnsetteledTransId(transactionNo, responseTransId);
+					}
+
+
+				}
+
+
+
+			}
+
+		}
+		/****new add***end**/
+	}
+
+
+	public static  void updateDonationAndTransactionOnSetteledTransaction1(net.authorize.sim.Result result ,String responseTransId){
+		final Form<Donation> donationForm = form(Donation.class);
+		String paymentStatus = null;
+		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
+		if(result.getResponseMap().get("x_response_code").equals("1")){
+			donation.status=PaymentStatus.CLEARED;
+			paymentStatus="Payment Done successfully";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("2")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("3")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("4")){
+			donation.status=PaymentStatus.PENDING;
+			paymentStatus="Payment Pending";
+		}
+		donation.ccNum=result.getResponseMap().get("x_account_number");
+		donation.update();
+		System.out.println("Donation table saved");
+	/*"&x_donation_transaction_number="+donation.transactionNumber+
+			"&x_amount="+String.valueOf(donation.amount)+
+			"&x_event_id="+event.id+
+			"&x_pfp_id="+donation.pfp.id+
+			"&x_donation_payment_status="+donation.status+
+			"&x_email_id="+donation.email;*/
+		try{
+			Transaction transaction = Transaction.class.newInstance() ;
+	/*Transaction transaction = Transaction.findByDonationTranId();*/
+			transaction.accountNumber = result.getResponseMap().get("x_account_number");
+			transaction.donationTranId=result.getResponseMap().get("x_donation_transaction_number");
+			transaction.email=result.getResponseMap().get("x_email_id");
+			transaction.mailSent=false;
+			transaction.reason=result.getResponseMap().get("x_response_code");
+			/*transaction.transid=result.getResponseMap().get("x_trans_id");*/
+			transaction.transid=responseTransId;
+			transaction.ccname="lll";
+			transaction.rcode="";
+			transaction.authcode="";
+			transaction.activityCheck=false;
+
+
+
+
+
+
+
+	/*transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber*/
+
+
+			transaction.save();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+		System.out.println("Transaction Table saved");
+
+	}
+
+
+
+	public static  Result updateDonationAndTransactionOnSetteledTransaction(net.authorize.sim.Result result ,String responseTransId){
+		final Form<Donation> donationForm = form(Donation.class);
+		String paymentStatus = null;
+		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
+		if(result.getResponseMap().get("x_response_code").equals("1")){
+			donation.status=PaymentStatus.CLEARED;
+			paymentStatus="Payment Done successfully";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("2")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("3")){
+			donation.status=PaymentStatus.FAILED;
+			paymentStatus="Payment Failed";
+		}
+		if(result.getResponseMap().get("x_response_code").equals("4")){
+			donation.status=PaymentStatus.PENDING;
+			paymentStatus="Payment Pending";
+		}
+		donation.ccNum=result.getResponseMap().get("x_account_number");
+		donation.update();
+		System.out.println("Donation table saved");
+	/*"&x_donation_transaction_number="+donation.transactionNumber+
+			"&x_amount="+String.valueOf(donation.amount)+
+			"&x_event_id="+event.id+
+			"&x_pfp_id="+donation.pfp.id+
+			"&x_donation_payment_status="+donation.status+
+			"&x_email_id="+donation.email;*/
+		try{
+			Transaction transaction = Transaction.class.newInstance() ;
+	/*Transaction transaction = Transaction.findByDonationTranId();*/
+			transaction.accountNumber = result.getResponseMap().get("x_account_number");
+			transaction.donationTranId=result.getResponseMap().get("x_donation_transaction_number");
+			transaction.email=result.getResponseMap().get("x_email_id");
+			transaction.mailSent=false;
+			transaction.reason=result.getResponseMap().get("x_response_code");
+			/*transaction.transid=result.getResponseMap().get("x_trans_id");*/
+			transaction.transid=responseTransId;
+			transaction.ccname="lll";
+			transaction.rcode="";
+			transaction.authcode="";
+			transaction.activityCheck=false;
+
+
+
+
+
+
+
+	/*transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber
+	transaction.accountNumber*/
+
+
+			transaction.save();
+
+
+			/*if (donation.status == Donation.PaymentStatus.CLEARED) {
+
+				//MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
+
+				String creditCardNumber = transaction.accountNumber;
+
+				if (creditCardNumber != null) {
+					creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
+					System.out.println("creditCardNumber :: " + creditCardNumber);
+					donation.ccNum = creditCardNumber;
+				}
+
+				donation.ccName = transaction.ccname;
+				ReceiptMgmt receiptMgmt = new ReceiptMgmt();
+				System.out.println(("before calling getAndSendCCReceipt"));
+				receiptMgmt.sendCCReceiptForCron(donation);
+				//System.out.println("result :: " + result);
+				System.out.println(("after calling getAndSendCCReceipt"));
+
+				System.out.println("before calling sendCCReceiptForPfp...");
+				receiptMgmt.sendCCReceiptForPfp(donation);
+				System.out.println("after calling sendCCReceiptForPfp");
+
+				//update
+				transaction.mailSent = true;
+				transaction.update();
+
+
+			}*/
+
+
+
+
+
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+		System.out.println("Transaction Table saved");
+		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
+		return ok(profileDonationsCreate.render(ControllerUtil
+				.getLocalUser(session()), null));
+	}
+
+	/**** --------------------Start Code Authorize.net-------11.01.2016- -end----------------------*****/
+
+
+	/***********************start code refund transaction*************14.01.2016***********************/
+
+	public static Result refundDonations(Long donId,int transactionId, String tranNumber, int amount){
+		System.out.println("tranNumber within refundDonations "+tranNumber);
+		String expDate = "1216";
+		System.out.println("id within refundDonations "+donId);
+		Donation donation = Donation.findById(donId);
+		Transaction transaction = Transaction.findById(transactionId);
+		System.out.println("donation "+donation.id);
+		String donationAmount = String.valueOf(amount);
+		System.out.println("tranNumber within refundDonations "+tranNumber);
+		System.out.println("ccNum within refundDonations "+transaction.accountNumber);
+		String ccNum =transaction.accountNumber;
+		ccNum = ccNum.substring(ccNum.length()-4,ccNum.length());
+		System.out.println("ccNum1 within refundDonations "+ccNum);
+		System.out.println("donationAmount "+donationAmount);
+		donationAmount = donationAmount+".00";
+		System.out.println("donationAmount1 "+donationAmount);
+
+		PaymentGatewayUtil paymentGatewayUtil = new PaymentGatewayUtil();
+		//String refundedVal=paymentGatewayUtil.anotherRefundmethod(ccNum, expDate, tranNumber, donationAmount);
+		HashMap refundHashMap =paymentGatewayUtil.anotherRefundmethod(ccNum, expDate, tranNumber, donationAmount);
+		String status = (String)refundHashMap.get("status");
+		if(status.equals("successful")){
+			donation.status = PaymentStatus.REFUNDED;
+			donation.update();
+			String refundTransactionId = (String)refundHashMap.get("transactionId");
+			System.out.println("refundTransactionId :: "+refundTransactionId);
+			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Transaction has been refunded");
+		}else{
+			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Refund is not successful");
+		}
+	/*	if(refundedVal.equals("1")) {
+			donation.status = PaymentStatus.REFUNDED;
+			donation.update();
+		}*/
+
+
+		final User localUser = ControllerUtil.getLocalUser(session());
+		return ok(profileMain.render(localUser));
+	}
+
+	/************************end code refund transaction**************14.01.2016***********************/
 	
 }

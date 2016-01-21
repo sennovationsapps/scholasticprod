@@ -29,6 +29,7 @@ val appDependencies = Seq(
       "net.tanesha.recaptcha4j" % "recaptcha4j" % "0.0.7",
       "org.avaje.ebeanorm" % "avaje-ebeanorm" % "3.3.3",
       "com.typesafe.play" % "play-ebean-33-compat" % "1.0.0",
+      "net.authorize" % "anet-java-sdk" % "1.8.6",
       javaCore,
 //      "play4jpa" %% "play4jpa" % "0.1-SNAPSHOT"
       javaJpa,

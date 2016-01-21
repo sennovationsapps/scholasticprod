@@ -5,10 +5,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.avaje.ebean.ExpressionList;
-import models.ContactUs;
-import models.Donation;
-import models.Event;
-import models.Pfp;
+import models.*;
 import models.security.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.NumberUtils;
@@ -22,14 +19,13 @@ import play.db.ebean.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.donations.ProfileCashDonations;
+import views.html.donations.ProfileRefundDonations;
 import views.html.general.helpcenter;
 import views.html.index;
 import views.html.profile.*;
 import views.html.restricted;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static play.data.Form.form;
 
@@ -487,6 +483,63 @@ public class Application extends Controller {
 	}
 
 	/****************start*******************Bulk Cash Donation*******************24.09.2015**********************************/
+
+	/****************start*******************profileRefundDonations*******************14.01.2016**********************************/
+
+	public static Result profileRefundDonations(){
+		final User localUser = ControllerUtil.getLocalUser(session());
+		List<Event> events = new ArrayList<Event>();
+		if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+			events = Event.findAllEvents();
+		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
+			events = Event.findAllByUserId(localUser.id);
+		}
+		final Form<Donation> donationForm = form(Donation.class);
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		transactions = Transaction.findAllTransactions();
+		Iterator transactionItr = transactions.iterator();
+
+		List<Donation> donations = new ArrayList<Donation>();
+
+
+
+		while(transactionItr.hasNext()) {
+			try{
+				Transaction transaction = (Transaction) transactionItr.next();
+				System.out.println("transaction.mailSent :: " + transaction.mailSent);
+				System.out.println("transaction.transid2:: " + transaction.donationTranId);
+				Donation donation = Donation.findByTransactionNumber(transaction.donationTranId);
+				/****new add*****/
+				Date currDate = new Date();
+				System.out.println("currDate.getTime() :: "+currDate.getTime());
+				System.out.println("donation.dateCreated.getTime()"+donation.dateCreated.getTime());
+				long diffInMillies = currDate.getTime() - donation.dateCreated.getTime();
+				int diffInMillies1 = (int)(diffInMillies / (1000 * 60 * 60)) ;
+				System.out.println("diffInMillies1 :: "+diffInMillies1);
+				/****new add*****/
+				donations.add(donation);
+			}catch(Exception e)
+			{
+
+				e.printStackTrace();
+			}
+
+		}
+
+
+		//if(!Event.isLive(event) && (localUser == null || !ControllerUtil.isEqual(event.userAdmin.id, localUser.id)))
+
+		if(events!= null && events.size()>0){
+			return ok(ProfileRefundDonations.render(localUser,transactions,donations));
+		}else{
+			return ok(ProfileRefundDonations.render(localUser,transactions,donations));
+		}
+
+	}
+
+	/*****************end********************profileRefundDonations*******************14.01.2016**********************************/
+
+
 	/**
 	 * Profile donations.
 	 * 
@@ -582,15 +635,40 @@ public class Application extends Controller {
 		if(localUser.isEventAdmin()) {
 			return ok(profileSearchDonations.render(
 							Donation.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, localUser), sortBy,
-							order, filter, fieldName));
+							order, filter, fieldName,null,null));
 		} else if(localUser.isRootAdmin() || localUser.isSysAdmin()) {
 			return ok(profileSearchDonations.render(
 							Donation.page(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName, null), sortBy,
-							order, filter, fieldName));
+							order, filter, fieldName,null,null));
 		} else {
 			return redirect(routes.Application.profile());
 		}
 	}
+
+
+	/*************start****with year filter type**************************************************************18.01.2016*********/
+
+	@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
+			@Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN) })
+	@SubjectPresent
+	public static Result profileSearchDonations1(int page, String sortBy, String order,
+												String filter, String fieldName,String filter1, String fieldName1) {
+		System.out.println("fieldName :: "+fieldName);
+		System.out.println("fieldName1 :: "+fieldName1);
+		User localUser = ControllerUtil.getLocalUser(session());
+		if(localUser.isEventAdmin()) {
+			return ok(profileSearchDonations.render(
+					Donation.page1(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName1, StringUtils.trimToEmpty(filter1), fieldName, localUser), sortBy,
+					order, filter, fieldName, filter1, fieldName1));
+		} else if(localUser.isRootAdmin() || localUser.isSysAdmin()) {
+			return ok(profileSearchDonations.render(
+					Donation.page1(page, 10, sortBy, order, StringUtils.trimToEmpty(filter), fieldName,StringUtils.trimToEmpty(filter1), fieldName1, null), sortBy,
+					order, filter, fieldName, filter1, fieldName1));
+		} else {
+			return redirect(routes.Application.profile());
+		}
+	}
+	/*************end****with year filter type**************************************************************18.01.2016*********/
 	
 	/**
 	 * Profile events.
@@ -663,6 +741,7 @@ public class Application extends Controller {
 		if(StringUtils.isNotEmpty(request().getQueryString("id"))) {
 			Long id = Event.getIdFromSlug(request().getQueryString("id"));
 			event = Event.findById(id);
+			event.serviceFee = 10.0;
 		}
 		return ok(profileReports.render(ControllerUtil.getLocalUser(session()), event));
 	}

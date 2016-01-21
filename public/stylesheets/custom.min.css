@@ -309,3 +309,36 @@ li.profile p{overflow:hidden;font-size:14px;text-transform:none;word-wrap:break-
     color: #fff;
     display: inline-block;
 }
+
+
+/*
+.credit_card_no{
+    width: 100px;
+
+}
+
+.transaction_no{
+    width:100px;
+}
+
+.transaction_status{
+    width:100px;
+}*/
+
+/********start of donation search*****************************************18.01.2016***********************/
+#searchbox{
+    width:583px;
+}
+
+#selectYearDiv{
+
+    margin-right: 110px;
+
+}
+
+
+#donationSearchBtnDiv{
+    /*margin-right: 114px;*/
+}
+
+/**********end of donation search*****************************************18.01.2016***********************/

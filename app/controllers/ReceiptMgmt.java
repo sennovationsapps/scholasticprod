@@ -76,12 +76,15 @@ public class ReceiptMgmt extends Controller {
 
 
 	public static void sendCCReceiptForCron(Donation donation) {
-		String message = views.txt.donations.email_cc_receipt
-				.render(donation).toString();
-		RECEIPT_LOGGER.info("*** Before calling emailReceipt for Tax Letter ***");
-		ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Tax Letter", message, donation.email);
-		RECEIPT_LOGGER.info("*** Successfully calling emailReceipt for Tax Letter for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}] :: ",
-				donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount +" ***");
+		if(donation!=null){
+			String message = views.txt.donations.email_cc_receipt
+					.render(donation).toString();
+			RECEIPT_LOGGER.info("*** Before calling emailReceipt for Tax Letter ***");
+			ReceiptMgmt.generateEmailReceipt("Scholastic Challenge : Tax Letter", message, donation.email);
+			RECEIPT_LOGGER.info("*** Successfully calling emailReceipt for Tax Letter for PFP ID [{}] and Event ID [{}] with a Donation ID [{}] and Transaction Number [{}] in the amount of [{}] :: ",
+					donation.pfp.id, donation.event.id, donation.id, donation.transactionNumber, donation.amount +" ***");
+		}
+
 	}
 
 

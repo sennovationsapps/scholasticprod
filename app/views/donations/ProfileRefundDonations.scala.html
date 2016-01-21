@@ -1,0 +1,451 @@
+@import views.html.helper.FieldConstructor
+@(localUser: models.security.User = null, transactions: List[Transaction]=null,  donations: List[Donation]=null)
+
+@@import helper._
+
+@import com.feth.play.module.pa.views.html._
+
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+    <!-- Main body
+================== -->
+    <div class="wrapper">
+        <div class="section-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                            <!-- Remove the .animated class if you don't want things to move -->
+                        <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @general.alerts()
+
+        <div class="container">
+            <div class="row">
+                @profile.menu(localUser)
+
+                    <!-- Avatar & social links -->
+                <div class="col-sm-8 col-md-9">
+                    <div class="row">
+
+                        <h4 class="hl"><i class="fa fa-map-marker"></i> Refund Transactions </h4>
+                        <hr>
+                           <td class="table-responsive">
+
+                               <table class="table table-striped table-hover ">
+                                 <thead>
+                                     <tr>
+                                         <th class="credit_card_no"><a>Credit card No</a></th>
+                                         <th class="transaction_no"><a>Transaction No</a></th>
+                                         <th class="transaction_status"><a>Transaction Status</a></th>
+                                         <th  class="date"><a>Date</a></th>
+                                         <th></th>
+                                     </tr>
+                                 </thead>
+                                   <tbody>
+
+                                   @if(transactions!= null && transactions.size>0){
+
+                                       @for(transaction <- transactions){
+                                             <tr>
+                                                 <td><a>@transaction.accountNumber</a></td>
+                                                 <td>@transaction.transid</td>
+                                               @*  <td>@Donation.findByTransactionNumber(transaction.donationTranId).dateCreated</td>*@
+                                                 @defining(Donation.findByTransactionNumber(transaction.donationTranId)) { donation =>
+
+
+                                                     <td>@donation.status.value</td>
+                                                     <td>@donation.dateCreated</td>
+
+
+                                                    @****new add***start*@
+
+                                                 @defining(Donation.getDiffTimeByTransactionNumber(transaction.donationTranId)) { diffTime =>
+                                                   @if(diffTime>25){
+                                                       <td><a href="@routes.DonationMgmt.refundDonations(donation.id,transaction.id, transaction.transid, donation.amount )" class="btn btn-block btn-green donationAmount" href="#" id="searchUsers" role="button">Refund</a></td>
+                                                   }
+                                                 }
+                                                         @*******new add***end*@
+                                                     @*<td><a href="@routes.DonationMgmt.refundDonations(donation.id,transaction.id, transaction.transid, donation.amount )" class="btn btn-block btn-green donationAmount" href="#" id="searchUsers" role="button">Refund</a></td>*@
+                                                 }
+
+
+                                             </tr>
+                                       }
+                                   }
+                                   </tbody>
+                               </table>
+
+                           </div>
+
+
+
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+    </script>
+    <script>
+function addMoreRowsSubmit(){
+            //  alert("on click on addmore rows");
+
+         $('#statusOfBulkCashDonation').val("0");
+        // alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
+          $('form#donateForm').submit();
+             }
+             function aqbc(){
+           //  alert("jjjj");
+             }
+$(document).ready(function(){
+//alert("document.ready........");
+//$('#addCashTransaction').hide();
+$("#wellForCommunityCollection").hide();
+$("#editCashTransaction").hide();
+
+//========================start=================================//
+/*
+var collectionTypes = $("#collectionTypesText").val();
+		//alert("collectionTypesText "+collectionTypes);
+		$("#collectionTypes").val(collectionTypes);
+
+
+		if(collectionTypes==null || collectionTypes == ""){
+		$("#collectionTypes").val('---select---');
+		}
+
+	//	alert("collectionTypes text : "+$("#collectionTypes").val());
+		if(collectionTypes === "COMMUNITY_COLLECTION"){
+		mergeCollectionTypes();
+		}else if(collectionTypes === "INDIVIDUAL"){
+mergeCollectionTypes();
+		}else{
+		$("#collectionTypes").val("select");
+		}
+*/
+
+
+//========================end====================================//
+ $("#pfpText").val("");
+//alert("pfpValue :: "+pfpValue);
+
+
+
+
+
+/*$("#phNo").hide();*/
+var phNoValue = $("#phNo").val();
+var phNoValuePart1;
+var phNoValuePart2;
+var phNoValuePart3;
+
+/*if(phNoValue!= null){
+phNoValuePart1  = phNoValue.substring(0,3);
+$("#areaCode").val(phNoValuePart1);
+phNoValuePart2 = phNoValue.substring(3,6);
+$("#phonePre").val(phNoValuePart2);
+phNoValuePart3 = phNoValue.substring(6,10);
+$("#phoneSuf").val(phNoValuePart3);
+}*/
+
+
+});
+
+
+
+function addMoreRows(){
+//alert("addMorerows................................");
+var getDiv=$('#addCashTransaction').html();
+//alert(getDiv);
+ $("#addCashTransaction").show();
+ $("#addMoreRowsForCashTransaction").append(getDiv);
+ //$(document.body).append('<div id="helloDiv">this is test</div>');
+
+}
+
+function getDetailsForEvent(){
+var eventId = $('#adminsEvents').val();
+    //alert("eventId :: "+eventId);
+   if(eventId === 'select'){
+        //alert("within eventId >>>");
+        $('#cashDonationDetails').hide();
+        }else{
+        //alert("within else");
+    /*      $.ajax({
+        url: '../profile/pfpsForCashDonations/:eventId='+eventId,
+         type: 'GET',
+        dataType : 'html',
+        success: function (response) {
+        alert(response);
+         $('#cashDonationDetails').show();
+         // location.reload();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          $('#volunteerModalBody').empty();
+          $('#volunteerModalBody').html(xhr.responseText);
+          $('#volunteerModalBody').scrollTop(0);
+        }
+    });*/
+    /* $('#cashDonationDetails').show();*/
+
+    var donationLoad = '@routes.DonationMgmt.participantDetailsForParticularEvent';
+
+
+   if(eventId) {
+   //alert("eventId :: "+eventId);
+      window.location.href = donationLoad + "?type=eventId&id=" + eventId;
+   }
+
+
+        }
+}
+
+
+function editCashTransaction(){
+//alert("on editCashTransaction");
+$("#addCashTransaction").hide();
+//alert("after hide..");
+$("#editCashTransaction").show();
+}
+
+
+
+ /*$('form#donateForm').submit(function(){
+           //  $('#payByCreditCardDiv').hide();
+                alert("within submit...");
+	   		/!*$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+		    $('#payByCreditCardButton').attr('disabled', 'disabled');
+		    $('#payByCheckButton').attr('disabled', 'disabled');
+		    $('#payByCashButton').attr('disabled', 'disabled');*!/
+
+
+		    mergeStatus();
+
+		});*/
+
+/*function onCashSubmit(eventId){
+alert("oncash submit : "+eventId);
+mergeStatus();
+  var donationLoad = '';
+
+  /*routes.DonationMgmt.saveDonationByCash*/
+
+
+  /* if(eventId) {
+      window.location.href = donationLoad + "?type=eventId&id=" + eventId;
+   }
+}*/
+
+
+		/*function mergeStatus(){
+		var status = $("#status").val();
+		alert("status "+status);
+		$("#statusText").val(status);
+		alert("status text : "+$("#statusText").val());
+		//var pfp = $("#pfpForEvent").val();
+
+
+		}*/
+  /*   function mergeCollectionTypes(){
+		var collectionTypes = $("#collectionTypes").val();
+		//alert("collectionTypes "+collectionTypes);
+		$("#collectionTypesText").val(collectionTypes);
+		//alert("collectionTypesText text : "+$("#collectionTypesText").val());
+		if(collectionTypes === "COMMUNITY_COLLECTION")
+{
+//alert("within COMMUNITY_COLLECTION");
+$("#wellForCommunityCollection").show();
+$("#wellForIndividualCollection").hide();
+}		//var pfp = $("#pfpForEvent").val();
+if(collectionTypes === "INDIVIDUAL")
+{
+//alert("within individual");
+$("#wellForIndividualCollection").show();
+$("#wellForCommunityCollection").hide();
+}		//var pfp = $("#pfpForEvent").val();
+
+
+		}
+*/
+
+
+       function mergePfp(){
+       var pfpId = $("#pfpForEvent").val();
+       //alert("pfpId :: "+pfpId);
+      $("#pfpText").val(pfpId);
+      //alert("pfp text : "+ $("#pfpText").val());
+
+       }
+    </script>
+
+
+
+
+    <script>
+
+    function autoFormAdvance(afterNumChars,currentFormId,nextFormId) {
+    /*if(currentFormId.equals("phoneSuf")){
+    $("#phoneSuf").onkeyup();
+    }*/
+    patternMatchForPhone(currentFormId);
+
+    if(document.getElementById(currentFormId).value.length==afterNumChars) {
+    document.getElementById(nextFormId).focus();
+    }
+
+    mergeTotalPhNo();
+    }
+
+    function mergeTotalPhNo(){
+    //alert("within keyup");
+    patternMatchForPhone('phoneSuf');
+    var totalPhValue;
+    var length1 = $("#areaCode").val().length;
+    var length2 = $("#phonePre").val().length;
+    var length3 = $("#phoneSuf").val().length;
+
+    if(length1==3 && length2 ==3 &&length3 == 4){
+    totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+    $("#phNo").val(totalPhValue);
+    //alert($("#phNo").val());
+    }else{
+    totalPhValue = $("#areaCode").val()+$("#phonePre").val()+$("#phoneSuf").val();
+    $("#phNo").val(totalPhValue);
+
+    }
+
+    //alert("totalPhValue :: "+ $("#phNo").val());
+
+
+    }
+
+    //============================phno partition validation ====================================24.08.2015==========end========================================//
+    </script>
+
+    <script>
+    function patternMatchForPhone(id){
+
+    var phPattern = /^([0-9])+$/;
+    var phValue =document.getElementById(id).value;
+    //alert(phValue );
+    //alert(phValue.match(phPattern));
+    if(phValue.match(phPattern)==null){
+    //alert("before "+phValue);
+     phValue = phValue.substring(0,phValue.length-1);
+    // alert("after "+phValue);
+     }
+     id = "#"+id;
+     // alert("id :: "+id);
+     $(id).val(phValue);
+
+     //alert(" $(id).val"+ $(id).val);
+    //alert(ph)
+
+     //document.getElementById(id).HTML(phValue);
+
+    }
+</script>
+
+
+    <script>
+          $('form#donateForm').submit(function(){
+           //  $('#payByCreditCardDiv').hide();
+               // alert("within submit...");
+               var atSign = String.fromCharCode(64);
+               //alert("atSign :: "+atSign);
+                var collectionTypes = $("#collectionTypes").val();
+                 $("#phNo").val("1234567890");
+                 $("#areaCode").val("123");
+                 $("#phonePre").val("456");
+                 $("#phoneSuf").val("7890");
+                 $("#email").val("rimi"+atSign+"g.c");
+                // alert("emai to submit :: "+$("#email").val());
+                if(collectionTypes === "COMMUNITY_COLLECTION"){
+                /* $("#phNo").val("1234567890");
+                 $("#areaCode").val("123");
+                 $("#phonePre").val("456");
+                 $("#phoneSuf").val("7890");*/
+                 /*var email=$("#email").val();
+                  $("#email1").val(email);*/
+
+                }
+                else if(collectionTypes === "INDIVIDUAL"){
+                /*var email=$("#emailForIndividual").val();
+                var email=$("#email1").val();
+                //alert("email for individual :: "+email);
+
+                $("#email").val(email);*/
+                //alert(" $(#email).val(email) :: "+ $("#email").val());
+
+                }
+               /* $("#phNo").val(totalPhValue);
+	   		$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
+		    $('#payByCreditCardButton').attr('disabled', 'disabled');
+		    $('#payByCheckButton').attr('disabled', 'disabled');
+		    $('#payByCashButton').attr('disabled', 'disabled');*/
+		});
+
+
+	/*	$('#addMoreRowsSubmit').onclick(function(){*/
+
+
+		/*})*/
+
+
+		/*$('#submit').onclick(function(){
+
+        alert("on click on submit");
+
+         $('#statusOfBulkCashDonation').val("1");
+         alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
+          $('form#donateForm').submit();
+		})*/
+      function submitButton(){
+     // alert("on click on submit");
+
+         $('#statusOfBulkCashDonation').val("1");
+       //  alert("status of bulk :: "+ $('#statusOfBulkCashDonation').val());
+          $('form#donateForm').submit();
+      }
+
+
+
+
+      //====================new add for anonymous===========================start===============09.10.2015===========================//
+
+      $("#anonymous").click(function () {
+
+      if ($(this).prop('checked')) {
+       $('#donorname').val('Anonymous')
+        }
+        else {
+       //do nothing
+        $('#donorname').val(null)
+        }
+
+})
+
+
+//====================new add for anonymous===============================end=================09.10.2015===========================//
+
+    </script>
+}

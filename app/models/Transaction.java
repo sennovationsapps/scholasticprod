@@ -88,7 +88,11 @@ public class Transaction extends Model {
    }
 
 
-
+    public static Transaction findByDonationTranId(String donationTranId) {
+        System.out.println("findByDonationTranId");
+        System.out.println("transaction :: "+find.where().eq("donationTranId", donationTranId).findUnique());
+        return find.where().eq("donationTranId", donationTranId).findUnique();
+    }
 
 
     public static List<Transaction> findAll() {
@@ -107,4 +111,12 @@ public class Transaction extends Model {
         return new ArrayList<Transaction>();
     }
 
+
+    /******start*********************refund donations******************************14.01.2016************************************/
+
+    public static List<Transaction> findAllTransactions() {
+        return find.all();
+    }
+
+    /*******end**********************refund donations******************************14.01.2016************************************/
 }

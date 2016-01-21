@@ -102,6 +102,13 @@ public class Event extends Model implements PathBindable<Event> {
 	@ManyToOne(optional = false)
 	public User userAdmin;
 
+
+	/*****start*****19.01.2016*********/
+
+   @Transient
+    public double serviceFee ;
+	/*****end******19.01.2016*********/
+
 	// @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	// @JoinColumn(name="USER_ID")
 	// public List<User> eventAssistants;
