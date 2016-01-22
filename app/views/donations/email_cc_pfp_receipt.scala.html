@@ -1,8 +1,18 @@
 @(donation: Donation)
 
 <div>
-    <p>Dear @donation.pfp.name,</p>
-    <p> Thank you for participating in @donation.event.name. You have received a contribution for your Fundraising Page.</p>
+    <p>
+        @if(donation.pfp!=null){
+            Dear @donation.pfp.name,
+        }
+
+    </p>
+    <p>
+        @if(donation.event!=null &&donation.event.name!=null){
+            Thank you for participating in @donation.event.name. You have received a contribution for your Fundraising Page.
+        }
+
+    </p>
     <p> We suggest you contact them and thank them for their generous contribution.</p>
     <br/>
     <br/>
@@ -11,12 +21,18 @@
      <br/>
      Donor Name : @donation.ccName
     <br/>
-    Participant Name : @donation.pfp.name
+         @if(donation.pfp!=null){
+     Participant Name : @donation.pfp.name
+         }
+
     <br/>
     Donation Amount : $@donation.amount
     <br/>
      Transaction Id :  @donation.transactionNumber<br/>
-     Time Submitted :  @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")<br/>
+         @if(donation.dateCreated!=null){
+             Time Submitted :  @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")<br/>
+         }
+
     </p>
 
 

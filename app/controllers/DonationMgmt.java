@@ -1971,9 +1971,54 @@ public class DonationMgmt extends Controller {
 
 
 			transaction.save();
+
+
+
+
+
+			/*********new add***********************21.01.2016**************************/
+
+			if (donation.status == Donation.PaymentStatus.CLEARED) {
+
+				//MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
+
+				String creditCardNumber = transaction.accountNumber;
+
+				if (creditCardNumber != null) {
+					creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
+					System.out.println("creditCardNumber :: " + creditCardNumber);
+					donation.ccNum = creditCardNumber;
+				}
+
+				donation.ccName = transaction.ccname;
+				ReceiptMgmt receiptMgmt = new ReceiptMgmt();
+
+				System.out.println(("before calling getAndSendCCReceipt"));
+				System.out.println("donation.event " + donation.event);
+				System.out.println("donation.event.userAdmin " + donation.event.userAdmin);
+				System.out.println("");
+				receiptMgmt.sendCCReceiptForCron(donation);
+				//System.out.println("result :: " + result);
+				System.out.println(("after calling getAndSendCCReceipt"));
+
+				System.out.println("before calling sendCCReceiptForPfp...");
+				receiptMgmt.sendCCReceiptForPfp(donation);
+				System.out.println("after calling sendCCReceiptForPfp");
+
+				//update
+				transaction.mailSent = true;
+				transaction.update();
+
+
+			}
+				/******/
+
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
+
+
+
 
 
 		System.out.println("Transaction Table saved");
@@ -2177,7 +2222,7 @@ public static HashMap transIdForTransactionNo = new HashMap();
 			transaction.save();
 
 
-			/*if (donation.status == Donation.PaymentStatus.CLEARED) {
+		/*	if (donation.status == Donation.PaymentStatus.CLEARED) {
 
 				//MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
 
@@ -2191,7 +2236,11 @@ public static HashMap transIdForTransactionNo = new HashMap();
 
 				donation.ccName = transaction.ccname;
 				ReceiptMgmt receiptMgmt = new ReceiptMgmt();
+
 				System.out.println(("before calling getAndSendCCReceipt"));
+				System.out.println("donation.event "+donation.event);
+				System.out.println("donation.event.userAdmin "+donation.event.userAdmin);
+				System.out.println("");
 				receiptMgmt.sendCCReceiptForCron(donation);
 				//System.out.println("result :: " + result);
 				System.out.println(("after calling getAndSendCCReceipt"));

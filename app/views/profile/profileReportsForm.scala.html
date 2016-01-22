@@ -11,7 +11,7 @@
 			    <li><a href="#tab2" data-toggle="tab" id="tab2Link">Volunteers</a></li>
 			    <li><a href="#tab3" data-toggle="tab" id="tab3Link">Pfps</a></li>
 				@********new add****19.01.2016****reconciliation report**********start*@
-				@*<li><a href="#tab4" data-toggle="tab" id="tab3Link">Reconciliation</a></li>*@
+				<li><a href="#tab4" data-toggle="tab" id="tab3Link">Reconciliation</a></li>
 	            <li><a href="#tab5" data-toggle="tab" id="tab3Link">payout</a></li>
 				@********new add****19.01.2016****reconciliation report***********end**@
 	            <li><a href="#tab6" data-toggle="tab" id="tab6Link">One Click Report</a></li>
@@ -105,24 +105,24 @@
 
 				@********new add****19.01.2016****reconciliation report**********start*@
 
-				@*<div class="tab-pane" id="tab4">
+				<div class="tab-pane" id="tab4">
 				@form(routes.ReportMgmt.reconciliationReport(event), 'role -> "form", 'id -> "adminPfpsForm") {
 					<div class="form-group ">
 						<label for="fromDate" class=" ">From Date  &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
-						*@@*<input type="text" id="fromDate" name="fromDate" class="form-control">*@@*
+						<input type="text" id="fromDate" name="fromDate" class="form-control">
 					</div>
 					<div class="form-group ">
 						<label for="toDate" class=" ">To Date &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
-						*@@*<input type="text" id="toDate" name="toDate" value="" class="form-control">*@@*
+						<input type="text" id="toDate" name="toDate" value="" class="form-control">
 					</div>
 					<div class="form-group ">
-						<label for="pfpType" class=" ">PFP Type</label>
+						@*<label for="pfpType" class=" ">PFP Type</label>
 						<select id="pfpType" name="pfpType" class="form-control">
 							<option value="">All</option>
 							<option value="2">General</option>
 							<option value="1">Pfp</option>
 							<option value="3">Sponsor</option>
-						</select>
+						</select>*@
 					</div>
 					<div>
 						<button type="submit" class="btn btn-green">Run Report</button>
@@ -130,7 +130,7 @@
 					</div>
 				}
 				</div>
-*@
+
 
 				<div class="tab-pane" id="tab5">
 				@form(routes.ReportMgmt.payoutReport(event), 'role -> "form", 'id -> "adminPfpsForm") {

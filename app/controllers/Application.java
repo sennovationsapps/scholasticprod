@@ -72,7 +72,7 @@ public class Application extends Controller {
 
 		//==========================new================06.10.2015======================start===================================//
 		//System.out.println("before calling cronJobUtilsThread..");
-		CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
+		/*CronJobUtilsThread cronJobUtilsThread = new CronJobUtilsThread();
 
 		System.out.println("schedulerTheadStatus :: "+schedulerTheadStatus);
 
@@ -88,7 +88,7 @@ public class Application extends Controller {
 			//System.out.println("after ");
 			schedulerTheadStatus = true;
 
-		}
+		}*/
 		//System.out.println("after calling cronJobUtilsThread..");
 		//==========================new================06.10.2015=======================end====================================//
 

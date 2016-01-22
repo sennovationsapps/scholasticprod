@@ -1,10 +1,12 @@
 @(donation: Donation)
 
+  @if(donation.pfp!=null){
 Dear @donation.pfp.name,
+        }
 
-
-
+ @if(donation.event!=null &&donation.event.name!=null){
 Thank you for participating in @donation.event.name. You have received a contribution for your Fundraising Page.
+        }
 
 We suggest you contact them and thank them for their generous contribution.
 
@@ -14,13 +16,17 @@ Donor Email : @donation.email
 
 Donor Name : @donation.ccName
 
+ @if(donation.pfp!=null){
 Participant Name : @donation.pfp.name
+         }
 
 Donation Amount : $@donation.amount
 
 Transaction Id :  @donation.transactionNumber
 
-Time Submitted : @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
+@if(donation.dateCreated!=null){
+Time Submitted :  @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")<br/>
+         }
 
 
 

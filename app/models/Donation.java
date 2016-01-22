@@ -503,6 +503,47 @@ public class Donation extends Model implements PathBindable<Donation> {
 		return new ArrayList<Donation>();
 	}
 
+
+
+
+
+	/********************start*****************************21.01.2016*********************************/
+	public static List<Donation> findAllByEventIdAndOptionsForReconcile(Long id, Map<String, String> options) {
+		System.out.println("within findAllByEventIdAndOptions...");
+		final ExpressionList<Donation> donations = find.where()
+				.eq("event.id", id);
+		if(options.containsKey("paymentType") && StringUtils.isNotEmpty(options.get("paymentType"))) {
+			donations.eq("paymentType", options.get("paymentType"));
+		}
+		if(options.containsKey("status") && StringUtils.isNotEmpty(options.get("status"))) {
+			donations.eq("status", options.get("status"));
+		}
+		if(options.containsKey("fromDate")) {
+			donations.gt("dateCreated", DateUtils.parseDate(options.get("fromDate")).get());
+		}
+		if(options.containsKey("toDate")) {
+			donations.lt("dateCreated", DateUtils.parseDate(options.get("toDate")).get());
+		}
+		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
+						.fetch("pfp").fetch("event");*/
+		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
+				.fetch("pfp").fetch("event");*/
+		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, transactionNumber")
+				.fetch("pfp", "name").fetch("pfp", "team").fetch("pfp.team", "name").fetch("event","name");
+
+		if(StringUtils.isEmpty(options.get("totalByPfp"))) {
+			queryDonations.orderBy("pfp.id");
+		}
+		if (queryDonations != null) {
+			return queryDonations.findList();
+		}*/
+		if (donations != null) {
+			return donations.findList();
+		}
+		return new ArrayList<Donation>();
+		//return new ArrayList<Donation>();
+	}
+	/*********************end******************************21.01.2016*********************************/
 	/*****start******19.01.2016**************************************************/
 
 
@@ -1280,7 +1321,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 				|| StringUtils.equals("email", fieldName)
 				|| StringUtils.equals("invoice_number",fieldName)) {
 			if (fieldName.equals("donorName")){
-				queryField="ccname";
+				/*queryField="ccname";******rimi*****21.01.2016*/
+				queryField="donorName";
 			}
 			else {
 				queryField = fieldName;
