@@ -567,7 +567,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 						.fetch("pfp").fetch("event");*/
 		/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, event.name, pfp.id, pfp.name, pfp.team.name, transactionNumber")
 				.fetch("pfp").fetch("event");*/
-		final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, transactionNumber")
+		final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, transactionNumber, donorName")
 				.fetch("pfp","name").fetch("pfp","team").fetch("pfp.team","name").fetch("event","name");
 
 

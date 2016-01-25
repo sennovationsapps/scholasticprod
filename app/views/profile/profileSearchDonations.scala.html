@@ -73,29 +73,9 @@
 		            <div class="form-group">
 		                <div class="col-lg-12">
 		                    <div class="input-group">
-		                        <input type="search" class="form-control" id="searchbox"  name="f" value="@currentFilter" placeholder="Filter by..."> <span class="input-group-btn">
 
 
-
-
-
-                                <div class="btn-group" id ="donationSearchBtnDiv">
-									<button type="button" class="btn btn-blue dropdown-toggle" data-toggle="dropdown">
-										Filter By <span class="caret"></span>
-									</button>
-
-									<ul class="dropdown-menu" role="menu">
-										<li><a href="#" class="navSearch" value="donorName">Donor Name</a></li>
-										<li><a href="#" class="navSearch" value="pfpName">PFP Name</a></li>
-										<!--<li><a href="#" class="navSearch" value="transactionNumber">Transaction Number</a></li>-->
-										<li><a href="#" class="navSearch" value="ccDigits">CC Digits</a></li>
-										<li><a href="#" class="navSearch" value="paymentType">Payment Type</a></li>
-                                        <li><a href="#" class="navSearch" value="invoice_number">Invoice Number</a></li>
-                                        <li><a href="#" class="navSearch" value="email">Donor Email</a></li>
-									</ul>
-								</div>
-
-                                @******adding for year*****18.01.2016*****start*@
+                                @******adding for year*****25.01.2016*****start*@
 
                                 @*  <div class="btn-group">*@
                                 @*                 &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;
@@ -145,6 +125,84 @@
                                 <div style="display:none; ">
                                     <input type="search" class="form-control" id="yearTxtval"  name="f1" value="@currentFilter1" />
                                 </div>
+                                @* </div>*@
+
+                                @******adding for year*****25.01.2016******end**@
+
+
+
+		                      <div id ="searchBoxDiv"><input type="search" class="form-control" id="searchbox"  name="f" value="@currentFilter" placeholder="Filter by..."> <span class="input-group-btn"></div>
+
+
+
+
+
+                                <div class="btn-group" id ="donationSearchBtnDiv">
+									<button type="button" class="btn btn-blue dropdown-toggle" data-toggle="dropdown">
+										Filter By <span class="caret"></span>
+									</button>
+
+									<ul class="dropdown-menu" role="menu">
+										<li><a href="#" class="navSearch" value="donorName">Donor Name</a></li>
+										<li><a href="#" class="navSearch" value="pfpName">PFP Name</a></li>
+										<!--<li><a href="#" class="navSearch" value="transactionNumber">Transaction Number</a></li>-->
+										<li><a href="#" class="navSearch" value="ccDigits">CC Digits</a></li>
+										<li><a href="#" class="navSearch" value="paymentType">Payment Type</a></li>
+                                        <li><a href="#" class="navSearch" value="invoice_number">Invoice Number</a></li>
+                                        <li><a href="#" class="navSearch" value="email">Donor Email</a></li>
+									</ul>
+								</div>
+
+                                @******adding for year*****18.01.2016*****start*@
+
+                                @*  <div class="btn-group">*@
+                                @*                 &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-blue dropdown-toggle" data-toggle="dropdown" value="@filterType1">
+                                select year <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" class="navSearch1" value="donorName">2016</a></li>
+                                <li><a href="#" class="navSearch1" value="pfpName">2015</a></li>
+                                *@@*       <!--<li><a href="#" class="navSearch" value="transactionNumber">Transaction Number</a></li>-->
+                                <li><a href="#" class="navSearch" value="ccDigits">CC Digits</a></li>
+                                <li><a href="#" class="navSearch" value="paymentType">Payment Type</a></li>
+                                <li><a href="#" class="navSearch" value="invoice_number">Invoice Number</a></li>
+                                <li><a href="#" class="navSearch" value="email">Donor Email</a></li>*@@*
+                                </ul>*@
+                               @* <div  class="btn-group" id ="selectYearDiv">
+                                    <select id="yearType" name="currentFilter1" class="form-control" readonly="readonly">
+                                        @if(currentFilter1!=null){
+                                            *@@* @if(currentFilter1.equals("2016")){
+                                            <option value="2016" selected="selected">2016</option>
+                                            <option value="2015" >2015</option>
+                                            }
+                                            @if(currentFilter1.equals("2015")){
+                                            <option value="2016">2016</option>
+                                            <option value="2015"  selected="selected">2015</option>
+                                            }*@@*
+                                            <option value="selectYear" >Select Year</option>
+                                            <option value="2016" @if(currentFilter1.equals("2016")){ selected}>2016</option>
+                                            <option value="2015" @if(currentFilter1.equals("2015")){ selected}>2015</option>
+
+                                            <option value="2014" @if(currentFilter1.equals("2014")){ selected}>2014</option>
+
+                                            *@@* @if(currentFilter1.equals("2016"))
+                                            <option value="2016" selected>2016</option>*@@*
+                                        }else{
+                                            <option value="selectYear" selected="selected">Select Year</option>
+                                            <option value="2016" >2016</option>
+                                            <option value="2015" >2015</option>
+
+                                        }
+                                        *@@* <option value="2016" >2016</option>
+                                        <option value="2015" >2015</option>*@@*
+
+                                    </select>
+                                </div>*@
+                               @* <div style="display:none; ">
+                                    <input type="search" class="form-control" id="yearTxtval"  name="f1" value="@currentFilter1" />
+                                </div>*@
                                 @* </div>*@
 
                                 @******adding for year*****18.01.2016******end**@

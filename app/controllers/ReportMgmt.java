@@ -16,6 +16,7 @@ import models.security.SecurityRole;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
+import org.slf4j.LoggerFactory;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -43,6 +44,9 @@ public class ReportMgmt extends Controller {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
+
+	private static final org.slf4j.Logger REPORT_LOGGER = LoggerFactory.getLogger("ScholasticWebApplication");
+
 	@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
 			@Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN),
 			@Group(SecurityRole.EVENT_ASSIST) })
@@ -472,19 +476,21 @@ public class ReportMgmt extends Controller {
 		final List<String[]> records = new ArrayList<String[]>();
 
 
-		records.add(new String[] {" ", " ", "Reconciliation  Report " ," "," "," "," "});
-		records.add(new String[] {" ", " ", " " ," "," "," "," "});
-		records.add(new String[] {" ", " ", " " ," "," "," "," "});
-		records.add(new String[] {"Donation Type", " Transaction No", " Invoice No" ,"Transaction Id ","Status"," Date Created"," "});
+		records.add(new String[] {" "," "," ", " ", "Reconciliation  Report " ," "," "," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});
+		records.add(new String[] {" ", " ","Event Name ",eventy.name, " " ," "," "," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});
+		records.add(new String[] {"Donor Name","Pfp Name","Donor Email","Amount","Donation Type", " Transaction Reference from SC", " Invoice No For Both SC and authorize.net " ,"Transaction id from authorize.net ","Status"," Date Created"," "});
 		records.add(new String[] {" ", " ", " " ," "," "," "," "});
 		if(donations!=null && donations.size()>0){
 			for(Donation donation:donations){
 				if(donation!=null){
 					Transaction transaction = Transaction.findByDonationTranId(donation.transactionNumber);
-					if(transaction!=null){
-						records.add(new String[] {donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber ,transaction.transid,donation.status.getValue(),String.valueOf(donation.dateCreated)," "});
+					if(transaction!=null && (donation.transactionNumber!=null && !donation.transactionNumber.trim().equals(""))){
+						records.add(new String[] {donation.donorName,donation.pfp.name,donation.email,String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber ,transaction.transid,donation.status.getValue(),String.valueOf(donation.dateCreated)," "});
 					}else{
-						records.add(new String[] {donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber ," ",donation.status.getValue(),String.valueOf(donation.dateCreated)," "});
+						records.add(new String[] {donation.donorName,donation.pfp.name,donation.email,String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber ," ",donation.status.getValue(),String.valueOf(donation.dateCreated)," "});
 					}
 
 
@@ -1529,7 +1535,7 @@ public class ReportMgmt extends Controller {
 			records.add(new String[]{"Monthly payout ", "75%", "", "", "",  ""});
 			records.add(new String[]{"", "", "", "", "",  ""});
 
-			String[] string =  new String[10];
+			String[] string =  new String[100];
 			string[0]="Collections Summary";
 			for(int i1=1;i1<=firstPayoutCount;i1++){
 				String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
@@ -2183,7 +2189,7 @@ public class ReportMgmt extends Controller {
 			records.add(new String[]{"Monthly payout ", "75%", "", "", "",  ""});
 			records.add(new String[]{"", "", "", "", "",  ""});
 
-			String[] string =  new String[10];
+			String[] string =  new String[100];
 			string[0]="Collections Summary";
 			for(int i1=1;i1<=firstPayoutCount;i1++){
 				String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
@@ -2753,7 +2759,9 @@ public class ReportMgmt extends Controller {
 		return ok(myJsonNode);*/
 
 
-		final File file = new File("yourfile.csv");
+		final File file = new File("yourfile.xls");
+
+		/*final File file = new File("yourfile.csv");*/
 		final BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		final CSVWriter writer = new CSVWriter(out, ',');
 		/*final List<String[]> data =payoutToStringArray(donations,eventy);*/
@@ -2761,11 +2769,16 @@ public class ReportMgmt extends Controller {
 		final List<String[]> data = reconcileToStringArrayForMonth(donations,eventy);
 		writer.writeAll(data);
 		writer.close();
-		response().setHeader("Content-Disposition",
+		/*response().setHeader("Content-Disposition",
 				"attachment; filename=\"ReconciliationReport.csv\"");
 		response().setContentType("text/csv");
-		return ok(file).as("text/csv");
+		return ok(file).as("text/csv");*/
 
+
+		response().setHeader("Content-Disposition",
+				"attachment; filename=\"ReconciliationReport.xls\"");
+		response().setContentType("text/xls");
+		return ok(file).as("text/xls");
 
 
 		/*if(StringUtils.isEmpty(requestData.get("paymentType"))) {
@@ -2817,6 +2830,7 @@ public class ReportMgmt extends Controller {
 		System.out.println("event.serviceFee within payoutReport "+event.serviceFee);
 		Event event1 = Event.findById(event.id);
 		System.out.println("event.slug within payoutReport "+event1.slug);
+
 
 		//Map<String, String> requestData = Form.form().bindFromRequest().data();
 

@@ -326,13 +326,19 @@ li.profile p{overflow:hidden;font-size:14px;text-transform:none;word-wrap:break-
 }*/
 
 /********start of donation search*****************************************18.01.2016***********************/
-#searchbox{
-    width:583px;
+#searchBoxDiv{
+    width:576px;
 }
 
 #selectYearDiv{
 
     margin-right: 110px;
+
+    float: left;
+    width: 125px;
+    text-align: right;
+    margin: 0px -2px;
+    display: inline;
 
 }
 
@@ -340,5 +346,13 @@ li.profile p{overflow:hidden;font-size:14px;text-transform:none;word-wrap:break-
 #donationSearchBtnDiv{
     /*margin-right: 114px;*/
 }
+#searchBoxDiv{
+    margin-right: 110px;
+    margin-left: 120px;
 
+    float: left;
+    text-align: left;
+    margin: 0px 0px;
+    display: inline;
+}
 /**********end of donation search*****************************************18.01.2016***********************/

@@ -41,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static play.data.Form.form;
@@ -1036,7 +1037,18 @@ public class DonationMgmt extends Controller {
 		} else {
 			donation.event = event;
 		}
-		donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();
+
+
+		/****************25.01.2016*************************start**************************************************************/
+		/*donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();*/
+		Random randomGenerator1 = new Random();
+		int randomSequence1 = randomGenerator1.nextInt(100000);
+
+		Date date = new Date();
+		String modifiedDate= new SimpleDateFormat("yyyy-MM-dd").format(date);
+		donation.invoiceNumber = modifiedDate+String.valueOf(randomSequence1);
+		System.out.println("invoiceNumber :: "+donation.invoiceNumber);
+		/****************25.01.2016**************************end***************************************************************/
 		donation.phone = ControllerUtil.stripPhone(donation.phone);
 		if(StringUtils.isNotEmpty(donation.donorMessage)) {
 			donation.donorMessage = donation.donorMessage.replaceAll("\\p{P}", "");
@@ -1083,10 +1095,12 @@ public class DonationMgmt extends Controller {
 			}
 			else{*/
 			donation.status = PaymentStatus.APPROVED;
-			/*donation.transactionNumber = UUID.randomUUID().toString();*****comment out***15.01.2016**/
-			Random randomGenerator1 = new Random();
+			donation.transactionNumber = UUID.randomUUID().toString();
+			/*********************start*********************comment out******************************25.01.2016***********************************************/
+			/*Random randomGenerator1 = new Random();
 			int randomSequence1 = randomGenerator1.nextInt(1000);
-			donation.transactionNumber = String.valueOf(randomSequence1);
+			donation.transactionNumber = String.valueOf(randomSequence1);*/
+			/**********************end**********************comment out******************************25.01.2016***********************************************/
 			PAYMENT_LOGGER.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
 					donation.ccDigits, donation.transactionNumber, donation.amount);
 			try {
@@ -1168,7 +1182,7 @@ public class DonationMgmt extends Controller {
 						"&x_pfp_id="+donation.pfp.id+
 						"&x_donation_payment_status="+donation.status+
 						"&x_email_id="+donation.email+
-				"&x_invoice_num="+donation.transactionNumber;
+				"&x_invoice_num="+donation.invoiceNumber;
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -1261,7 +1275,17 @@ public class DonationMgmt extends Controller {
 		//============new add for checking web url and img url======================07.09.2015=======================end===================//
 		donation.dateCreated = new Date();
 		donation.event = event;
-		donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();
+		/*donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();*/
+		/****************25.01.2016*************************start**************************************************************/
+		/*donation.invoiceNumber = donation.event.id + "_" + donation.dateCreated.getTime();*/
+		Random randomGenerator1 = new Random();
+		int randomSequence1 = randomGenerator1.nextInt(100000);
+
+		Date date = new Date();
+		String modifiedDate= new SimpleDateFormat("yyyy-MM-dd").format(date);
+		donation.invoiceNumber = modifiedDate+String.valueOf(randomSequence1);
+		System.out.println("invoiceNumber111 :: "+donation.invoiceNumber);
+		/****************25.01.2016**************************end***************************************************************/
 		donation.donationType = DonationType.SPONSOR;
 		if (donation.paymentType == null) {
 //			if (StringUtils.isNotEmpty(donation.ccNum)) {
@@ -1890,6 +1914,7 @@ public class DonationMgmt extends Controller {
 		System.out.println("result.getResponseMap().get(x_trans_id)"+result.getResponseMap().get("x_trans_id"));
 		System.out.println("result.getResponseMap().get(x_account_number)" + result.getResponseMap().get("x_account_number"));
 		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + result.getResponseMap().get("x_donation_transaction_number"));
+		System.out.println("result.getResponseMap().get(x_invoice_num)" + result.getResponseMap().get("x_invoice_num"));
 		System.out.println("result.getResponseMap().get(x_email_id)" + result.getResponseMap().get("x_email_id"));
             /****new add***start**/
        /* String transactionNo = result.getResponseMap().get("x_donation_transaction_number");
@@ -1944,6 +1969,7 @@ public class DonationMgmt extends Controller {
 			paymentStatus="Payment Pending";
 		}
 		donation.ccNum=result.getResponseMap().get("x_account_number");
+		donation.invoiceNumber = result.getResponseMap().get("x_invoice_num");
 		donation.update();
 		System.out.println("Donation table saved");
 

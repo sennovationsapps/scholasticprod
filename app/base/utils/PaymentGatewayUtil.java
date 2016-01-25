@@ -26,7 +26,7 @@ public class PaymentGatewayUtil {
     private static final String TRANSACTION_KEY = "9L9H43Kny8s347z4";//scholastic mode account credential
 
     private static final Environment environmentType=Environment.PRODUCTION;
-   //private static final Environment environmentType=Environment.SANDBOX;
+  // private static final Environment environmentType=Environment.SANDBOX;
 
 
 
