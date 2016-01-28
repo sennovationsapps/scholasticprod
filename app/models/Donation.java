@@ -544,6 +544,61 @@ public class Donation extends Model implements PathBindable<Donation> {
 		//return new ArrayList<Donation>();
 	}
 	/*********************end******************************21.01.2016*********************************/
+
+
+
+	/********************start*****************************28.01.2016*********************************/
+	public static List<Donation> findAllByOnlyOptionsForReconcile(Map<String, String> options) {
+		System.out.println("within findAllByOnlyOptionsForReconcile...");
+		// List<Donation> donationList = null;
+		if(options!=null && !options.isEmpty()){
+
+			if(!options.containsKey("fromDate") && !options.containsKey("toDate")){
+				final List<Donation> donationList = find.all();
+				return donationList;
+				/*final Query<Donation> queryDonations = find.select("id, firstName, lastName, zipCode, email, phone, " +
+						"donationType, dateCreated, datePaid, paymentType, status, amount, transactionNumber")
+						.fetch("pfp", "name").fetch("pfp", "team").fetch("pfp.team", "name").fetch("event","name");
+				if (queryDonations != null) {
+					return queryDonations.findList();
+				}*/
+				/*final Query<Donation> queryDonations = donations.select("id, firstName, lastName, zipCode, email, phone, donationType, dateCreated, datePaid, paymentType, status, amount, transactionNumber")
+						.fetch("pfp", "name").fetch("pfp", "team").fetch("pfp.team", "name").fetch("event","name");*/
+			}else if(options.containsKey("fromDate") && options.containsKey("toDate")){
+				final ExpressionList<Donation> donations = find.where().gt("dateCreated", DateUtils.parseDate(options.get("fromDate")).get()).lt("dateCreated", DateUtils.parseDate(options.get("toDate")).get());
+				if (donations != null) {
+					return donations.findList();
+				}
+			}else if(options.containsKey("fromDate")&&!options.containsKey("toDate")){
+				final ExpressionList<Donation> donations = find.where().gt("dateCreated", DateUtils.parseDate(options.get("fromDate")).get());
+				if (donations != null) {
+					return donations.findList();
+				}
+			}else if(!options.containsKey("fromDate")&&options.containsKey("toDate")) {
+				final ExpressionList<Donation> donations = find.where().lt("dateCreated", DateUtils.parseDate(options.get("toDate")).get());
+				if (donations != null) {
+					return donations.findList();
+				}
+			}
+
+
+
+
+
+		}else{
+			final List<Donation> donationList = find.all();
+			return donationList;
+		}
+
+
+
+
+
+		return new ArrayList<Donation>();
+		//return new ArrayList<Donation>();
+	}
+	/*********************end******************************28.01.2016*********************************/
+
 	/*****start******19.01.2016**************************************************/
 
 
@@ -1388,6 +1443,7 @@ public class Donation extends Model implements PathBindable<Donation> {
 	/************************end****************18.01.2016***************donation search with year***********************/
 	public enum PaymentStatus {
 		@EnumValue("0")
+		/*INITIATED(0, "Initiated"),*/
 		APPROVED(0, "Approved"),
 		@EnumValue("1")
 		PENDING(1, "Pending"),

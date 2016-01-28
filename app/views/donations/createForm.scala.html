@@ -279,6 +279,7 @@ $("#anonymous").click(function () {
 
 
 
+
 $("#amount").focusout(function() {
  var amount =document.getElementById("amount").value;
  if (amount != null)
@@ -295,6 +296,41 @@ $("#amount").focusout(function() {
 }
 })
 
+
+
+
+/******start***********28.01.2016*********************************************/
+
+/*$("#amount").focusout(function() {
+ var amount =document.getElementById("amount").value;
+ if (amount != null)
+ {
+  if (amount<5)
+  {
+  document.getElementById("amount").value=5;
+  }
+
+ else
+ {
+
+ document.getElementById("amount").value=Math.round(amount);
+ }
+}
+});
+$("#amount").keyup(function(){
+var amount =document.getElementById("amount").value;
+if(amount.charAt(amount.length-1) == '.'){
+document.getElementById("amount").value = amount.substring(0,(amount.length-1));
+}
+});
+$("#amount").keydown(function(){
+var amount =document.getElementById("amount").value;
+if(amount.charAt(amount.length-1) == '.'){
+document.getElementById("amount").value = amount.substring(0,(amount.length-1));
+}
+});*/
+
+/*******end************28.01.2016********************************************/
 
 
    $( "#phNo" ).keyup(function(){

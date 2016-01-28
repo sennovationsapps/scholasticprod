@@ -237,12 +237,20 @@ public class DonationMgmt extends Controller {
 			if (ccProps.containsKey(donation.transactionNumber)) {
 				Map<String, String> props = ccProps.get(donation.transactionNumber);
 				if (StringUtils.equalsIgnoreCase(props.get("ssl_trans_status"), "STL")) {
-					if(donation.status == PaymentStatus.APPROVED && StringUtils.equalsIgnoreCase(props.get("ssl_transaction_type"), "Sale")) {
+					if(donation.status == PaymentStatus.APPROVED && StringUtils.equalsIgnoreCase(props.get
+							("ssl_transaction_type"), "Sale")) {
 						Logger.debug("This transaction has been updated to settled or cleared - {}", donation.id);
 						donation.status = PaymentStatus.CLEARED;
 						donation.datePaid = new Date();
 						donation.update();
 					}
+					/*if(donation.status == PaymentStatus.INITIATED && StringUtils.equalsIgnoreCase(props.get
+							("ssl_transaction_type"), "Sale")) {
+						Logger.debug("This transaction has been updated to settled or cleared - {}", donation.id);
+						donation.status = PaymentStatus.CLEARED;
+						donation.datePaid = new Date();
+						donation.update();
+					}*/
 					else if(donation.status != PaymentStatus.REFUNDED && (StringUtils.equalsIgnoreCase(props.get("ssl_transaction_type"), "Void") || StringUtils.equalsIgnoreCase(props.get("ssl_transaction_type"), "Return"))) {
 						Logger.debug("This transaction has been updated to returned - {}", donation.id);
 						donation.status = PaymentStatus.REFUNDED;
@@ -1346,6 +1354,7 @@ public class DonationMgmt extends Controller {
 //				}
 //			}
 			donation.status = PaymentStatus.APPROVED;
+			/*donation.status = PaymentStatus.INITIATED;*/
 			donation.paymentType = PaymentType.CREDIT;
 			donation.transactionNumber =UUID.randomUUID().toString();
 			//ccProps.get("ssl_txn_id");
@@ -2303,7 +2312,7 @@ public static HashMap transIdForTransactionNo = new HashMap();
 	/***********************start code refund transaction*************14.01.2016***********************/
 
 	public static Result refundDonations(Long donId,int transactionId, String tranNumber, int amount){
-		System.out.println("tranNumber within refundDonations "+tranNumber);
+		System.out.println("###########tranNumber within refundDonations####################### "+tranNumber);
 		String expDate = "1216";
 		System.out.println("id within refundDonations "+donId);
 		Donation donation = Donation.findById(donId);
@@ -2321,6 +2330,9 @@ public static HashMap transIdForTransactionNo = new HashMap();
 
 		PaymentGatewayUtil paymentGatewayUtil = new PaymentGatewayUtil();
 		//String refundedVal=paymentGatewayUtil.anotherRefundmethod(ccNum, expDate, tranNumber, donationAmount);
+
+
+
 		HashMap refundHashMap =paymentGatewayUtil.anotherRefundmethod(ccNum, expDate, tranNumber, donationAmount);
 		String status = (String)refundHashMap.get("status");
 		if(status.equals("successful")){
@@ -2332,6 +2344,11 @@ public static HashMap transIdForTransactionNo = new HashMap();
 		}else{
 			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Refund is not successful");
 		}
+
+
+
+
+
 	/*	if(refundedVal.equals("1")) {
 			donation.status = PaymentStatus.REFUNDED;
 			donation.update();

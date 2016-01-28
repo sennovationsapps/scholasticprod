@@ -751,6 +751,29 @@ public class Application extends Controller {
 	 * 
 	 * @return the result
 	 */
+
+
+
+
+	/*******start*******Reconciliation Report******28.01.2016*************************************************/
+
+	@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
+			@Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN) })
+	@SubjectPresent
+	public static Result profileReconciliationReports() {
+		Event event = null;
+		if(StringUtils.isNotEmpty(request().getQueryString("id"))) {
+			Long id = Event.getIdFromSlug(request().getQueryString("id"));
+			event = Event.findById(id);
+			event.serviceFee = 10.0;
+		}
+		return ok(profileReconciliationReport.render(ControllerUtil.getLocalUser(session()), event));
+	}
+
+	/********end********Reconciliation Report******28.01.2016*************************************************/
+
+
+
 	@SubjectPresent
 	public static Result restricted() {
 		return ok(restricted.render(ControllerUtil.getLocalUser(session())));

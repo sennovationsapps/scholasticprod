@@ -276,7 +276,9 @@
                                                   @if(diffTime>25){
                                                   @defining(Transaction.findByDonationTranId(donation.transactionNumber)){transaction =>
                                                   @if(transaction!=null){
-                                                      <a href="@routes.DonationMgmt.refundDonations(donation.id,transaction.id, transaction.transid, donation.amount )" class="btn btn-default refundBtn" type="button">Refund</a>
+                                                      <a href="@routes.DonationMgmt.refundDonations(donation.id,
+                                                          transaction.id, transaction.transid, donation.amount )"
+                                                      class="btn btn-default refundBtn" type="button" onclick="return confirm('Are you sure?')">Refund</a>
                                                   }
 
                                                   }

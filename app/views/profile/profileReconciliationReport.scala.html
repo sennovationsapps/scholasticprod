@@ -1,0 +1,89 @@
+@(localUser: models.security.User = null, event: Event = null)
+
+@import helper._
+
+@import com.feth.play.module.pa.views.html._
+
+@main(Messages("playauthenticate.profile.title"),"profile") {
+    <!-- Main body
+================== -->
+    <div class="wrapper">
+        <div class="section-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                            <!-- Remove the .animated class if you don't want things to move -->
+                        <h1 class="animated slideInLeft"><span>Profiles</span></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @general.alerts()
+        <div class="container">
+            <div class="row">
+                @profile.menu(localUser)
+                    <!-- Avatar & social links -->
+                <div class="col-sm-8 col-md-9">
+                        <!-- PFPS -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 class="hl"><i class="fa fa-map-marker"></i> Reconciliation Report</h4>
+                            <hr>
+                          @*  <div>this is reconciliation report</div>*@
+
+
+                            <div class="tab-pane" >
+                            @form(routes.ReportMgmt.reconciliationReport1(), 'role -> "form", 'id -> "adminPfpsForm") {
+                                <div class="form-group ">
+                                    <label for="fromDate" class=" ">From Date  &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+                                    <input type="text" id="fromDate" name="fromDate" class="form-control">
+                                </div>
+                                <div class="form-group ">
+                                    <label for="toDate" class=" ">To Date &nbsp;( <span class="help-block">Date (&#x27;MM/dd/yyyy&#x27;) </span>) </label>
+                                    <input type="text" id="toDate" name="toDate" value="" class="form-control">
+                                </div>
+                                <div class="form-group ">
+                                    @*<label for="pfpType" class=" ">PFP Type</label>
+                                    <select id="pfpType" name="pfpType" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="2">General</option>
+                                    <option value="1">Pfp</option>
+                                    <option value="3">Sponsor</option>
+                                    </select>*@
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-green">Run Report</button>
+                                    @*<a href="@routes.Application.profileReports" class="btn btn-default" type="button">Cancel</a>*@
+                                </div>
+                            }
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    $( document ).ready(function() {
+	jQuery('input[name=fromDate]').datetimepicker({
+    	  timepicker:false,
+    	  format:'m/d/Y',
+    	  formatDate:'m/d/Y',
+    	  closeOnDateSelect:true,
+    	  lazyInit:true
+    	});
+    jQuery('input[name=toDate]').datetimepicker({
+    	  timepicker:false,
+    	  format:'m/d/Y',
+    	  formatDate:'m/d/Y',
+    	  closeOnDateSelect:true,
+    	  lazyInit:true
+    	});
+
+});
+</script>
+}
