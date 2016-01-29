@@ -63,7 +63,10 @@
                         <tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="100"> $100</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="50"> $50</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="25">$25</button></td></tr>
                     </table>
 
-                    @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $1.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+                   @* @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $1.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")*@
+
+                    @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $5.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control",  'id -> "amountValue" , 'placeholder -> "Donation amount", '_addon -> "$")
+                    <input type="text"  id = "centValue" value=".00" readonly>
 
 
                     <!--@checkbox(donationForm("agreeToPolicy"), '_label -> "Give this amount monthly for the duration of this event", '_labelSide -> "right")-->
@@ -280,11 +283,12 @@ $("#anonymous").click(function () {
 
 
 
-$("#amount").focusout(function() {
- var amount =document.getElementById("amount").value;
+$("#amountValue").focusout(function() {
+//alert("focusout");
+ var amount =document.getElementById("amountValue").value;
  if (amount != null)
  {
-  if (amount<1)
+/*  if (amount<1)
   {
   document.getElementById("amount").value=1;
   }
@@ -292,7 +296,8 @@ $("#amount").focusout(function() {
  else
  {
  document.getElementById("amount").value=Math.round(amount);
- }
+ }*/
+ document.getElementById("amountValue").value=Math.round(amount);
 }
 })
 

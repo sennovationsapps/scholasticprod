@@ -529,15 +529,15 @@ public class ReportMgmt extends Controller {
 						/*records.add(new String[]{donation.event.name, donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});*/
 					}else{
 						System.out.println("donation.id :: "+donation.id);
-						System.out.println("donation.event.name ::: "+donation.event.name);
-						System.out.println("donation.donorName :: "+donation.donorName);
-						System.out.println("donation.pfp :: "+donation.pfp);
+						//System.out.println("donation.event.name ::: "+donation.event.name);
+						//System.out.println("donation.donorName :: "+donation.donorName);
+						//System.out.println("donation.pfp :: "+donation.pfp);
 						//System.out.println("donation.pfp.id :: "+donation.pfp.id);
-						System.out.println("donation.email :: "+donation.email);
-						System.out.println("donation.paymentType :: "+donation.paymentType);
-						System.out.println("donation.transactionNumber :: "+donation.transactionNumber);
-						System.out.println("donation.invoiceNumber v:: "+donation.invoiceNumber);
-						System.out.printf("donation.status :: " + donation.status);
+						//System.out.println("donation.email :: "+donation.email);
+						//System.out.println("donation.paymentType :: "+donation.paymentType);
+						//System.out.println("donation.transactionNumber :: "+donation.transactionNumber);
+						//System.out.println("donation.invoiceNumber v:: "+donation.invoiceNumber);
+						//System.out.printf("donation.status :: " + donation.status);
 						/*if()*/
 						if(donation.pfp!=null){
 							records.add(new String[]{donation.event.name, donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, " ", donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
@@ -5036,8 +5036,15 @@ public class ReportMgmt extends Controller {
 					System.out.println("reconciliationAmount890 "+reconciliationAmount);
 
 					//   double
+					/********month show**start*********************29.01.2016**/
 
-					records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+					String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+
+
+				   /*******month show***end************************29.01.2016****/
+					//element+"("+String.valueOf(i1)+")"
+					/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+					records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
 
 
 				}
@@ -5057,9 +5064,18 @@ public class ReportMgmt extends Controller {
 						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
 						System.out.println("reconciliationAmount3890 "+reconciliationAmount);
 
+						/********month show**start*********************29.01.2016**/
+
+						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
 
 
-						records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+						/*******month show***end************************29.01.2016****/
+
+
+						records.add(new String[]{element + "( Payout No: " + String.valueOf(i1) + ")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
 
 
 					}
@@ -5080,8 +5096,16 @@ public class ReportMgmt extends Controller {
 						System.out.println("remainingPayableAmount15634"+remainingPayableAmount1);
 						System.out.println("reconciliationAmount5634"+reconciliationAmount);
 						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+						/********month show**start*********************29.01.2016**/
 
-						records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+
+
+						/*******month show***end************************29.01.2016****/
+
+						records.add(new String[]{element + "( Payout No: " + String.valueOf(i1) + ")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
 					}
 				}
 
@@ -5809,10 +5833,20 @@ public class ReportMgmt extends Controller {
 					reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
 					System.out.println("reconciliationAmount890 " + reconciliationAmount);
 					System.out.println("total remaining amount :: " + totalRemainingAmount);
-
+					//String element=payOutTimeAndAllAmountsMap.get(i1-1 + "-month").toString();
 
 					/*records.add(new String[]{String.valueOf(i1), String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) reconciliationAmount), "", "", ""});*/
-					records.add(new String[]{String.valueOf(i1), String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) remainingPayableAmount1), "", "", ""});
+					/*records.add(new String[]{String.valueOf(i1), String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) remainingPayableAmount1), "", "", ""});*/
+
+					/********month show**start*********************29.01.2016**/
+
+					String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+
+
+					/*******month show***end************************29.01.2016****/
+
+
+					records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) remainingPayableAmount1), "", "", ""});
 
 
 				}
@@ -5836,9 +5870,17 @@ public class ReportMgmt extends Controller {
 						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
 						System.out.println("reconciliationAmount3890 "+reconciliationAmount);
 
+						/********month show**start*********************29.01.2016**/
+
+						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
 
 
-						records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+						/*******month show***end************************29.01.2016****/
+
+
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+						records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
 
 
 					}
@@ -5864,7 +5906,15 @@ public class ReportMgmt extends Controller {
 						System.out.println("reconciliationAmount5634"+reconciliationAmount);
 						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
 
-						records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+						/********month show**start*********************29.01.2016**/
+
+						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+
+
+						/*******month show***end************************29.01.2016****/
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+						records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
 					}
 					totalRemainingAmount = totalRemainingAmount+lastMonthNetIncome;
 					records.add(new String[]{"Final payout",String.valueOf(totalRemainingAmount)});
@@ -6321,9 +6371,9 @@ public class ReportMgmt extends Controller {
 		return ok(myJsonNode);*/
 
 
-		final File file = new File("yourfile.xls");
+		/*final File file = new File("yourfile.xls");*/
 
-		/*final File file = new File("yourfile.csv");*/
+		final File file = new File("yourfile.csv");
 		final BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		final CSVWriter writer = new CSVWriter(out, ',');
 		/*final List<String[]> data =payoutToStringArray(donations,eventy);*/
@@ -6331,16 +6381,16 @@ public class ReportMgmt extends Controller {
 		final List<String[]> data = reconcileToStringArrayForMonth(donations,eventy);
 		writer.writeAll(data);
 		writer.close();
-		/*response().setHeader("Content-Disposition",
+		response().setHeader("Content-Disposition",
 				"attachment; filename=\"ReconciliationReport.csv\"");
 		response().setContentType("text/csv");
-		return ok(file).as("text/csv");*/
+		return ok(file).as("text/csv");
 
 
-		response().setHeader("Content-Disposition",
+		/*response().setHeader("Content-Disposition",
 				"attachment; filename=\"ReconciliationReport.xls\"");
 		response().setContentType("text/xls");
-		return ok(file).as("text/xls");
+		return ok(file).as("text/xls");*/
 
 
 		/*if(StringUtils.isEmpty(requestData.get("paymentType"))) {
@@ -6434,9 +6484,9 @@ public class ReportMgmt extends Controller {
 		return ok(myJsonNode);*/
 
 
-		final File file = new File("yourfile.xls");
+		/*final File file = new File("yourfile.xls");*/
 
-		/*final File file = new File("yourfile.csv");*/
+		final File file = new File("yourfile.csv");
 		final BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		final CSVWriter writer = new CSVWriter(out, ',');
 		/*final List<String[]> data =payoutToStringArray(donations,eventy);*/
@@ -6444,16 +6494,16 @@ public class ReportMgmt extends Controller {
 		final List<String[]> data = reconcileToStringArrayForMonth1(donations);
 		writer.writeAll(data);
 		writer.close();
-		/*response().setHeader("Content-Disposition",
+		response().setHeader("Content-Disposition",
 				"attachment; filename=\"ReconciliationReport.csv\"");
 		response().setContentType("text/csv");
-		return ok(file).as("text/csv");*/
+		return ok(file).as("text/csv");
 
 
-		response().setHeader("Content-Disposition",
+		/*response().setHeader("Content-Disposition",
 				"attachment; filename=\"ReconciliationReport.xls\"");
 		response().setContentType("text/xls");
-		return ok(file).as("text/xls");
+		return ok(file).as("text/xls");*/
 
 
 		/*if(StringUtils.isEmpty(requestData.get("paymentType"))) {

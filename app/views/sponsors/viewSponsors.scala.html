@@ -91,7 +91,7 @@
                  @for(sponsoritem <- SponsorItem.getSortedSponsorItems(sponsors.sponsoritems)) {
                  	@if(sponsoritem.title != null && sponsoritem.amount != 0) {
                  	<tr>
-                    	<td width="20%">@if(sponsoritem.donation != null) { @if((sponsoritem.donation.status == Donation.PaymentStatus.CLEARED) || (sponsoritem.donation.status == Donation.PaymentStatus.APPROVED)) { Sponsored } else { Pending } } else { <a type="button" class="btn btn-green" name="sponsorButton" href="@routes.DonationMgmt.createModalWithSponsor(event, event.sponsorFund,sponsoritem.id)">Sponsor</a>}</td>
+                    	<td width="20%">@if(sponsoritem.donation != null) { @if((sponsoritem.donation.status == Donation.PaymentStatus.CLEARED) || (sponsoritem.donation.status == Donation.PaymentStatus.INITIATED)) { Sponsored } else { Pending } } else { <a type="button" class="btn btn-green" name="sponsorButton" href="@routes.DonationMgmt.createModalWithSponsor(event, event.sponsorFund,sponsoritem.id)">Sponsor</a>}</td>
                     	@*<td>$@sponsoritem.amount @sponsoritem.title<br/>@sponsoritem.description</td>*@
 
                         @if(sponsoritem.donation!=null){
@@ -100,7 +100,7 @@
                             <td>$@sponsoritem.amount @sponsoritem.title <br/>@sponsoritem.description</td>
                         }
                     	<td>
-					    @if(sponsoritem.donation != null && ((sponsoritem.donation.status == Donation.PaymentStatus.CLEARED) || (sponsoritem.donation.status == Donation.PaymentStatus.APPROVED))) {
+					    @if(sponsoritem.donation != null && ((sponsoritem.donation.status == Donation.PaymentStatus.CLEARED) || (sponsoritem.donation.status == Donation.PaymentStatus.INITIATED))) {
 						<h4>Sponsored by @if(!Option(sponsoritem.donation.donorName).getOrElse("").isEmpty){@sponsoritem.donation.donorName}else{@sponsoritem.donation.firstName @sponsoritem.donation.lastName}</h4>
                     	}
                     	</td>

@@ -156,7 +156,7 @@
                                                                 <td width ="50px;">
 
                                                                 </td >
-                                                                <td width ="350px;"><b>Amount</b></td>
+                                                                <td width ="350px;"><b>Amount(Min. donation is $5.00. Please enter whole dollar amounts NO cents)</b></td>
                                                                 @*<td width ="20px;">
 
                                                             </td>*@
@@ -205,7 +205,8 @@
                                                                 <td width ="350px;">
 
                                                                     <br />
-                                                                @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")
+                                                                @helper.inputText(donationForm("amount"), '_label -> "nolabel", 'class -> "form-control",'id -> "amountValue1" , 'placeholder -> "Donation amount", '_addon -> "$")
+                                                                    <input type="text"  id = "centValue1" value=".00" readonly>
                                                                 </td>
                                                                 @*<td width ="20px;">
 
@@ -672,7 +673,13 @@
                                                                             </select>
                                                                             </td>
                                                                             <td><select id="status" name="status" class="form-control" @if(donation.paymentType == Donation.PaymentType.CREDIT && !ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN) && !ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)) {disabled="disabled"}>
-                                                                                <option value="APPROVED" @if(donation.status == Donation.PaymentStatus.APPROVED){ selected}>Approved</option>
+                                                                              @*  <option value="APPROVED" @if(donation.status == Donation.PaymentStatus.APPROVED){ selected}>Approved</option>*@
+                                                                                <option value="INITIATED" @if(donation.status == Donation.PaymentStatus.INITIATED){ selected}>Initiated</option>
+
+
+
+
+
                                                                                 <option value="PENDING" @if(donation.status == Donation.PaymentStatus.PENDING){ selected}>Pending</option>
                                                                                 <option value="CLEARED" @if(donation.status == Donation.PaymentStatus.CLEARED){ selected}>Cleared</option>
                                                                                 <option value="REFUNDED" @if(donation.status == Donation.PaymentStatus.REFUNDED){ selected}>Refunded</option>
@@ -1485,6 +1492,21 @@ $("#wellForCommunityCollection").hide();
 
 
 //====================new add for anonymous===============================end=================09.10.2015===========================//
+$("#amountValue1").focusout(function() {
+ var amount =document.getElementById("amountValue1").value;
+ if (amount != null)
+ {
+/*  if (amount<1)
+  {
+  document.getElementById("amount").value=1;
+  }
 
+ else
+ {
+ document.getElementById("amount").value=Math.round(amount);
+ }*/
+ document.getElementById("amountValue1").value=Math.round(amount);
+}
+})
     </script>
 }

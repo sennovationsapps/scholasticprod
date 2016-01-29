@@ -237,20 +237,20 @@ public class DonationMgmt extends Controller {
 			if (ccProps.containsKey(donation.transactionNumber)) {
 				Map<String, String> props = ccProps.get(donation.transactionNumber);
 				if (StringUtils.equalsIgnoreCase(props.get("ssl_trans_status"), "STL")) {
-					if(donation.status == PaymentStatus.APPROVED && StringUtils.equalsIgnoreCase(props.get
-							("ssl_transaction_type"), "Sale")) {
-						Logger.debug("This transaction has been updated to settled or cleared - {}", donation.id);
-						donation.status = PaymentStatus.CLEARED;
-						donation.datePaid = new Date();
-						donation.update();
-					}
-					/*if(donation.status == PaymentStatus.INITIATED && StringUtils.equalsIgnoreCase(props.get
+				/*	if(donation.status == PaymentStatus.APPROVED && StringUtils.equalsIgnoreCase(props.get
 							("ssl_transaction_type"), "Sale")) {
 						Logger.debug("This transaction has been updated to settled or cleared - {}", donation.id);
 						donation.status = PaymentStatus.CLEARED;
 						donation.datePaid = new Date();
 						donation.update();
 					}*/
+					if(donation.status == PaymentStatus.INITIATED && StringUtils.equalsIgnoreCase(props.get
+							("ssl_transaction_type"), "Sale")) {
+						Logger.debug("This transaction has been updated to settled or cleared - {}", donation.id);
+						donation.status = PaymentStatus.CLEARED;
+						donation.datePaid = new Date();
+						donation.update();
+					}
 					else if(donation.status != PaymentStatus.REFUNDED && (StringUtils.equalsIgnoreCase(props.get("ssl_transaction_type"), "Void") || StringUtils.equalsIgnoreCase(props.get("ssl_transaction_type"), "Return"))) {
 						Logger.debug("This transaction has been updated to returned - {}", donation.id);
 						donation.status = PaymentStatus.REFUNDED;
@@ -626,6 +626,10 @@ public class DonationMgmt extends Controller {
 								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 								// return badRequest(createForm.render(event, event.generalFund, donationForm));
 							}
+							if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+								donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
+								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							}
 							/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 								System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
 								donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
@@ -656,6 +660,10 @@ public class DonationMgmt extends Controller {
 
 							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 							// return badRequest(createForm.render(event, event.generalFund, donationForm));
+						}
+						if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+							donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
+							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						}
 						/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 							System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
@@ -688,6 +696,10 @@ public class DonationMgmt extends Controller {
 						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						// return badRequest(createForm.render(event, event.generalFund, donationForm));
 					}
+					if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+						donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
+						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					}
 					/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 						System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
 						donationForm.reject("collectionTypes", "Please select the Cash Collection Types.");
@@ -719,6 +731,10 @@ public class DonationMgmt extends Controller {
 
 					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 					// return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+				else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+					donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
+					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 				}
 				/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 					System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
@@ -810,6 +826,13 @@ public class DonationMgmt extends Controller {
 
 		if (StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
 			donationForm.reject("pfp.id", "Please select the Participant that you would like to donate to.  The General Fund donations are made to the Event only and not an individual Participant.");
+			if (donationForm.hasErrors()) {
+				Logger.debug("Has errors {}", donationForm.errorsAsJson());
+				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+			}
+		}
+		if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+			donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
 			if (donationForm.hasErrors()) {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
 				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
@@ -1025,7 +1048,11 @@ public class DonationMgmt extends Controller {
 			Logger.debug("Has errors {}", donationForm.errorsAsJson());
 			if(StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			} else {
+			}else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+				donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}else
+			{
 				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
 			}
@@ -1036,6 +1063,10 @@ public class DonationMgmt extends Controller {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
 			}
+		}
+		if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+			donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
+			return badRequest(createForm.render(event, event.generalFund, donationForm));
 		}
 		Donation donation = donationForm.get(); // donation form in donation variable fdatsuv
 		donation.dateCreated = new Date();
@@ -1102,7 +1133,8 @@ public class DonationMgmt extends Controller {
 				return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 			}
 			else{*/
-			donation.status = PaymentStatus.APPROVED;
+			/*donation.status = PaymentStatus.APPROVED;*/
+			donation.status = PaymentStatus.INITIATED;
 			donation.transactionNumber = UUID.randomUUID().toString();
 			/*********************start*********************comment out******************************25.01.2016***********************************************/
 			/*Random randomGenerator1 = new Random();
@@ -1245,6 +1277,7 @@ public class DonationMgmt extends Controller {
 	 */
 	@Transactional
 	public static Result saveModalWithSponsor(Event event, Pfp pfp, Long sponsorItemId) {
+		String	url="";
 		if (event.isIdOnly()) {
 			event = Event.findByIdWithMin(event.id);
 		}
@@ -1353,8 +1386,8 @@ public class DonationMgmt extends Controller {
 //									donationForm));
 //				}
 //			}
-			donation.status = PaymentStatus.APPROVED;
-			/*donation.status = PaymentStatus.INITIATED;*/
+			/*donation.status = PaymentStatus.APPROVED;*/
+			donation.status = PaymentStatus.INITIATED;
 			donation.paymentType = PaymentType.CREDIT;
 			donation.transactionNumber =UUID.randomUUID().toString();
 			//ccProps.get("ssl_txn_id");
@@ -1425,7 +1458,7 @@ public class DonationMgmt extends Controller {
 		Donation updatedDonation = Donation.findById(donationForm.get().id);
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
 		ReceiptMgmt.sendSponsoredMsg(updatedDonation);
-		if (updatedDonation.paymentType == PaymentType.CREDIT) {
+		/*if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			String WorldPlayUrl=null;
 			try {
 				WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
@@ -1447,7 +1480,47 @@ public class DonationMgmt extends Controller {
 			System.out.println("worldpay Now URL"+WorldPlayUrl);
 			//return redirect(routes.ReceiptMgmt.getAndSendCCReceipt(event, updatedDonation));
 			return redirect(WorldPlayUrl);
-		} else {
+		}*/
+		if (updatedDonation.paymentType == PaymentType.CREDIT) {
+			/**********start********authorize.net**********************************************08.01.2016******************/
+			try {
+				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
+				/*Random randomGenerator1 = new Random();
+				int randomSequence1 = randomGenerator1.nextInt(1000);*/
+
+				Random randomGenerator = new Random();
+				int randomSequence = randomGenerator.nextInt(1000);
+				Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence,String.valueOf(donation.amount));
+				//url="https://test.authorize.net/gateway/transact.dll?"+
+				url="https://secure.authorize.net/gateway/transact.dll?"+
+						"x_fp_sequence="+fingerprint.getSequence()+
+						"&x_fp_timestamp="+fingerprint.getTimeStamp()+
+						"&x_fp_hash="+fingerprint.getFingerprintHash()+
+						"&x_version=3.1"+
+						"&x_method=CC"+
+						"&x_type=AUTH_CAPTURE"+
+						"&x_login="+API_LOGIN_ID+
+						"&x_description=Scholastic"+
+						"&x_show_form=PAYMENT_FORM"+
+						"&x_relay_response=true"+
+						"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png"+
+
+						"&x_donation_transaction_number="+donation.transactionNumber+
+						"&x_amount="+String.valueOf(donation.amount)+
+						"&x_event_id="+event.id+
+						"&x_pfp_id="+donation.pfp.id+
+						"&x_donation_payment_status="+donation.status+
+						"&x_email_id="+donation.email+
+						"&x_invoice_num="+donation.invoiceNumber;
+				System.out.println("url"+url);
+				//return redirect(url);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("within validateAndSendCreditInfo now Authorize URLEEEEEEEEEEEEEEEEEEEEEEEEEE1111111111 =>>>>>>>>>>>>>>>"+url);
+			return redirect(url);
+			/**********end********authorize.net**********************************************08.01.2016******************/
+		}else {
 			System.out.println("before calling getAndSendCheckReceipt..");
 			return redirect(routes.ReceiptMgmt.getAndSendCheckReceipt(event, updatedDonation));
 		}
@@ -1961,6 +2034,7 @@ public class DonationMgmt extends Controller {
 		/****new add***end**/
 		final Form<Donation> donationForm = form(Donation.class);
 		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
+		System.out.println("donationId ::: "+donation.id);
 		if(result.getResponseMap().get("x_response_code").equals("1")){
 			donation.status=PaymentStatus.CLEARED;
 			paymentStatus="Payment Done successfully";

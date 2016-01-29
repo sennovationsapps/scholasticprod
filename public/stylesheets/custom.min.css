@@ -356,3 +356,37 @@ li.profile p{overflow:hidden;font-size:14px;text-transform:none;word-wrap:break-
     display: inline;
 }
 /**********end of donation search*****************************************18.01.2016***********************/
+
+
+/********start**********************************29.01.2016******************amount min***************/
+
+
+
+
+#amountValue {
+    float: left;
+    width: 619px;
+    display: inline;
+    margin: 0px;
+}
+
+#centValue { width: 60px;
+    padding: 0px;
+    text-align: left;
+    margin-top: -50px;
+    float: right;
+    display: inline;
+   /* margin-left: 301px;*/
+    height: 36px;
+}
+
+#amountValue1{
+    width: 269px;
+}
+#centValue1{
+    margin-top: -50px;
+    float: right;
+    width: 50px;
+    height: 36px;
+}
+/*********end***********************************29.01.2016******************amount min***************/

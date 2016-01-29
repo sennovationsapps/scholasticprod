@@ -723,7 +723,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 				int id=row.getInteger("status");
 
 				if(id == 0){
-					donationByPfp.status = PaymentStatus.APPROVED;
+					/*donationByPfp.status = PaymentStatus.APPROVED;*/
+					donationByPfp.status = PaymentStatus.INITIATED;
 				}else if(id == 1){
 					donationByPfp.status = PaymentStatus.PENDING;
 
@@ -850,7 +851,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 				int id=row.getInteger("status");
 
 				if(id == 0){
-					donationByTeam.status = PaymentStatus.APPROVED;
+					/*donationByTeam.status = PaymentStatus.APPROVED;*/
+					donationByTeam.status = PaymentStatus.INITIATED;
 				}else if(id == 1){
 					donationByTeam.status = PaymentStatus.PENDING;
 
@@ -1443,8 +1445,8 @@ public class Donation extends Model implements PathBindable<Donation> {
 	/************************end****************18.01.2016***************donation search with year***********************/
 	public enum PaymentStatus {
 		@EnumValue("0")
-		/*INITIATED(0, "Initiated"),*/
-		APPROVED(0, "Approved"),
+		INITIATED(0, "Initiated"),
+		/*APPROVED(0, "Approved"),*/
 		@EnumValue("1")
 		PENDING(1, "Pending"),
 		@EnumValue("2")
