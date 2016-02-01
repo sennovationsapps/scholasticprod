@@ -4978,7 +4978,7 @@ public class ReportMgmt extends Controller {
 
 			for(int i1=1;i1<=firstPayoutCount;i1++){
 				//i1 payout will be shown
-				System.out.println("-----------------------------------i1------------------------------------"+i1);
+				/*System.out.println("-----------------------------------i1------------------------------------"+i1);
 				System.out.println("totalCreditAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNo"));
 				System.out.println("totalCheckAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo"));
 				System.out.println("totalDonationsAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalDonationsAmount"));
@@ -5002,7 +5002,7 @@ public class ReportMgmt extends Controller {
 				System.out.println("grossIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-grossIncomeAmount"));
 				System.out.println("netIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
 				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-scholasticChallengeFeeAmount"));
-				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-netAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-netAmount"));*/
 				double totalCreditAmounts = (double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+(double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo");
 				/*totalCheckDonations[i1] =String.valueOf(Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+"") + Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNo")+"")) ;*/
 
@@ -5102,13 +5102,17 @@ public class ReportMgmt extends Controller {
 						System.out.println("reconciliationAmount5634"+reconciliationAmount);
 						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
 						/********month show**start*********************29.01.2016**/
-
+					if(payOutTimeAndAllAmountsMap.get(i1 + "-month")!=null){
 						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+						records.add(new String[]{element + "( Payout No: " + String.valueOf(i1) + ")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+					}
+
+
 
 
 						/*******month show***end************************29.01.2016****/
 
-						records.add(new String[]{element + "( Payout No: " + String.valueOf(i1) + ")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+
 
 						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
 					}
@@ -5765,7 +5769,7 @@ public class ReportMgmt extends Controller {
 
 			for(int i1=1;i1<=firstPayoutCount;i1++){
 				//i1 payout will be shown
-				System.out.println("-----------------------------------i1------------------------------------"+i1);
+				/*System.out.println("-----------------------------------i1------------------------------------"+i1);
 				System.out.println("totalCreditAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNo"));
 				System.out.println("totalCheckAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo"));
 				System.out.println("totalDonationsAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalDonationsAmount"));
@@ -5789,7 +5793,7 @@ public class ReportMgmt extends Controller {
 				System.out.println("grossIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-grossIncomeAmount"));
 				System.out.println("netIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
 				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-scholasticChallengeFeeAmount"));
-				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-netAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-netAmount"));*/
 				double totalCreditAmounts = (double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+(double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo");
 				/*totalCheckDonations[i1] =String.valueOf(Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+"") + Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNo")+"")) ;*/
 
@@ -6340,7 +6344,7 @@ public class ReportMgmt extends Controller {
 		if((check2-check1)>0){
 
 			if(currDate1.getDate()<eventy.fundraisingStart.getDate()){
-				monthBetweenStartAndCurrDate = ((int) diffDays/30) +2;
+				monthBetweenStartAndCurrDate = ((int) diffDaysBetweenStartAndCurrDate1/30) +2;
 			}
 			else
 			{
