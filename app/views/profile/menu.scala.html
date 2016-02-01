@@ -45,24 +45,26 @@
 
 
       @if(ControllerUtil.isUserInPermission(UserPermission.EVENT_ROOT_EDIT)) {
-        <li>
-          @**<a href="@routes.Application.profileEvents">**@
-          <a href="@routes.Application.profileSearchEvents()">
-            <i class="sign fa fa-calendar bg-green"></i> Events <i class="fa fa-chevron-right pull-right"></i>
-          </a>
-        </li>
-        <li>
-          <a href="@routes.EventWorkflowMgmt.create()">
-            <i class="sign fa fa-calendar bg-green"></i> Create Event <i class="fa fa-chevron-right pull-right"></i>
-          </a>
-        </li>
-        <li>
-          <a href="@routes.Application.profileReports">
-            <i class="sign fa fa-file-text-o bg-green"></i> Reports <i class="fa fa-chevron-right pull-right"></i>
-          </a>
-        </li>
-
+          <li>
+              @**<a href="@routes.Application.profileEvents">**@
+              <a href="@routes.Application.profileSearchEvents()">
+                  <i class="sign fa fa-calendar bg-green"></i> Events <i class="fa fa-chevron-right pull-right"></i>
+              </a>
+          </li>
+          <li>
+              <a href="@routes.EventWorkflowMgmt.create()">
+                  <i class="sign fa fa-calendar bg-green"></i> Create Event <i class="fa fa-chevron-right pull-right"></i>
+              </a>
+          </li>
+          <li>
+              <a href="@routes.Application.profileReports">
+                  <i class="sign fa fa-file-text-o bg-green"></i> Reports <i class="fa fa-chevron-right pull-right"></i>
+              </a>
+          </li>
+      }
           @*******start*********reconciliation report**********28.01.2016***********************@
+        @if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) || ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)){
+
 
 
           <li>
@@ -71,8 +73,11 @@
               </a>
           </li>
 
+        }
+
 
           @********end**********reconciliation report**********28.01.2016***********************@
+        @if(ControllerUtil.isUserInPermission(UserPermission.EVENT_ROOT_EDIT)) {
         <li>
           @**<a href="@routes.Application.profileDonations">**@
          @* <a href="@routes.Application.profileSearchDonations()">
@@ -114,11 +119,11 @@
 
 
       @if(ControllerUtil.isUserInPermission(UserPermission.SYS_DONATION_EDIT)) {
-        <li>
+        @*<li>
           <a href="@routes.Application.profileDonationsReconcile">
             <i class="sign fa fa-dollar bg-green"></i> Reconcile<i class="fa fa-chevron-right pull-right"></i>
           </a>
-        </li>
+        </li>*@
       }
       @if(ControllerUtil.isUserInPermission(UserPermission.PFP_ROOT_EDIT) || ControllerUtil.isUserInPermission(UserPermission.EVENT_ROOT_EDIT)) {
         <li>

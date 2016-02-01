@@ -4580,6 +4580,7 @@ public class ReportMgmt extends Controller {
 		long daysBetweenStartAndCurrDate1 = currDate1.getTime()-eventy.fundraisingStart.getTime();
 		int diffDaysBetweenStartAndCurrDate1 = (int)TimeUnit.DAYS.convert(daysBetweenStartAndCurrDate1, TimeUnit.MILLISECONDS);
 
+		System.out.println("---------diffDaysBetweenStartAndCurrDate1+++++++++"+diffDaysBetweenStartAndCurrDate1);
 
 
 		check1 = (int) diffDaysBetweenStartAndCurrDate1/30;
@@ -4587,10 +4588,14 @@ public class ReportMgmt extends Controller {
 		if((check2-check1)>0){
 
 			if(currDate1.getDate()<eventy.fundraisingStart.getDate()){
-				diffMonthBetweenStartAndEndFundraising = ((int) diffDays/30) +2;
+				System.out.println("-------------(int) diffDaysBetweenStartAndCurrDate11111111111111/30)++++++"+(int)
+						diffDaysBetweenStartAndCurrDate1/30);
+				monthBetweenStartAndCurrDate = ((int) diffDaysBetweenStartAndCurrDate1/30) +2;
 			}
 			else
 			{
+				System.out.println("-------------(int) diffDaysBetweenStartAndCurrDate1/30)++++++"+(int)
+						diffDaysBetweenStartAndCurrDate1/30);
 				monthBetweenStartAndCurrDate = ((int) diffDaysBetweenStartAndCurrDate1/30) +1;
 			}
 
@@ -6237,6 +6242,1770 @@ public class ReportMgmt extends Controller {
 
 
 	/*******end*******27.01.2016*******************************************/
+
+
+
+	/********start**********01.02.2016*****************************************/
+	private static List<String[]> payoutToStringArrayForMonth3(List<Donation> donations, Event eventy){
+		List<String[]> records = new ArrayList<String[]>();
+		Date currDate = new Date();
+		long daysBetweenStartAndCurrDate = currDate.getTime()-eventy.fundraisingStart.getTime();
+		Date date1=null;
+		Date date2=null;
+		//Calendar calendar=Calendar.getInstance(eventy.fundraisingStart.getTime());
+		date2=new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth(), eventy.fundraisingStart.getDate());
+		if(eventy.fundraisingStart.getMonth() == 11){
+			date1 = new Date(eventy.fundraisingStart.getYear()+1,  0, 5);
+		}else {
+			date1 = new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth() + 1, 5);
+		}
+
+		System.out.println("date2----"+date2+"@@@@date1---"+date1+"@@@@currDate@@@"+currDate);
+
+
+
+
+		long difffirstpayout=date1.getTime()-eventy.fundraisingStart.getTime();
+		Map<Integer,Double> payout=new HashMap<Integer,Double>();
+		Map<Integer,Double> consilation=new HashMap<Integer,Double>();
+		int totalCreditAccNo=0;
+		String totalCreditAcc=null;
+		int totalCheckAccNo=0;
+		String totalCheckAcc=null;
+
+		double totalPaymentByCredit=0.0;
+		double totalPaymentByCheck=0.0;
+		double totalserviceTax=0.0;
+
+
+
+
+
+		//----rimi-----start----------------21.01.2016-------------------------------------------------//
+
+		double scholasticChallengeFeeAmount = 0.0;
+		double scholasticChallengeFeeAmountPerct = eventy.serviceFee;
+		if(scholasticChallengeFeeAmountPerct == 0){
+			scholasticChallengeFeeAmountPerct = 10.0;
+		}
+		long daysBetweenStartAndEndFundraising = eventy.fundraisingEnd.getTime()-eventy.fundraisingStart.getTime();
+		System.out.println("start day:: "+eventy.fundraisingStart);
+		System.out.println("end day:: "+eventy.fundraisingEnd);
+		System.out.println ("Days: " + TimeUnit.DAYS.convert(daysBetweenStartAndEndFundraising, TimeUnit.MILLISECONDS));
+		int diffDays = (int)TimeUnit.DAYS.convert(daysBetweenStartAndEndFundraising, TimeUnit.MILLISECONDS);
+		Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
+		int currentDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
+		System.out.println("currentDayOfMonth :: "+currentDayOfMonth);
+
+		/***********Add Morning 28.01.16********************/
+		int diffMonthBetweenStartAndEndFundraising =0;
+		int monthBetweenStartAndCurrDate =0;
+
+		int check1 = (int) diffDays/30;
+		float check2=(float) diffDays/30;
+		System.out.println("-----------check1--------check2------"+check1+"-----"+check2);
+
+
+		if((check2-check1)>0){
+
+
+			if(eventy.fundraisingEnd.getDate()<eventy.fundraisingStart.getDate()){
+				diffMonthBetweenStartAndEndFundraising = ((int) diffDays/30) +2;
+			}
+
+			else{
+				diffMonthBetweenStartAndEndFundraising = ((int) diffDays/30) +1;
+			}
+
+
+		}
+		else{
+			diffMonthBetweenStartAndEndFundraising = ((int) diffDays/30);
+		}
+		//int diffMonthBetweenStartAndEndFundraising = (int) diffDays/30;
+
+		System.out.println("------------diffMonthBetweenStartAndEndFundraising-----------"+diffMonthBetweenStartAndEndFundraising);
+
+
+
+
+		Date currDate1 = new Date();
+		long daysBetweenStartAndCurrDate1 = currDate1.getTime()-eventy.fundraisingStart.getTime();
+		int diffDaysBetweenStartAndCurrDate1 = (int)TimeUnit.DAYS.convert(daysBetweenStartAndCurrDate1, TimeUnit.MILLISECONDS);
+
+
+
+		check1 = (int) diffDaysBetweenStartAndCurrDate1/30;
+		check2=(float) diffDaysBetweenStartAndCurrDate1/30;
+		if((check2-check1)>0){
+
+			if(currDate1.getDate()<eventy.fundraisingStart.getDate()){
+				monthBetweenStartAndCurrDate = ((int) diffDays/30) +2;
+			}
+			else
+			{
+				monthBetweenStartAndCurrDate = ((int) diffDaysBetweenStartAndCurrDate1/30) +1;
+			}
+
+		}
+		else{
+			monthBetweenStartAndCurrDate = ((int) diffDaysBetweenStartAndCurrDate1/30);
+		}
+
+		System.out.println("------------monthBetweenStartAndCurrDate-----------"+monthBetweenStartAndCurrDate);
+		/***********Add Morning 28.01.16********************/
+
+
+
+		//int monthBetweenStartAndCurrDate = diffDaysBetweenStartAndCurrDate1/30;
+
+
+
+
+
+		date1 = new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth() + 1, 5);
+		//int diffMonthBetweenStartAndEndFundraising
+
+
+		LocalDate start = new LocalDate(eventy.fundraisingStart.getTime());
+		//LocalDate start = new LocalDate(firstDate.getTime());
+		LocalDate end = new LocalDate(currDate1.getTime());
+
+		//monthBetweenStartAndCurrDate =Months.monthsBetween(start, end).getMonths();
+
+
+
+
+
+
+		//Date startDate = new Date("2015-02-14");
+
+
+	/*	int months  = (firstDate.getTime().get(Calendar.YEAR) - secondDate.get(Calendar.YEAR)) * 12 +
+				(firstDate.get(Calendar.MONTH)- secondDate.get(Calendar.MONTH)) +
+				(firstDate.get(Calendar.DAY_OF_MONTH) >= secondDate.get(Calendar.DAY_OF_MONTH)? 0: -1);*/
+
+
+		System.out.println("-----------------------Diff months is-------------------" + monthBetweenStartAndCurrDate);
+
+		System.out.println();
+
+
+//Calculate Difference between month---
+
+
+
+
+
+
+
+		//Test
+
+
+		System.out.println();
+
+		int i = 0;
+		int firstPayoutCount = 0;
+		double reconciliationAmount = 0.0;
+		HashMap payOutTimeAndPaidAmountMap = new HashMap();
+		HashMap payOutTimeAndAllAmountsMap = new HashMap();
+		HashMap payOutTimeAndPayableAmountMap = new HashMap();
+		if(monthBetweenStartAndCurrDate<diffMonthBetweenStartAndEndFundraising){
+			for( i = 0 ;i<monthBetweenStartAndCurrDate;i++) {
+
+				System.out.println("--------------------------------------i---------------------" + i);
+
+				Date dateStartFundraising = eventy.fundraisingStart;
+
+
+				//fundraising start date+ i no of month
+				Calendar calendar = Calendar.getInstance();
+
+
+				//java.util.Date date= new Date();
+				Calendar cal = Calendar.getInstance();
+				System.out.println("------------@@@@@@" + eventy.fundraisingStart);
+
+				//Date date
+				cal.setTime(date2);
+				//int month = eventy.fundraisingStart.getMonth();
+
+				//System.out.println("---hjhhh-----"+month);
+				//cal.add(month, i);
+				//System.out.println("----------Jan--------"+cal.MONTH);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+				Date eachMonthFirstDay = cal.getTime();
+				System.out.println("---eachMonthFirstDay9----" + eachMonthFirstDay);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				Date eachMonthLastDay = cal.getTime();
+				System.out.println("---eachMonthLastDay9---" + eachMonthLastDay);
+
+
+				//current day
+				Date currdate = new Date();
+
+
+				//total logic
+				// for donations variable
+				double totalCreditAmountNo = 0.0;
+				double totalCheckAmountNo = 0.0;
+				totalCreditAccNo = 0;
+				totalCheckAccNo = 0;
+				double totalDonationsAmount = 0.0;
+				double totalDonationsAccNo = 0.0;
+
+				//for sponsors variable
+				double totalCreditAmountNoForSponsor = 0.0;
+				double totalCheckAmountNoForSponsor = 0.0;
+				double totalCreditAccNoForSponsor = 0.0;
+				double totalCheckAccNoForSponsor = 0.0;
+				double totalSponsorAmount = 0.0;
+				double totalSponsorsAccNo = 0.0;
+
+
+				if (donations != null && donations.size() > 0) {
+
+
+					for (Donation donation : donations) {
+						if(donation !=null){
+							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+								//total donations calculation for i where i
+								if (donation.donationType != Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNo = totalCreditAccNo + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCheckAmountNo = totalCheckAmountNo + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										totalCheckAccNo = totalCheckAccNo + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+								if (donation.donationType == Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCheckAmountNoForSponsor = totalCheckAmountNoForSponsor + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										totalCheckAccNoForSponsor = totalCheckAccNoForSponsor + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+
+
+							}
+						}
+					}
+
+				}
+
+				//calculations of donations
+				//totalDonationsAmount = totalCreditAmountNo+totalCheckAmountNo;
+				totalDonationsAmount = totalCreditAmountNo;
+				System.out.println("----totalDonationsAmount---"+totalDonationsAmount);
+				//totalDonationsAccNo = totalCreditAccNo+totalCheckAccNo;
+				totalDonationsAccNo = totalCreditAccNo;
+				System.out.println("----totalDonationsAccNo---"+totalDonationsAccNo);
+				double totalCreditDonationsPerct = (totalCreditAmountNo/totalDonationsAmount)*100;
+				double totalCheckDonationsPerct = (totalCheckAmountNo/totalDonationsAmount)*100;
+				double totalCreditDonationsAccNoPerct = (totalCreditAccNo/totalDonationsAccNo)*100;
+				double totalCheckDonationsAccNoPerct = (totalCheckAccNo/totalDonationsAccNo)*100;
+
+
+				//total sponsorship calculations
+				//totalSponsorAmount = totalCreditAmountNoForSponsor+totalCheckAmountNoForSponsor;
+				totalSponsorAmount = totalCreditAmountNoForSponsor;
+				//totalSponsorsAccNo = totalCreditAccNoForSponsor+totalCheckAccNoForSponsor;
+				totalSponsorsAccNo = totalCreditAccNoForSponsor;
+				double totalCreditSponsorsPerct = (totalCreditAmountNoForSponsor/totalSponsorAmount)*100;
+				double totalCheckSponsorsPerct = (totalCheckAmountNoForSponsor/totalSponsorAmount)*100;
+				double totalCreditSponsorsAccNoPerct = (totalCreditAccNoForSponsor/totalSponsorsAccNo)*100;
+				double totalCheckSponsorsAccNoPerct = (totalCheckAccNoForSponsor/totalSponsorsAccNo)*100;
+
+				//gross income
+				double grossIncomeAmount = totalDonationsAmount + totalSponsorAmount;
+
+				//scholastic challenge fee
+				scholasticChallengeFeeAmount = 0.0;
+
+				/*double scholasticChallengeFeeAmountPerct = eventy.serviceFee;
+				if(scholasticChallengeFeeAmountPerct == 0){
+					scholasticChallengeFeeAmountPerct = 10.0;
+				}*/
+
+				scholasticChallengeFeeAmount = grossIncomeAmount*scholasticChallengeFeeAmountPerct/100;
+
+
+
+				//net income
+
+				double netIncomeAmount = grossIncomeAmount-scholasticChallengeFeeAmount;
+
+				//first payout
+
+				double remainingPayableAmount = 0.0;
+				double paidoutAmount = 0.0;
+				firstPayoutCount = firstPayoutCount + 1;
+				//paid amout percentage
+				double paidAmountPercent = 75;
+
+				paidoutAmount = (netIncomeAmount*75)/100;
+				remainingPayableAmount = netIncomeAmount - paidoutAmount;
+
+
+
+
+
+				//Commend on 27.01.16--------
+			/*	Formatter formatter=new Formatter();
+				formatter.format("%tb",cal);
+
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-month",formatter);*/
+
+
+
+
+
+
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAmountNo",totalCreditAmountNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAmountNo",totalCheckAmountNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalDonationsAmount",totalDonationsAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAccNo",totalCreditAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAccNo",totalCheckAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalDonationsAccNo",totalDonationsAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditDonationsPerct",totalCreditDonationsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckDonationsPerct",totalCheckDonationsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditDonationsAccNoPerct",totalCreditDonationsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckDonationsAccNoPerct",totalCheckDonationsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAmountNoForSponsor",totalCreditAmountNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAmountNoForSponsor",totalCheckAmountNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalSponsorAmount",totalSponsorAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAccNoForSponsor",totalCreditAccNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAccNoForSponsor",totalCheckAccNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalSponsorsAccNo",totalSponsorsAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditSponsorsPerct",totalCreditSponsorsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckSponsorsPerct",totalCheckSponsorsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditSponsorsAccNoPerct",totalCreditSponsorsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckSponsorsAccNoPerct",totalCheckSponsorsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-grossIncomeAmount",grossIncomeAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-netIncomeAmount",netIncomeAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-scholasticChallengeFeeAmount",scholasticChallengeFeeAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-netAmount",netIncomeAmount);
+				payOutTimeAndPaidAmountMap.put(firstPayoutCount,paidoutAmount);
+				payOutTimeAndPayableAmountMap.put(firstPayoutCount,remainingPayableAmount);
+
+
+				/*localCalendar = Calendar.getInstance(TimeZone.getDefault());
+				currentDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
+				if(currentDayOfMonth==5 || currentDayOfMonth>5){
+					for(int i1=1;i1<=firstPayoutCount;i1++){
+						//i1 payout will be shown
+
+						double remainingPayableAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						//reconciliationAmount
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+
+
+					}
+				}else{
+					for(int i1=1;i1<=firstPayoutCount-1;i1++){
+						//i1 payout will be shown
+
+						double remainingPayableAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						//reconciliationAmount
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+
+
+					}
+				}
+*/
+
+
+
+				if(date2.getMonth() == 11){
+					date2 = new Date(date2.getYear()+1,  0, date2.getDate());
+				}else {
+					date2 = new Date(date2.getYear(), date2.getMonth() + 1, date2.getDate());
+				}
+
+
+				System.out.println("------------------date2----------------"+date2);
+
+
+				//
+
+
+			}
+
+
+
+
+			records.add(new String[]{"Event Name", String.valueOf(eventy.name), "", "", "",  ""});
+
+			records.add(new String[]{"Event Start Date", String.valueOf(eventy.fundraisingStart), "", "", "",  ""});
+			records.add(new String[]{"Event End Date", String.valueOf(eventy.fundraisingEnd), "", "", "",  ""});
+			records.add(new String[]{"SC Fee", String.valueOf(scholasticChallengeFeeAmountPerct)+"%", "", "", "",  ""});
+			records.add(new String[]{"Monthly payout ", "75%", "", "", "",  ""});
+			records.add(new String[]{"", "", "", "", "",  ""});
+
+			String[] string =  new String[100];
+			string[0]="Collections Summary";
+
+
+
+
+
+
+
+
+			/********Show Month Between Start and end*********/
+			Date date3=null;
+			Calendar cal2 = Calendar.getInstance();
+			//cal2.setTime();
+			date3=new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth(), eventy.fundraisingStart.getDate());
+			for( i = 0 ;i<monthBetweenStartAndCurrDate;i++){
+
+				cal2.setTime(date3);
+
+				Formatter formatter=new Formatter();
+				formatter.format("%tb", cal2);
+
+				payOutTimeAndAllAmountsMap.put(i + "-month", formatter);
+
+
+				if(date3.getMonth() == 11){
+					/*date3 = new Date(eventy.fundraisingStart.getYear()+1,  0, 5);*/
+					date3 = new Date(date3.getYear()+1,  0, 5);
+				}else {
+					date3 = new Date(date3.getYear(), date3.getMonth() + 1, 5);
+				}
+
+			}
+
+
+
+
+			for(int i1=0;i1<monthBetweenStartAndCurrDate;i1++){
+				String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+				string[i1+1]=element;
+			}
+
+
+
+			records.add(string);
+			records.add(new String[]{"", "", "", "", "",  ""});
+
+
+			/*String[] totalCheckDonations =  new String[100];
+			totalCheckDonations[0] = "Cheque";*/
+
+			String[]  totalCreditDonations = new String[100];
+			totalCreditDonations[0] = "Credit Card";
+
+			String[]  grossIncomeDonations = new String[100];
+			grossIncomeDonations[0] = "Gross Income";
+
+
+			String[] scFee = new String[100];
+			scFee[0] = "SC Fee";
+
+
+			String[] disbursibleAmount = new String[100];
+			disbursibleAmount[0] = "Net Income";
+
+
+
+			for(int i1=1;i1<=firstPayoutCount;i1++){
+				//i1 payout will be shown
+				System.out.println("-----------------------------------i1------------------------------------"+i1);
+				System.out.println("totalCreditAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNo"));
+				System.out.println("totalCheckAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo"));
+				System.out.println("totalDonationsAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalDonationsAmount"));
+				System.out.println("totalCreditAccNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAccNo"));
+				System.out.println("totalCheckAccNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNo"));
+				System.out.println("totalDonationsAccNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalDonationsAccNo"));
+				System.out.println("totalCreditDonationsPerct::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditDonationsPerct"));
+				System.out.println("totalCheckDonationsPerct::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckDonationsPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditDonationsAccNoPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckDonationsAccNoPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalSponsorAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAccNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalSponsorsAccNo"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditSponsorsPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckSponsorsPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditSponsorsAccNoPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckSponsorsAccNoPerct"));
+				System.out.println("grossIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-grossIncomeAmount"));
+				System.out.println("netIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-scholasticChallengeFeeAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-netAmount"));
+				double totalChequeAmounts = (double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+(double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo");
+				/*totalCheckDonations[i1] =String.valueOf(Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+"") + Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNo")+"")) ;*/
+
+
+				//totalCheckDonations[i1] =String.valueOf(totalCreditAmounts) ;
+				//totalCreditAmounts
+				double totalCreditAmounts = (double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNo")+(double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNoForSponsor");
+				totalCreditDonations[i1] = String.valueOf(totalCreditAmounts);
+				grossIncomeDonations[i1] = String.valueOf((double)payOutTimeAndAllAmountsMap.get(i1 + "-grossIncomeAmount"));
+				scFee[i1] = String.valueOf((double)payOutTimeAndAllAmountsMap.get(i1 + "-scholasticChallengeFeeAmount"));
+				disbursibleAmount[i1] = String.valueOf((double)payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
+
+				//records.add(new String[]{"Balance Due", " ", "($" + remainingAmount + ")", "100%", "100%", remainingAmountPercent + "%"});
+
+
+			}
+
+			//records.add(totalCheckDonations);
+			records.add(totalCreditDonations);
+			records.add(grossIncomeDonations);
+			records.add(scFee);
+			records.add(disbursibleAmount);
+			localCalendar = Calendar.getInstance(TimeZone.getDefault());
+			currentDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
+			records.add(new String[]{"", "", "", "", "",  ""});
+			records.add(new String[]{"Payout Installments", "payout", "Withheld amount", "", "",  ""});
+			records.add(new String[]{"", "", "", "", "",  ""});
+			if(currentDayOfMonth==5 || currentDayOfMonth>5){
+				for(int i1=1;i1<firstPayoutCount;i1++){
+					//i1 payout will be shown
+
+					double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+					System.out.println("paidAmount1----"+paidAmount1);
+					double remainingPayableAmount1 = (double)payOutTimeAndPayableAmountMap.get(i1);
+					//reconciliationAmount
+					System.out.println("remainingPayableAmount1890 "+remainingPayableAmount1);
+
+					reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+					System.out.println("reconciliationAmount890 "+reconciliationAmount);
+
+					//   double
+					/********month show**start*********************29.01.2016**/
+					if (payOutTimeAndAllAmountsMap.get(i1 + "-month") != null) {
+						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+						records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+
+					}
+
+
+
+					/*******month show***end************************29.01.2016****/
+					//element+"("+String.valueOf(i1)+")"
+					/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+
+
+
+				}
+			}else{
+
+
+				if(currentDayOfMonth==eventy.fundraisingStart.getDate()){
+					for(int i1=1;i1<=firstPayoutCount-1;i1++){
+
+
+						double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						System.out.println("paidAmount1----"+paidAmount1);
+						double remainingPayableAmount1 = (double)payOutTimeAndPayableAmountMap.get(i1);
+						//reconciliationAmount
+						System.out.println("remainingPayableAmount2890 "+remainingPayableAmount1);
+
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+						System.out.println("reconciliationAmount3890 "+reconciliationAmount);
+
+						/********month show**start*********************29.01.2016**/
+                         if(payOutTimeAndAllAmountsMap.get(i1 + "-month")!=null){
+							 String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+							 records.add(new String[]{element + "( Payout No: " + String.valueOf(i1) + ")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+						 }
+
+
+
+						/*******month show***end************************29.01.2016****/
+
+
+
+
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+
+
+					}
+				}
+				else{
+					for(int i1=1;i1<=firstPayoutCount;i1++){
+
+
+						double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						System.out.println("paidAmount115634----"+paidAmount1);
+
+						//i1 payout will be shown
+
+						double remainingPayableAmount1 = (double)payOutTimeAndPayableAmountMap.get(i1);
+						//reconciliationAmount
+
+
+						System.out.println("remainingPayableAmount15634"+remainingPayableAmount1);
+						System.out.println("reconciliationAmount5634"+reconciliationAmount);
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+						/********month show**start*********************29.01.2016**/
+                         if(payOutTimeAndAllAmountsMap.get(i1 + "-month")!=null){
+							 String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+							 records.add(new String[]{element + "( Payout No: " + String.valueOf(i1) + ")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+						 }
+
+
+
+						/*******month show***end************************29.01.2016****/
+
+
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+					}
+				}
+
+			}
+
+			//If the current Date greater than 5th date
+			if(currDate.getDate()>=5){
+
+				//total logic
+				// for donations variable
+				double totalCreditAmountNo = 0.0;
+				//double totalCheckAmountNo = 0.0;
+				totalCreditAccNo = 0;
+				//totalCheckAccNo = 0;
+				double totalDonationsAmount = 0.0;
+				double totalDonationsAccNo = 0.0;
+
+				//for sponsors variable
+				double totalCreditAmountNoForSponsor = 0.0;
+				//double totalCheckAmountNoForSponsor = 0.0;
+				double totalCreditAccNoForSponsor = 0.0;
+				//double totalCheckAccNoForSponsor = 0.0;
+				double totalSponsorAmount = 0.0;
+				double totalSponsorsAccNo = 0.0;
+
+
+
+
+
+				Calendar cal = Calendar.getInstance();
+				System.out.println("------------@@@@@@" + eventy.fundraisingStart);
+
+				//Date date
+				cal.setTime(currDate);
+
+
+
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+				Date eachMonthFirstDay = cal.getTime();
+				System.out.println("---eachMonthFirstDay10----" + eachMonthFirstDay);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				Date eachMonthLastDay = currDate;
+				System.out.println("---eachMonthLastDay10---" + eachMonthLastDay);
+
+
+				if (donations != null && donations.size() > 0) {
+
+
+					for (Donation donation : donations) {
+						if(donation !=null){
+							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+								//total donations calculation for i where i
+								if (donation.donationType != Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNo = totalCreditAccNo + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										//totalCheckAmountNo = totalCheckAmountNo + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										//totalCheckAccNo = totalCheckAccNo + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+								if (donation.donationType == Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										//totalCheckAmountNoForSponsor = totalCheckAmountNoForSponsor + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										//totalCheckAccNoForSponsor = totalCheckAccNoForSponsor + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+
+
+							}
+						}
+					}
+
+				}
+
+
+
+				/*double  withheldAmount=totalCreditAmountNo+totalCheckAmountNo+totalCheckAmountNoForSponsor+totalCreditAmountNoForSponsor;*/
+				double  withheldAmount=totalCreditAmountNo+totalCreditAmountNoForSponsor;
+				withheldAmount=withheldAmount-((withheldAmount*scholasticChallengeFeeAmountPerct)/100);
+
+				records.add(new String[]{"Final Remaining Amount", "",String.valueOf((double)withheldAmount) , "", "",  ""});
+
+
+
+
+
+			}
+
+
+
+			else{
+
+
+				double totalCreditAmountNo = 0.0;
+				//double totalCheckAmountNo = 0.0;
+				totalCreditAccNo = 0;
+				//totalCheckAccNo = 0;
+				double totalDonationsAmount = 0.0;
+				double totalDonationsAccNo = 0.0;
+
+				//for sponsors variable
+				double totalCreditAmountNoForSponsor = 0.0;
+				//double totalCheckAmountNoForSponsor = 0.0;
+				double totalCreditAccNoForSponsor = 0.0;
+				//double totalCheckAccNoForSponsor = 0.0;
+				double totalSponsorAmount = 0.0;
+				double totalSponsorsAccNo = 0.0;
+
+
+
+
+
+				Calendar cal = Calendar.getInstance();
+				System.out.println("------------@@@@@@" + eventy.fundraisingStart);
+
+				//Date date
+				Date startDateCheck=new Date();
+
+				//date2=new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth(), eventy.fundraisingStart.getDate());
+				if(currDate.getMonth() == 1){
+					startDateCheck = new Date(eventy.fundraisingStart.getYear()-1,  12, 1);
+				}else {
+					startDateCheck = new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth() - 1, 1);
+				}
+
+
+
+
+
+
+
+
+
+				cal.setTime(startDateCheck);
+
+
+
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+				Date eachMonthFirstDay = cal.getTime();
+				System.out.println("---eachMonthFirstDay11----" + eachMonthFirstDay);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				Date eachMonthLastDay = currDate;
+				System.out.println("---eachMonthLastDay11---" + eachMonthLastDay);
+
+
+				if (donations != null && donations.size() > 0) {
+
+
+					for (Donation donation : donations) {
+						if(donation !=null){
+							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+								//total donations calculation for i where i
+								if (donation.donationType != Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNo = totalCreditAccNo + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										//totalCheckAmountNo = totalCheckAmountNo + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										//totalCheckAccNo = totalCheckAccNo + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+								if (donation.donationType == Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										//totalCheckAmountNoForSponsor = totalCheckAmountNoForSponsor + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										//totalCheckAccNoForSponsor = totalCheckAccNoForSponsor + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+
+
+							}
+						}
+					}
+
+				}
+
+
+
+				/*double  withheldAmount=totalCreditAmountNo+totalCheckAmountNo+totalCheckAmountNoForSponsor+totalCreditAmountNoForSponsor;*/
+				double  withheldAmount=totalCreditAmountNo+totalCreditAmountNoForSponsor;
+				withheldAmount=withheldAmount-((withheldAmount*scholasticChallengeFeeAmountPerct)/100);
+
+				records.add(new String[]{"Final Remaining Amount", "",String.valueOf((double)withheldAmount) , "", "",  ""});
+
+
+
+
+
+
+
+
+
+
+
+
+			}
+
+
+
+
+
+
+
+
+
+
+		}
+
+
+
+		//If the Fundraising End date before current date-------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		else{
+			System.out.println("diffMonthBetweenStartAndEndFundraising :: "+diffMonthBetweenStartAndEndFundraising);
+			for( i = 0 ;i<diffMonthBetweenStartAndEndFundraising;i++) {
+
+				System.out.println("--------------------------------------i---------------------" + i);
+
+				Date dateStartFundraising = eventy.fundraisingStart;
+
+
+				//fundraising start date+ i no of month
+				Calendar calendar = Calendar.getInstance();
+
+
+				//java.util.Date date= new Date();
+				Calendar cal = Calendar.getInstance();
+				System.out.println("------------@@@@@@" + eventy.fundraisingStart);
+
+				//Date date
+				cal.setTime(date2);
+				//int month = eventy.fundraisingStart.getMonth();
+
+				//System.out.println("---hjhhh-----"+month);
+				//cal.add(month, i);
+				//System.out.println("----------Jan--------"+cal.MONTH);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+				Date eachMonthFirstDay = cal.getTime();
+				System.out.println("---eachMonthFirstDay12----" + eachMonthFirstDay);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				Date eachMonthLastDay = cal.getTime();
+				System.out.println("---eachMonthLastDay12---" + eachMonthLastDay);
+
+
+				//current day
+				Date currdate = new Date();
+
+
+				//total logic
+				// for donations variable
+				double totalCreditAmountNo = 0.0;
+				double totalCheckAmountNo = 0.0;
+				totalCreditAccNo = 0;
+				totalCheckAccNo = 0;
+				double totalDonationsAmount = 0.0;
+				double totalDonationsAccNo = 0.0;
+
+				//for sponsors variable
+				double totalCreditAmountNoForSponsor = 0.0;
+				double totalCheckAmountNoForSponsor = 0.0;
+				double totalCreditAccNoForSponsor = 0.0;
+				double totalCheckAccNoForSponsor = 0.0;
+				double totalSponsorAmount = 0.0;
+				double totalSponsorsAccNo = 0.0;
+
+
+				if (donations != null && donations.size() > 0) {
+
+
+					for (Donation donation : donations) {
+						if(donation !=null){
+							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+								//total donations calculation for i where i
+								if (donation.donationType != Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNo = totalCreditAccNo + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCheckAmountNo = totalCheckAmountNo + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										totalCheckAccNo = totalCheckAccNo + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+								if (donation.donationType == Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCheckAmountNoForSponsor = totalCheckAmountNoForSponsor + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										totalCheckAccNoForSponsor = totalCheckAccNoForSponsor + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+
+
+							}
+						}
+					}
+
+				}
+
+				//calculations of donations
+				/*totalDonationsAmount = totalCreditAmountNo+totalCheckAmountNo;*/
+				totalDonationsAmount = totalCreditAmountNo;
+				System.out.println("----totalDonationsAmount---"+totalDonationsAmount);
+				totalDonationsAccNo = totalCreditAccNo+totalCheckAccNo;
+				System.out.println("----totalDonationsAccNo---"+totalDonationsAccNo);
+				double totalCreditDonationsPerct = (totalCreditAmountNo/totalDonationsAmount)*100;
+				double totalCheckDonationsPerct = (totalCheckAmountNo/totalDonationsAmount)*100;
+				double totalCreditDonationsAccNoPerct = (totalCreditAccNo/totalDonationsAccNo)*100;
+				double totalCheckDonationsAccNoPerct = (totalCheckAccNo/totalDonationsAccNo)*100;
+
+
+				//total sponsorship calculations
+				/*totalSponsorAmount = totalCreditAmountNoForSponsor+totalCheckAmountNoForSponsor;*/
+				totalSponsorAmount = totalCreditAmountNoForSponsor;
+				totalSponsorsAccNo = totalCreditAccNoForSponsor+totalCheckAccNoForSponsor;
+				double totalCreditSponsorsPerct = (totalCreditAmountNoForSponsor/totalSponsorAmount)*100;
+				double totalCheckSponsorsPerct = (totalCheckAmountNoForSponsor/totalSponsorAmount)*100;
+				double totalCreditSponsorsAccNoPerct = (totalCreditAccNoForSponsor/totalSponsorsAccNo)*100;
+				double totalCheckSponsorsAccNoPerct = (totalCheckAccNoForSponsor/totalSponsorsAccNo)*100;
+
+				//gross income
+				double grossIncomeAmount = totalDonationsAmount + totalSponsorAmount;
+
+				//scholastic challenge fee
+				scholasticChallengeFeeAmount = 0.0;
+
+				/*double scholasticChallengeFeeAmountPerct = eventy.serviceFee;
+				if(scholasticChallengeFeeAmountPerct == 0){
+					scholasticChallengeFeeAmountPerct = 10.0;
+				}*/
+
+				scholasticChallengeFeeAmount = grossIncomeAmount*scholasticChallengeFeeAmountPerct/100;
+
+
+
+				//net income
+
+				double netIncomeAmount = grossIncomeAmount-scholasticChallengeFeeAmount;
+
+				//first payout
+
+				double remainingPayableAmount = 0.0;
+				double paidoutAmount = 0.0;
+				firstPayoutCount = firstPayoutCount + 1;
+				//paid amout percentage
+				double paidAmountPercent = 75;
+
+				paidoutAmount = (netIncomeAmount*75)/100;
+				remainingPayableAmount = netIncomeAmount - paidoutAmount;
+
+
+
+				//Commend on 27.01.16---------
+
+		/*		Formatter formatter=new Formatter();
+				formatter.format("%tb",cal);
+
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-month",formatter);
+				*/
+
+
+
+
+
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAmountNo",totalCreditAmountNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAmountNo",totalCheckAmountNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalDonationsAmount",totalDonationsAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAccNo",totalCreditAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAccNo",totalCheckAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalDonationsAccNo",totalDonationsAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditDonationsPerct",totalCreditDonationsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckDonationsPerct",totalCheckDonationsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditDonationsAccNoPerct",totalCreditDonationsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckDonationsAccNoPerct",totalCheckDonationsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAmountNoForSponsor",totalCreditAmountNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAmountNoForSponsor",totalCheckAmountNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalSponsorAmount",totalSponsorAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditAccNoForSponsor",totalCreditAccNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckAccNoForSponsor",totalCheckAccNoForSponsor);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalSponsorsAccNo",totalSponsorsAccNo);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditSponsorsPerct",totalCreditSponsorsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckSponsorsPerct",totalCheckSponsorsPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCreditSponsorsAccNoPerct",totalCreditSponsorsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-totalCheckSponsorsAccNoPerct",totalCheckSponsorsAccNoPerct);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-grossIncomeAmount",grossIncomeAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-netIncomeAmount",netIncomeAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-scholasticChallengeFeeAmount",scholasticChallengeFeeAmount);
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount+"-netAmount",netIncomeAmount);
+				payOutTimeAndPaidAmountMap.put(firstPayoutCount,paidoutAmount);
+				payOutTimeAndPayableAmountMap.put(firstPayoutCount,remainingPayableAmount);
+
+
+				/*localCalendar = Calendar.getInstance(TimeZone.getDefault());
+				currentDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
+				if(currentDayOfMonth==5 || currentDayOfMonth>5){
+					for(int i1=1;i1<=firstPayoutCount;i1++){
+						//i1 payout will be shown
+
+						double remainingPayableAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						//reconciliationAmount
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+
+
+					}
+				}else{
+					for(int i1=1;i1<=firstPayoutCount-1;i1++){
+						//i1 payout will be shown
+
+						double remainingPayableAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						//reconciliationAmount
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+
+
+					}
+				}
+*/
+
+
+
+				if(date2.getMonth() == 11){
+					date2 = new Date(date2.getYear()+1,  0, date2.getDate());
+				}else {
+					date2 = new Date(date2.getYear(), date2.getMonth() + 1, date2.getDate());
+				}
+
+
+				System.out.println("------------------date2----------------"+date2);
+
+
+				//
+
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			records.add(new String[]{"Event Name", String.valueOf(eventy.name), "", "", "",  ""});
+			records.add(new String[]{"Event Start Date", String.valueOf(eventy.fundraisingStart), "", "", "",  ""});
+			records.add(new String[]{"Event End Date", String.valueOf(eventy.fundraisingEnd), "", "", "",  ""});
+			records.add(new String[]{"SC Fee", String.valueOf(scholasticChallengeFeeAmountPerct)+"%", "", "", "",  ""});
+			records.add(new String[]{"Monthly payout ", "75%", "", "", "",  ""});
+			records.add(new String[]{"", "", "", "", "",  ""});
+
+			String[] string =  new String[100];
+			string[0]="Collections Summary";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			/********Show Month Between Start and end*********/
+			Date date3=null;
+			Calendar cal2 = Calendar.getInstance();
+			//cal2.setTime();
+
+			System.out.println("------diffMonthBetweenStartAndEndFundraising----"+diffMonthBetweenStartAndEndFundraising);
+			date3=new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth(), eventy.fundraisingStart.getDate());
+			for( i = 0 ;i<diffMonthBetweenStartAndEndFundraising;i++){
+				/*****************start**************************28.01.2016***************/
+				//date3 = new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth()+i, eventy.fundraisingStart.getDate());
+				System.out.println("new date :: "+date3);
+				/*****************end****************************28.01.2016***************/
+				cal2.setTime(date3);
+
+				Formatter formatter=new Formatter();
+				formatter.format("%tb", cal2);
+				System.out.println("-----Formatter----" + formatter);
+				//System.out.println(i + "-month");
+				payOutTimeAndAllAmountsMap.put(i + "-month", formatter);
+
+
+				if(date3.getMonth() == 11){
+					/*date3 = new Date(eventy.fundraisingStart.getYear()+1,  0, 5);*/
+					date3 = new Date(date3.getYear()+1,  0, 5);
+				}else {
+					date3 = new Date(date3.getYear(), date3.getMonth() + 1, 5);
+				}
+
+			}
+
+
+
+
+			/*Date date3=null;
+			Calendar cal2 = Calendar.getInstance();
+			//cal2.setTime();
+			for( i = 0 ;i<diffMonthBetweenStartAndEndFundraising;i++){
+				date3=new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth(), eventy.fundraisingStart.getDate());
+				cal2.setTime(date3);
+
+				Formatter formatter=new Formatter();
+				formatter.format("%tb", cal2);
+
+				payOutTimeAndAllAmountsMap.put(firstPayoutCount + "-month", formatter);
+
+
+				if(date3.getMonth() == 12){
+					date3 = new Date(date3.getYear()+1,  1, 1);
+				}else {
+					date3 = new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth() + 1, 1);
+				}
+
+			}
+*/
+
+
+
+
+
+
+
+
+
+
+
+			string[0]="Collections Summary";
+
+			for(int i1=0;i1<diffMonthBetweenStartAndEndFundraising;i1++){
+				System.out.println(i1 + "-month");
+				String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+				System.out.println("----------element--------------"+element);
+				string[i1+1]=element;
+			}
+
+
+/*
+
+			for(int i1=1;i1<=firstPayoutCount;i1++){
+				String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+				string[i1]=element;
+			}*/
+
+			records.add(string);
+			//records.add(new String[]{"",string});
+
+			//String[] both = (String[])ArrayUtils.addAll(first, second);
+			//records.add("",string);
+			records.add(new String[]{"", "", "", "", "",  ""});
+
+
+			//String[] totalCheckDonations =  new String[100];
+			//totalCheckDonations[0] = "Cheque";
+
+			String[]  totalCreditDonations = new String[100];
+			totalCreditDonations[0] = "Credit Card";
+
+			String[]  grossIncomeDonations = new String[100];
+			grossIncomeDonations[0] = "Gross Income";
+
+
+			String[] scFee = new String[100];
+			scFee[0] = "SC Fee";
+
+
+			String[] disbursibleAmount = new String[100];
+			disbursibleAmount[0] = "Net Income";
+
+			double lastMonthNetIncome=0;
+
+			for(int i1=1;i1<=firstPayoutCount;i1++){
+				//i1 payout will be shown
+				System.out.println("-----------------------------------i1------------------------------------"+i1);
+				System.out.println("totalCreditAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNo"));
+				System.out.println("totalCheckAmountNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo"));
+				System.out.println("totalDonationsAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalDonationsAmount"));
+				System.out.println("totalCreditAccNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAccNo"));
+				System.out.println("totalCheckAccNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNo"));
+				System.out.println("totalDonationsAccNo::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalDonationsAccNo"));
+				System.out.println("totalCreditDonationsPerct::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditDonationsPerct"));
+				System.out.println("totalCheckDonationsPerct::"+payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckDonationsPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditDonationsAccNoPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckDonationsAccNoPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalSponsorAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAccNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNoForSponsor"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalSponsorsAccNo"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditSponsorsPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckSponsorsPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditSponsorsAccNoPerct"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckSponsorsAccNoPerct"));
+				System.out.println("grossIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-grossIncomeAmount"));
+				System.out.println("netIncomeAmount::"+payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-scholasticChallengeFeeAmount"));
+				System.out.println(payOutTimeAndAllAmountsMap.get(i1 + "-netAmount"));
+				double totalChequeAmounts = (double)payOutTimeAndAllAmountsMap.get(i1 +
+						"-totalCheckAmountNoForSponsor")+(double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNo");
+				/*totalCheckDonations[i1] =String.valueOf(Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAmountNoForSponsor")+"") + Double.parseDouble(payOutTimeAndAllAmountsMap.get(i1 + "-totalCheckAccNo")+"")) ;*/
+
+				//double totalCreditAmounts
+				//totalCheckDonations[i1] =String.valueOf(totalChequeAmounts) ;
+				double totalCreditAmounts = (double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNo")+(double)payOutTimeAndAllAmountsMap.get(i1 + "-totalCreditAmountNoForSponsor");
+				totalCreditDonations[i1] = String.valueOf(totalCreditAmounts);
+				grossIncomeDonations[i1] = String.valueOf((double)payOutTimeAndAllAmountsMap.get(i1 + "-grossIncomeAmount"));
+				scFee[i1] = String.valueOf((double)payOutTimeAndAllAmountsMap.get(i1 + "-scholasticChallengeFeeAmount"));
+				disbursibleAmount[i1] = String.valueOf((double)payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
+
+				//records.add(new String[]{"Balance Due", " ", "($" + remainingAmount + ")", "100%", "100%", remainingAmountPercent + "%"});
+				if(i1 == firstPayoutCount){
+					System.out.println("netIncomeAmount for last month ::"+payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount"));
+					lastMonthNetIncome = (double)payOutTimeAndAllAmountsMap.get(i1 + "-netIncomeAmount");
+				}
+
+			}
+
+			//records.add(totalCheckDonations);
+			records.add(totalCreditDonations);
+			records.add(grossIncomeDonations);
+			records.add(scFee);
+			records.add(disbursibleAmount);
+			localCalendar = Calendar.getInstance(TimeZone.getDefault());
+
+			currentDayOfMonth = eventy.fundraisingEnd.getDate();
+			//currentDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
+			records.add(new String[]{"", "", "", "", "",  ""});
+			records.add(new String[]{"Payout Installments", "payout", "Withheld amount", "", "",  ""});
+			records.add(new String[]{"", "", "", "", "",  ""});
+
+
+
+
+			if(currentDayOfMonth==5 || currentDayOfMonth>5){
+				System.out.println("within current day of month 11 :: "+currentDayOfMonth);
+				double totalRemainingAmount = 0;
+				for(int i1=1;i1<firstPayoutCount;i1++){
+					//i1 payout will be shown
+
+					double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+					System.out.println("paidAmount1----"+paidAmount1);
+					double remainingPayableAmount1 = (double)payOutTimeAndPayableAmountMap.get(i1);
+					//reconciliationAmount
+					System.out.println("remainingPayableAmount1890 "+remainingPayableAmount1);
+					totalRemainingAmount = totalRemainingAmount + remainingPayableAmount1;
+					reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+					System.out.println("reconciliationAmount890 " + reconciliationAmount);
+					System.out.println("total remaining amount :: " + totalRemainingAmount);
+					//String element=payOutTimeAndAllAmountsMap.get(i1-1 + "-month").toString();
+
+					/*records.add(new String[]{String.valueOf(i1), String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) reconciliationAmount), "", "", ""});*/
+					/*records.add(new String[]{String.valueOf(i1), String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) remainingPayableAmount1), "", "", ""});*/
+
+					/********month show**start*********************29.01.2016**/
+
+				if(payOutTimeAndAllAmountsMap.get(i1 + "-month")!=null){
+					String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+					records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double) payOutTimeAndPaidAmountMap.get(i1)), String.valueOf((double) remainingPayableAmount1), "", "", ""});
+				}
+
+
+
+
+					/*******month show***end************************29.01.2016****/
+
+
+
+
+
+				}
+				totalRemainingAmount = totalRemainingAmount+lastMonthNetIncome;
+
+				records.add(new String[]{"Final payout",String.valueOf(totalRemainingAmount)});
+			}else{
+
+
+				if(currentDayOfMonth==eventy.fundraisingStart.getDate()){
+					double totalRemainingAmount = 0;
+					for(int i1=1;i1<=firstPayoutCount-1;i1++){
+
+
+						double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						System.out.println("paidAmount1----"+paidAmount1);
+						double remainingPayableAmount1 = (double)payOutTimeAndPayableAmountMap.get(i1);
+						//reconciliationAmount
+						System.out.println("remainingPayableAmount2890 "+remainingPayableAmount1);
+						totalRemainingAmount = totalRemainingAmount + remainingPayableAmount1;
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+						System.out.println("reconciliationAmount3890 "+reconciliationAmount);
+
+						/********month show**start*********************29.01.2016**/
+					if(payOutTimeAndAllAmountsMap.get(i1 + "-month")!=null){
+						String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+						records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+					}
+
+
+
+
+						/*******month show***end************************29.01.2016****/
+
+
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+
+
+
+					}
+					totalRemainingAmount = totalRemainingAmount+lastMonthNetIncome;
+					records.add(new String[]{"Final payout",String.valueOf(totalRemainingAmount)});
+				}
+				else{
+					double totalRemainingAmount = 0;
+					for(int i1=1;i1<firstPayoutCount;i1++){
+
+
+						double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
+						System.out.println("paidAmount115634----"+paidAmount1);
+
+						//i1 payout will be shown
+
+						double remainingPayableAmount1 = (double)payOutTimeAndPayableAmountMap.get(i1);
+						//reconciliationAmount
+
+
+						System.out.println("remainingPayableAmount15634"+remainingPayableAmount1);
+						totalRemainingAmount = totalRemainingAmount + remainingPayableAmount1;
+						System.out.println("reconciliationAmount5634"+reconciliationAmount);
+						reconciliationAmount = reconciliationAmount+remainingPayableAmount1;
+
+						/********month show**start*********************29.01.2016**/
+                      if(payOutTimeAndAllAmountsMap.get(i1 + "-month")!=null){
+						  String element=payOutTimeAndAllAmountsMap.get(i1 + "-month").toString();
+						  records.add(new String[]{element+"( Payout No: "+String.valueOf(i1)+")", String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});
+					  }
+
+
+
+						/*******month show***end************************29.01.2016****/
+
+						/*records.add(new String[]{String.valueOf(i1), String.valueOf((double)payOutTimeAndPaidAmountMap.get(i1)),String.valueOf((double)remainingPayableAmount1) , "", "",  ""});*/
+
+					}
+					totalRemainingAmount = totalRemainingAmount+lastMonthNetIncome;
+					records.add(new String[]{"Final payout",String.valueOf(totalRemainingAmount)});
+				}
+
+			}
+
+
+			if(eventy.fundraisingEnd.getDate()>=5){
+
+				//total logic
+				// for donations variable
+				double totalCreditAmountNo = 0.0;
+				double totalCheckAmountNo = 0.0;
+				totalCreditAccNo = 0;
+				//totalCheckAccNo = 0;
+				double totalDonationsAmount = 0.0;
+				double totalDonationsAccNo = 0.0;
+
+				//for sponsors variable
+				double totalCreditAmountNoForSponsor = 0.0;
+				//double totalCheckAmountNoForSponsor = 0.0;
+				double totalCreditAccNoForSponsor = 0.0;
+				double totalCheckAccNoForSponsor = 0.0;
+				double totalSponsorAmount = 0.0;
+				double totalSponsorsAccNo = 0.0;
+
+
+
+
+
+				Calendar cal = Calendar.getInstance();
+				System.out.println("------------@@@@@@" + eventy.fundraisingStart);
+
+				//Date date
+				cal.setTime(eventy.fundraisingEnd);
+
+
+
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+				Date eachMonthFirstDay = cal.getTime();
+				System.out.println("---eachMonthFirstDay1----" + eachMonthFirstDay);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				Date eachMonthLastDay = eventy.fundraisingEnd;
+				System.out.println("---eachMonthLastDay1---" + eachMonthLastDay);
+
+
+				if (donations != null && donations.size() > 0) {
+
+
+					for (Donation donation : donations) {
+						if(donation !=null){
+							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+								//total donations calculation for i where i
+								if (donation.donationType != Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNo = totalCreditAccNo + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										//totalCheckAmountNo = totalCheckAmountNo + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+									//	totalCheckAccNo = totalCheckAccNo + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+								if (donation.donationType == Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										//totalCheckAmountNoForSponsor = totalCheckAmountNoForSponsor + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										//totalCheckAccNoForSponsor = totalCheckAccNoForSponsor + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+
+
+							}
+						}
+					}
+
+				}
+
+
+
+				double  withheldAmount=totalCreditAmountNo+totalCreditAmountNoForSponsor;
+				withheldAmount=withheldAmount-((withheldAmount*scholasticChallengeFeeAmountPerct)/100);
+
+				//***28.01.2016***records.add(new String[]{"Final Reconciliation ", String.valueOf((double)withheldAmount+(double)reconciliationAmount),"" , "", "",  ""});
+
+
+
+
+
+
+
+
+
+
+
+			}
+
+
+
+			else{
+
+
+				double totalCreditAmountNo = 0.0;
+				double totalCheckAmountNo = 0.0;
+				totalCreditAccNo = 0;
+				totalCheckAccNo = 0;
+				double totalDonationsAmount = 0.0;
+				double totalDonationsAccNo = 0.0;
+
+				//for sponsors variable
+				double totalCreditAmountNoForSponsor = 0.0;
+				double totalCheckAmountNoForSponsor = 0.0;
+				double totalCreditAccNoForSponsor = 0.0;
+				double totalCheckAccNoForSponsor = 0.0;
+				double totalSponsorAmount = 0.0;
+				double totalSponsorsAccNo = 0.0;
+
+
+
+
+
+				Calendar cal = Calendar.getInstance();
+				System.out.println("------------@@@@@@" + eventy.fundraisingStart);
+
+				//Date date
+				Date startDateCheck=new Date();
+
+				//date2=new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth(), eventy.fundraisingStart.getDate());
+				if(eventy.fundraisingEnd.getMonth() == 1){
+					startDateCheck = new Date(eventy.fundraisingStart.getYear()-1,  12, 1);
+				}else {
+					startDateCheck = new Date(eventy.fundraisingStart.getYear(), eventy.fundraisingStart.getMonth() - 1, 1);
+				}
+
+
+
+
+
+
+
+
+
+				cal.setTime(startDateCheck);
+
+
+
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+				Date eachMonthFirstDay = cal.getTime();
+				System.out.println("---eachMonthFirstDay2----" + eachMonthFirstDay);
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				Date eachMonthLastDay = eventy.fundraisingEnd;
+				System.out.println("---eachMonthLastDay2---" + eachMonthLastDay);
+
+
+				if (donations != null && donations.size() > 0) {
+
+
+					for (Donation donation : donations) {
+						if(donation !=null){
+							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+								//total donations calculation for i where i
+								if (donation.donationType != Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNo = totalCreditAccNo + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCheckAmountNo = totalCheckAmountNo + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										totalCheckAccNo = totalCheckAccNo + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+								if (donation.donationType == Donation.DonationType.SPONSOR) {
+									if (donation.paymentType == Donation.PaymentType.CREDIT) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
+										//rowHeadervalue = "Paid By Credit Card";
+										totalCheckAmountNoForSponsor = totalCheckAmountNoForSponsor + donation.amount;
+										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
+										totalCheckAccNoForSponsor = totalCheckAccNoForSponsor + 1;
+										//totalCheckAcc = String.valueOf(totalCheckAccNo);
+
+									}
+								}
+
+
+							}
+						}
+					}
+
+				}
+
+
+
+				/*double  withheldAmount=totalCreditAmountNo+totalCheckAmountNo+totalCheckAmountNoForSponsor+totalCreditAmountNoForSponsor;*/
+				double  withheldAmount=totalCreditAmountNo+totalCreditAmountNoForSponsor;
+				withheldAmount=withheldAmount-((withheldAmount*scholasticChallengeFeeAmountPerct)/100);
+
+				//***28.01.2016***records.add(new String[]{"Final Reconciliation ", String.valueOf((double)withheldAmount+(double)reconciliationAmount),"" , "", "",  ""});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//----rimi-----end----------------21.01.2016-------------------------------------------------//
+
+
+
+
+		//diff between month of current date and fundraising start month
+
+
+		///int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+		return records;
+	}
+
+
+	/********end***********01.02.2016******************************************/
 	/**
 	 * Participant  report (added Suvadeep Datta).
 	 *
@@ -6433,9 +8202,12 @@ public class ReportMgmt extends Controller {
 
 
 	/*********start*****Reconciliation report1**************28.01.2016***********************/
-	@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
+	/*@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
 			@Group(SecurityRole.SYS_ADMIN), @Group(SecurityRole.EVENT_ADMIN),
 			@Group(SecurityRole.EVENT_ASSIST) })
+	@SubjectPresent(content = "/login")*/
+	@Restrict({ @Group(SecurityRole.ROOT_ADMIN),
+			@Group(SecurityRole.SYS_ADMIN) })
 	@SubjectPresent(content = "/login")
 	public static Result reconciliationReport1() throws IOException {
 		//System.out.println("event.slug within reconciliationReport "+event.id);
@@ -6615,7 +8387,8 @@ public class ReportMgmt extends Controller {
 
 		//final List<String[]> data =payoutToStringArrayForMonth(donations,eventy);
 		//final List<String[]> data =payoutToStringArrayForMonth1(donations,eventy);
-		final List<String[]> data =payoutToStringArrayForMonth2(donations,eventy);
+		/*final List<String[]> data =payoutToStringArrayForMonth2(donations,eventy);*/
+		final List<String[]> data =payoutToStringArrayForMonth3(donations, eventy);
 		writer.writeAll(data);
 		writer.close();
 		response().setHeader("Content-Disposition",
