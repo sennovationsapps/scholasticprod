@@ -6852,7 +6852,7 @@ public class ReportMgmt extends Controller {
 					}
 				}
 				else{
-					for(int i1=1;i1<=firstPayoutCount;i1++){
+					for(int i1=1;i1<firstPayoutCount-1;i1++){
 
 
 						double paidAmount1 = (double)payOutTimeAndPaidAmountMap.get(i1);
