@@ -89,9 +89,16 @@ public class Transaction extends Model {
 
 
     public static Transaction findByDonationTranId(String donationTranId) {
+        Transaction transaction=null;
         System.out.println("findByDonationTranId");
-        System.out.println("transaction :: "+find.where().eq("donationTranId", donationTranId).findUnique());
-        return find.where().eq("donationTranId", donationTranId).findUnique();
+        System.out.println("transaction :: "+find.where().eq("donationTranId", donationTranId).findList());
+        List<Transaction> transactionList = null;
+        transactionList= find.where().eq("donationTranId", donationTranId).findList();
+        if(transactionList!=null && transactionList.size()>0){
+            transaction =transactionList.get(0);
+        }
+        //if(find.where().eq("donationTranId", donationTranId).findList().size()>0)
+        return transaction;
     }
 
 

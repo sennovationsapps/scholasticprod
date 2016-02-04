@@ -1222,7 +1222,8 @@ public class DonationMgmt extends Controller {
 						"&x_pfp_id="+donation.pfp.id+
 						"&x_donation_payment_status="+donation.status+
 						"&x_email_id="+donation.email+
-				"&x_invoice_num="+donation.invoiceNumber;
+				     "&x_invoice_num="+donation.invoiceNumber+
+						"&x_donation_type="+donation.donationType;
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -1387,6 +1388,8 @@ public class DonationMgmt extends Controller {
 //				}
 //			}
 			/*donation.status = PaymentStatus.APPROVED;*/
+			System.out.println("********************donation amount for sponsor credit*******************"+donation
+					.amount);
 			donation.status = PaymentStatus.INITIATED;
 			donation.paymentType = PaymentType.CREDIT;
 			donation.transactionNumber =UUID.randomUUID().toString();
@@ -1404,6 +1407,7 @@ public class DonationMgmt extends Controller {
 		donation.sponsorItem = sponsorItem;
 		donation.phone = ControllerUtil.stripPhone(donation.phone);
 		donation.event = event;
+		System.out.println("********************donation amount for sponsor*******************"+donation.amount);
 
 
 
@@ -1457,7 +1461,7 @@ public class DonationMgmt extends Controller {
 		sponsorItem.update();
 		Donation updatedDonation = Donation.findById(donationForm.get().id);
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
-		ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+		/*ReceiptMgmt.sendSponsoredMsg(updatedDonation);*/
 		/*if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			String WorldPlayUrl=null;
 			try {
@@ -1483,6 +1487,8 @@ public class DonationMgmt extends Controller {
 		}*/
 		if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			/**********start********authorize.net**********************************************08.01.2016******************/
+			System.out.println("********************donation amount for sponsor credit111*******************"+donation
+					.amount);
 			try {
 				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 				/*Random randomGenerator1 = new Random();
@@ -1511,7 +1517,9 @@ public class DonationMgmt extends Controller {
 						"&x_pfp_id="+donation.pfp.id+
 						"&x_donation_payment_status="+donation.status+
 						"&x_email_id="+donation.email+
-						"&x_invoice_num="+donation.invoiceNumber;
+						"&x_invoice_num="+donation.invoiceNumber+
+						"&x_donation_type="+donation.donationType+
+						"&x_sponsorItem_Id="+sponsorItemId;
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -1521,6 +1529,7 @@ public class DonationMgmt extends Controller {
 			return redirect(url);
 			/**********end********authorize.net**********************************************08.01.2016******************/
 		}else {
+			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
 			System.out.println("before calling getAndSendCheckReceipt..");
 			return redirect(routes.ReceiptMgmt.getAndSendCheckReceipt(event, updatedDonation));
 		}
@@ -1998,6 +2007,7 @@ public class DonationMgmt extends Controller {
 		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + result.getResponseMap().get("x_donation_transaction_number"));
 		System.out.println("result.getResponseMap().get(x_invoice_num)" + result.getResponseMap().get("x_invoice_num"));
 		System.out.println("result.getResponseMap().get(x_email_id)" + result.getResponseMap().get("x_email_id"));
+		System.out.println("result.getResponseMap().get(x_donation_type)" + result.getResponseMap().get("x_donation_type"));
             /****new add***start**/
        /* String transactionNo = result.getResponseMap().get("x_donation_transaction_number");
 		String responseTransId = result.getResponseMap().get("x_trans_id");
@@ -2053,7 +2063,26 @@ public class DonationMgmt extends Controller {
 		}
 		donation.ccNum=result.getResponseMap().get("x_account_number");
 		donation.invoiceNumber = result.getResponseMap().get("x_invoice_num");
+		System.out.println("-----donationType1111----- :: "+donation.donationType);
+		System.out.println("----donation type2222-------- :: " + result.getResponseMap().get("x_donation_type"));
+		System.out.println( "-----amount-----"+result.getResponseMap().get("x_amount"));
+		System.out.println("---------sponsor item id -----------"+result.getResponseMap().get("x_sponsorItem_Id"));
+		//donation.amount = Integer.parseInt(result.getResponseMap().get("x_amount"));
 		donation.update();
+		if(donation.donationType == DonationType.SPONSOR){
+			Long sponsorItemId = Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
+
+			SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
+			/*donation =*/
+			donation.amount = sponsorItem.amount;
+			donation.update();
+			System.out.println("-------------sponsor amount------------"+donation.amount);
+			sponsorItem.donation = donation;
+			sponsorItem.update();
+			//Donation updatedDonation = Donation.findById(donationForm.get().id);
+			//flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
+			//ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+		}
 		System.out.println("Donation table saved");
 
 		try{
@@ -2105,15 +2134,18 @@ public class DonationMgmt extends Controller {
 				System.out.println(("before calling getAndSendCCReceipt"));
 				System.out.println("donation.event " + donation.event);
 				System.out.println("donation.event.userAdmin " + donation.event.userAdmin);
-				System.out.println("");
-				receiptMgmt.sendCCReceiptForCron(donation);
-				//System.out.println("result :: " + result);
-				System.out.println(("after calling getAndSendCCReceipt"));
+				if(donation.donationType == DonationType.SPONSOR){
+					ReceiptMgmt.sendSponsoredMsg(donation);
+				}else {
+					System.out.println("");
+					receiptMgmt.sendCCReceiptForCron(donation);
+					//System.out.println("result :: " + result);
+					System.out.println(("after calling getAndSendCCReceipt"));
 
-				System.out.println("before calling sendCCReceiptForPfp...");
-				receiptMgmt.sendCCReceiptForPfp(donation);
-				System.out.println("after calling sendCCReceiptForPfp");
-
+					System.out.println("before calling sendCCReceiptForPfp...");
+					receiptMgmt.sendCCReceiptForPfp(donation);
+					System.out.println("after calling sendCCReceiptForPfp");
+				}
 				//update
 				transaction.mailSent = true;
 				transaction.update();
