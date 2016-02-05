@@ -2129,20 +2129,39 @@ public class DonationMgmt extends Controller {
 				//MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
 
 				String creditCardNumber = transaction.accountNumber;
-
+				System.out.println("-----------------donation.ccDigits1------------------------"+creditCardNumber);
 				if (creditCardNumber != null) {
 					creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
 					System.out.println("creditCardNumber :: " + creditCardNumber);
 					donation.ccNum = creditCardNumber;
+					donation.ccDigits = creditCardNumber;
+
+
 				}
 
 				donation.ccName = transaction.ccname;
+				System.out.println("-----------------donation.ccDigits------------------------"+donation.ccDigits);
+				donation.update();
+
 				ReceiptMgmt receiptMgmt = new ReceiptMgmt();
 
 				System.out.println(("before calling getAndSendCCReceipt"));
 				System.out.println("donation.event " + donation.event);
 				System.out.println("donation.event.userAdmin " + donation.event.userAdmin);
 				if(donation.donationType == DonationType.SPONSOR){
+
+
+
+					Long sponsorItemId = Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
+
+					SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
+			/*donation =*/
+					/*donation.amount = sponsorItem.amount;
+					donation.update();*/
+					System.out.println("-------------sponsor amount------------"+donation.amount);
+					sponsorItem.donation = donation;
+					sponsorItem.update();
+
 					ReceiptMgmt.sendSponsoredMsg(donation);
 				}else {
 					System.out.println("");
