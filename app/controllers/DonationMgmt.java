@@ -1198,7 +1198,11 @@ public class DonationMgmt extends Controller {
 				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 				/*Random randomGenerator1 = new Random();
 				int randomSequence1 = randomGenerator1.nextInt(1000);*/
-
+				final User user = ControllerUtil.getLocalUser(session());
+				System.out.println("*********************event id tooo*********************"+event.id);
+				//Long eventId = Long.parseLong(result.getResponseMap().get( "&x_event_id"));
+				//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
+				System.out.println("*********************user id tooo*********************"+ user.id);
 				Random randomGenerator = new Random();
 				int randomSequence = randomGenerator.nextInt(1000);
 				Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence,String.valueOf(donation.amount));
@@ -1223,7 +1227,9 @@ public class DonationMgmt extends Controller {
 						"&x_donation_payment_status="+donation.status+
 						"&x_email_id="+donation.email+
 				     "&x_invoice_num="+donation.invoiceNumber+
-						"&x_donation_type="+donation.donationType;
+						"&x_donation_type="+donation.donationType+
+						"&x_user_id="+user.id+
+				         "&x_event_id="+event.id;
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -1493,7 +1499,7 @@ public class DonationMgmt extends Controller {
 				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 				/*Random randomGenerator1 = new Random();
 				int randomSequence1 = randomGenerator1.nextInt(1000);*/
-
+				final User user = ControllerUtil.getLocalUser(session());
 				Random randomGenerator = new Random();
 				int randomSequence = randomGenerator.nextInt(1000);
 				Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence,String.valueOf(donation.amount));
@@ -1519,7 +1525,9 @@ public class DonationMgmt extends Controller {
 						"&x_email_id="+donation.email+
 						"&x_invoice_num="+donation.invoiceNumber+
 						"&x_donation_type="+donation.donationType+
-						"&x_sponsorItem_Id="+sponsorItemId;
+						"&x_sponsorItem_Id="+sponsorItemId+
+						"&x_user_id="+user.id+
+						"&x_event_id="+event.id;
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -2158,14 +2166,19 @@ public class DonationMgmt extends Controller {
 			ex.printStackTrace();
 		}
 
-
-
-
+		System.out.println("*********************event id*********************"+result.getResponseMap().get( "x_event_id"));
+		Long eventId = Long.parseLong(result.getResponseMap().get( "x_event_id"));
+		//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
+		System.out.println("*********************user id*********************"+result.getResponseMap().get
+				("x_user_id"));
+		String userId = result.getResponseMap().get("x_user_id");
+     Event event =Event.findById(eventId);
+		final User user = User.findByUserId(userId);
 
 		System.out.println("Transaction Table saved");
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
-		return ok(profileDonationsCreate.render(ControllerUtil
-				.getLocalUser(session()), null));
+		//return ok(profileDonationsCreate.render(User.findByUserId(userId), event));
+		return ok(profileMain.render(User.findByUserId(userId)));
 	}
 public static HashMap transIdForTransactionNo = new HashMap();
   public static void setUnsetteledTransId(String transactionNo,String responseTransId){
