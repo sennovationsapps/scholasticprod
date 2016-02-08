@@ -30,6 +30,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import views.html.donations.*;
+import views.html.index;
 import views.html.profile.profileDonationsReconcile;
 import views.html.profile.profileMain;
 import views.html.profile.profileDonationsCreate;
@@ -1048,7 +1049,12 @@ public class DonationMgmt extends Controller {
 			Logger.debug("Has errors {}", donationForm.errorsAsJson());
 			if(StringUtils.isEmpty(donationForm.data().get("pfp.id"))) {
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			}else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
+			}else if(donationForm.data().get("amount") == null || StringUtils.isEmpty(donationForm.data().get("amount"))){
+				donationForm.reject("amount", "Please provide the donation amount.The minimum donation is $5.00, please make the correction to proceed.");
+
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+			else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 				donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
 			}else
@@ -1063,6 +1069,11 @@ public class DonationMgmt extends Controller {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
 			}
+		}
+		 if(donationForm.data().get("amount") == null || StringUtils.isEmpty(donationForm.data().get("amount"))){
+			donationForm.reject("amount", "Please provide the donation amount.The minimum donation is $5.00, please make the correction to proceed.");
+
+			return badRequest(createForm.render(event, event.generalFund, donationForm));
 		}
 		if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 			donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
@@ -1199,37 +1210,72 @@ public class DonationMgmt extends Controller {
 				/*Random randomGenerator1 = new Random();
 				int randomSequence1 = randomGenerator1.nextInt(1000);*/
 				final User user = ControllerUtil.getLocalUser(session());
-				System.out.println("*********************event id tooo*********************"+event.id);
-				//Long eventId = Long.parseLong(result.getResponseMap().get( "&x_event_id"));
-				//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
-				System.out.println("*********************user id tooo*********************"+ user.id);
-				Random randomGenerator = new Random();
-				int randomSequence = randomGenerator.nextInt(1000);
-				Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence,String.valueOf(donation.amount));
-				//url="https://test.authorize.net/gateway/transact.dll?"+
-				url="https://secure.authorize.net/gateway/transact.dll?"+
-						"x_fp_sequence="+fingerprint.getSequence()+
-						"&x_fp_timestamp="+fingerprint.getTimeStamp()+
-						"&x_fp_hash="+fingerprint.getFingerprintHash()+
-						"&x_version=3.1"+
-						"&x_method=CC"+
-						"&x_type=AUTH_CAPTURE"+
-						"&x_login="+API_LOGIN_ID+
-						"&x_description=Scholastic"+
-						"&x_show_form=PAYMENT_FORM"+
-						"&x_relay_response=true"+
-						"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png"+
 
-						"&x_donation_transaction_number="+donation.transactionNumber+
-						"&x_amount="+String.valueOf(donation.amount)+
-						"&x_event_id="+event.id+
-						"&x_pfp_id="+donation.pfp.id+
-						"&x_donation_payment_status="+donation.status+
-						"&x_email_id="+donation.email+
-				     "&x_invoice_num="+donation.invoiceNumber+
-						"&x_donation_type="+donation.donationType+
-						"&x_user_id="+user.id+
-				         "&x_event_id="+event.id;
+				if(user == null){
+					System.out.println("*********************event id tooo  11*********************" + event.id);
+					//Long eventId = Long.parseLong(result.getResponseMap().get( "&x_event_id"));
+					//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
+					//System.out.println("*********************user id tooo  11*********************" + user.id);
+					Random randomGenerator = new Random();
+					int randomSequence = randomGenerator.nextInt(1000);
+					Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence, String.valueOf(donation.amount));
+					//url="https://test.authorize.net/gateway/transact.dll?"+
+					url = "https://secure.authorize.net/gateway/transact.dll?" +
+							"x_fp_sequence=" + fingerprint.getSequence() +
+							"&x_fp_timestamp=" + fingerprint.getTimeStamp() +
+							"&x_fp_hash=" + fingerprint.getFingerprintHash() +
+							"&x_version=3.1" +
+							"&x_method=CC" +
+							"&x_type=AUTH_CAPTURE" +
+							"&x_login=" + API_LOGIN_ID +
+							"&x_description=Scholastic" +
+							"&x_show_form=PAYMENT_FORM" +
+							"&x_relay_response=true" +
+							"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png" +
+
+							"&x_donation_transaction_number=" + donation.transactionNumber +
+							"&x_amount=" + String.valueOf(donation.amount) +
+							"&x_event_id=" + event.id +
+							"&x_pfp_id=" + donation.pfp.id +
+							"&x_donation_payment_status=" + donation.status +
+							"&x_email_id=" + donation.email +
+							"&x_invoice_num=" + donation.invoiceNumber +
+							"&x_donation_type=" + donation.donationType +
+							"&x_user_id=" +"none"+
+							"&x_event_id=" + event.id;
+				}else {
+					System.out.println("*********************event id tooo*********************" + event.id);
+					//Long eventId = Long.parseLong(result.getResponseMap().get( "&x_event_id"));
+					//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
+					System.out.println("*********************user id tooo*********************" + user.id);
+					Random randomGenerator = new Random();
+					int randomSequence = randomGenerator.nextInt(1000);
+					Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence, String.valueOf(donation.amount));
+					//url="https://test.authorize.net/gateway/transact.dll?"+
+					url = "https://secure.authorize.net/gateway/transact.dll?" +
+							"x_fp_sequence=" + fingerprint.getSequence() +
+							"&x_fp_timestamp=" + fingerprint.getTimeStamp() +
+							"&x_fp_hash=" + fingerprint.getFingerprintHash() +
+							"&x_version=3.1" +
+							"&x_method=CC" +
+							"&x_type=AUTH_CAPTURE" +
+							"&x_login=" + API_LOGIN_ID +
+							"&x_description=Scholastic" +
+							"&x_show_form=PAYMENT_FORM" +
+							"&x_relay_response=true" +
+							"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png" +
+
+							"&x_donation_transaction_number=" + donation.transactionNumber +
+							"&x_amount=" + String.valueOf(donation.amount) +
+							"&x_event_id=" + event.id +
+							"&x_pfp_id=" + donation.pfp.id +
+							"&x_donation_payment_status=" + donation.status +
+							"&x_email_id=" + donation.email +
+							"&x_invoice_num=" + donation.invoiceNumber +
+							"&x_donation_type=" + donation.donationType +
+							"&x_user_id=" + user.id +
+							"&x_event_id=" + event.id;
+				}
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -1493,41 +1539,73 @@ public class DonationMgmt extends Controller {
 		}*/
 		if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			/**********start********authorize.net**********************************************08.01.2016******************/
-			System.out.println("********************donation amount for sponsor credit111*******************"+donation
+			System.out.println("********************donation amount for sponsor credit2211*******************"+donation
 					.amount);
 			try {
 				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 				/*Random randomGenerator1 = new Random();
 				int randomSequence1 = randomGenerator1.nextInt(1000);*/
 				final User user = ControllerUtil.getLocalUser(session());
-				Random randomGenerator = new Random();
-				int randomSequence = randomGenerator.nextInt(1000);
-				Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence,String.valueOf(donation.amount));
-				//url="https://test.authorize.net/gateway/transact.dll?"+
-				url="https://secure.authorize.net/gateway/transact.dll?"+
-						"x_fp_sequence="+fingerprint.getSequence()+
-						"&x_fp_timestamp="+fingerprint.getTimeStamp()+
-						"&x_fp_hash="+fingerprint.getFingerprintHash()+
-						"&x_version=3.1"+
-						"&x_method=CC"+
-						"&x_type=AUTH_CAPTURE"+
-						"&x_login="+API_LOGIN_ID+
-						"&x_description=Scholastic"+
-						"&x_show_form=PAYMENT_FORM"+
-						"&x_relay_response=true"+
-						"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png"+
+				if(user == null){
+					Random randomGenerator = new Random();
+					int randomSequence = randomGenerator.nextInt(1000);
+					Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence, String.valueOf(donation.amount));
+					//url="https://test.authorize.net/gateway/transact.dll?"+
+					url = "https://secure.authorize.net/gateway/transact.dll?" +
+							"x_fp_sequence=" + fingerprint.getSequence() +
+							"&x_fp_timestamp=" + fingerprint.getTimeStamp() +
+							"&x_fp_hash=" + fingerprint.getFingerprintHash() +
+							"&x_version=3.1" +
+							"&x_method=CC" +
+							"&x_type=AUTH_CAPTURE" +
+							"&x_login=" + API_LOGIN_ID +
+							"&x_description=Scholastic" +
+							"&x_show_form=PAYMENT_FORM" +
+							"&x_relay_response=true" +
+							"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png" +
 
-						"&x_donation_transaction_number="+donation.transactionNumber+
-						"&x_amount="+String.valueOf(donation.amount)+
-						"&x_event_id="+event.id+
-						"&x_pfp_id="+donation.pfp.id+
-						"&x_donation_payment_status="+donation.status+
-						"&x_email_id="+donation.email+
-						"&x_invoice_num="+donation.invoiceNumber+
-						"&x_donation_type="+donation.donationType+
-						"&x_sponsorItem_Id="+sponsorItemId+
-						"&x_user_id="+user.id+
-						"&x_event_id="+event.id;
+							"&x_donation_transaction_number=" + donation.transactionNumber +
+							"&x_amount=" + String.valueOf(donation.amount) +
+							"&x_event_id=" + event.id +
+							"&x_pfp_id=" + donation.pfp.id +
+							"&x_donation_payment_status=" + donation.status +
+							"&x_email_id=" + donation.email +
+							"&x_invoice_num=" + donation.invoiceNumber +
+							"&x_donation_type=" + donation.donationType +
+							"&x_sponsorItem_Id=" + sponsorItemId +
+							"&x_user_id=" + "none" +
+							"&x_event_id=" + event.id;
+
+				}else {
+					Random randomGenerator = new Random();
+					int randomSequence = randomGenerator.nextInt(1000);
+					Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence, String.valueOf(donation.amount));
+					//url="https://test.authorize.net/gateway/transact.dll?"+
+					url = "https://secure.authorize.net/gateway/transact.dll?" +
+							"x_fp_sequence=" + fingerprint.getSequence() +
+							"&x_fp_timestamp=" + fingerprint.getTimeStamp() +
+							"&x_fp_hash=" + fingerprint.getFingerprintHash() +
+							"&x_version=3.1" +
+							"&x_method=CC" +
+							"&x_type=AUTH_CAPTURE" +
+							"&x_login=" + API_LOGIN_ID +
+							"&x_description=Scholastic" +
+							"&x_show_form=PAYMENT_FORM" +
+							"&x_relay_response=true" +
+							"&x_logo_url=http://www.scholasticchallenge.com/assets/images/LogoSmaller.png" +
+
+							"&x_donation_transaction_number=" + donation.transactionNumber +
+							"&x_amount=" + String.valueOf(donation.amount) +
+							"&x_event_id=" + event.id +
+							"&x_pfp_id=" + donation.pfp.id +
+							"&x_donation_payment_status=" + donation.status +
+							"&x_email_id=" + donation.email +
+							"&x_invoice_num=" + donation.invoiceNumber +
+							"&x_donation_type=" + donation.donationType +
+							"&x_sponsorItem_Id=" + sponsorItemId +
+							"&x_user_id=" + user.id +
+							"&x_event_id=" + event.id;
+				}
 				System.out.println("url"+url);
 				//return redirect(url);
 			} catch (Exception e) {
@@ -2192,12 +2270,14 @@ public class DonationMgmt extends Controller {
 				("x_user_id"));
 		String userId = result.getResponseMap().get("x_user_id");
      Event event =Event.findById(eventId);
-		final User user = User.findByUserId(userId);
+		//final User user = User.findByUserId(userId);
 
 		System.out.println("Transaction Table saved");
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
 		//return ok(profileDonationsCreate.render(User.findByUserId(userId), event));
-		return ok(profileMain.render(User.findByUserId(userId)));
+		//return ok(profileMain.render(User.findByUserId(userId)));
+
+		return ok(index.render());
 	}
 public static HashMap transIdForTransactionNo = new HashMap();
   public static void setUnsetteledTransId(String transactionNo,String responseTransId){

@@ -67,7 +67,7 @@ public class Application extends Controller {
 
 	public static Result index() {
 
-
+		System.out.println("----------within index------------");
 
 
 		//==========================new================06.10.2015======================start===================================//
