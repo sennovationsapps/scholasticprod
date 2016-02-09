@@ -476,21 +476,53 @@ public class ReportMgmt extends Controller {
 		final List<String[]> records = new ArrayList<String[]>();
 
 
-		records.add(new String[] {" "," "," ", " ", "Reconciliation  Report " ," "," "," "," "," "," "});
-		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});
-		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});
-		records.add(new String[] {" ", " ","Event Name ",eventy.name, " " ," "," "," "," "," "," "});
-		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});
-		records.add(new String[] {"Donor Name","Pfp Name","Donor Email","Amount","Donation Type", " Transaction Reference from SC", " Invoice No For Both SC and authorize.net " ,"Transaction id from authorize.net ","Status"," Date Created"," "});
-		records.add(new String[] {" ", " ", " " ," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", "Reconciliation  Report " ," "," "," "," "," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "," "});
+		records.add(new String[] {" ", " ","Event Name ",eventy.name, " " ," "," "," "," "," "," "," "});
+		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "," "});
+		/*records.add(new String[] {"Donor Name","Pfp Name","Donor Email","Amount","Donation Type", " Transaction " +
+				"Reference from SC", " Invoice No For Both SC and authorize.net " ,"Transaction id from authorize.net" +
+				"Status"," Date Created","Reason for Payment failure"});*/
+
+		records.add(new String[] {"Donor Name","Pfp Name","Donor Email","Amount","Donation Type", " Transaction Reference from SC", " Invoice No For Both SC and authorize.net " ,"Transaction id from authorize.net ","Status"," Date Created","Reason for Payment failure"});
+		records.add(new String[] {" ", " ", " " ," "," "," "," "," ", " "});
 		if(donations!=null && donations.size()>0){
 			for(Donation donation:donations){
 				if(donation!=null){
 					Transaction transaction = Transaction.findByDonationTranId(donation.transactionNumber);
 					if(transaction!=null && (donation.transactionNumber!=null && !donation.transactionNumber.trim().equals(""))){
-						records.add(new String[] {donation.donorName,donation.pfp.name,donation.email,String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber ,transaction.transid,donation.status.getValue(),String.valueOf(donation.dateCreated)," "});
-					}else{
-						records.add(new String[] {donation.donorName,donation.pfp.name,donation.email,String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber ," ",donation.status.getValue(),String.valueOf(donation.dateCreated)," "});
+						if(donation.pfp !=null){
+							if(transaction.rcode!=null){
+								records.add(new String[]{donation.donorName, donation.pfp.name, donation.email, String
+										.valueOf(donation.amount), donation.paymentType.getValue(), donation
+										.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status
+										.getValue(), String.valueOf(donation.dateCreated), transaction.rcode});
+							}else {
+								records.add(new String[]{donation.donorName, donation.pfp.name, donation.email, String.valueOf
+										(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+							}
+						}else{
+							if(transaction.rcode!=null){
+								records.add(new String[]{donation.donorName," ", donation.email, String
+										.valueOf(donation.amount), donation.paymentType.getValue(), donation
+										.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status
+										.getValue(), String.valueOf(donation.dateCreated), transaction.rcode});
+							}else {
+								records.add(new String[]{donation.donorName, " ", donation.email, String.valueOf
+										(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+							}
+						}
+
+						}else{
+						//System.out.println("donation.pfp :: "+donation.pfp);
+						if(donation.pfp !=null){
+							records.add(new String[]{donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation
+									.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, " ", donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+						}else {
+							records.add(new String[]{donation.donorName, " ", donation.email, String.valueOf(donation
+									.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, " ", donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+						}
 					}
 
 
@@ -508,12 +540,12 @@ public class ReportMgmt extends Controller {
 		final List<String[]> records = new ArrayList<String[]>();
 
 
-		records.add(new String[] {""," "," "," ", " ", "Reconciliation  Report " ," "," "," "," "," "," "});
-		records.add(new String[] {""," "," "," ", " ", " " ," "," "," "," "," "," "});
-		records.add(new String[] {""," "," "," ", " ", " " ," "," "," "," "," "," "});
+		records.add(new String[] {""," "," "," ", " ", "Reconciliation  Report " ," "," "," "," "," "," "," "});
+		records.add(new String[] {""," "," "," ", " ", " " ," "," "," "," "," "," "," "});
+		records.add(new String[] {""," "," "," ", " ", " " ," "," "," "," "," "," "," "});
 		/*records.add(new String[] {" ", " ","Event Name ",eventy.name, " " ," "," "," "," "," "," "});
 		records.add(new String[] {" "," "," ", " ", " " ," "," "," "," "," "," "});*/
-		records.add(new String[] {"Event Name","Donor Name","Pfp Name","Donor Email","Amount","Donation Type", " Transaction Reference from SC", " Invoice No For Both SC and authorize.net " ,"Transaction id from authorize.net ","Status"," Date Created"," "});
+		records.add(new String[] {"Event Name","Donor Name","Pfp Name","Donor Email","Amount","Donation Type", " Transaction Reference from SC", " Invoice No For Both SC and authorize.net " ,"Transaction id from authorize.net ","Status"," Date Created","Reason for Payment failure"});
 		records.add(new String[] {""," ", " ", " " ," "," "," "," "});
 		if(donations!=null && donations.size()>0){
 			for(Donation donation:donations){
@@ -521,10 +553,22 @@ public class ReportMgmt extends Controller {
 					Transaction transaction = Transaction.findByDonationTranId(donation.transactionNumber);
 					if(transaction!=null && (donation.transactionNumber!=null && !donation.transactionNumber.trim().equals(""))) {
 						if (donation.pfp != null) {
-							records.add(new String[]{donation.event.name, donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+							if(transaction.rcode!=null){
+								records.add(new String[]{donation.event.name, donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), transaction.rcode});
 
+							}else {
+								records.add(new String[]{donation.event.name, donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+
+
+							}
 						}else{
-							records.add(new String[]{donation.event.name, donation.donorName, "", donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+							if(transaction.rcode!=null){
+								records.add(new String[]{donation.event.name, donation.donorName, " ", donation
+										.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), transaction.rcode});
+							} else {
+								records.add(new String[]{donation.event.name, donation.donorName, " ", donation
+										.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});
+							}
 						}
 						/*records.add(new String[]{donation.event.name, donation.donorName, donation.pfp.name, donation.email, String.valueOf(donation.amount), donation.paymentType.getValue(), donation.transactionNumber, donation.invoiceNumber, transaction.transid, donation.status.getValue(), String.valueOf(donation.dateCreated), " "});*/
 					}else{

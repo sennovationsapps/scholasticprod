@@ -2076,7 +2076,7 @@ public class DonationMgmt extends Controller {
 
 	public static Result getResponseFromAuthorize(){
 		System.out.println("Enter getResponseFromAuthorizeeee");
-
+		PAYMENT_LOGGER.info("***************Enter getResponseFromAuthorize*************************");
 		String paymentStatus="Failed";
 		//Map<String,String[]> valForDecrypt=request().queryString();
 		//System.out.println("valForDecrypt"+valForDecrypt.toString());
@@ -2128,6 +2128,7 @@ public class DonationMgmt extends Controller {
 
 		 }*/
 		/****new add***end**/
+		String reasonForFailure = " ";
 		final Form<Donation> donationForm = form(Donation.class);
 		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
 		System.out.println("donationId ::: "+donation.id);
@@ -2137,10 +2138,13 @@ public class DonationMgmt extends Controller {
 		}
 		if(result.getResponseMap().get("x_response_code").equals("2")){
 			donation.status=PaymentStatus.FAILED;
+			reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
 			paymentStatus="Payment Failed";
+
 		}
 		if(result.getResponseMap().get("x_response_code").equals("3")){
 			donation.status=PaymentStatus.FAILED;
+			reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
 			paymentStatus="Payment Failed";
 		}
 		if(result.getResponseMap().get("x_response_code").equals("4")){
@@ -2181,9 +2185,13 @@ public class DonationMgmt extends Controller {
 			transaction.reason=result.getResponseMap().get("x_response_code");
 			transaction.transid=result.getResponseMap().get("x_trans_id");
 			transaction.ccname="lll";
-			transaction.rcode="";
+			//transaction.rcode="";
+			transaction.rcode = reasonForFailure;
 			transaction.authcode="";
 			transaction.activityCheck=false;
+
+
+
 
 
 
@@ -2197,7 +2205,8 @@ public class DonationMgmt extends Controller {
 			transaction.save();
 
 
-
+			PAYMENT_LOGGER.info("****saved successfully getResponseAuthorize transaction id ****"+transaction
+					.id+"********transaction response text*****"+transaction.reason);
 
 
 			/*********new add***********************21.01.2016**************************/
@@ -2260,6 +2269,7 @@ public class DonationMgmt extends Controller {
 				/******/
 
 		}catch (Exception ex){
+			PAYMENT_LOGGER.error("*************error in getResponseFromAuthorize******************"+ex.getMessage());
 			ex.printStackTrace();
 		}
 
@@ -2276,7 +2286,7 @@ public class DonationMgmt extends Controller {
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
 		//return ok(profileDonationsCreate.render(User.findByUserId(userId), event));
 		//return ok(profileMain.render(User.findByUserId(userId)));
-
+		PAYMENT_LOGGER.info("***************Exit getResponseFromAuthorize*************************");
 		return ok(index.render());
 	}
 public static HashMap transIdForTransactionNo = new HashMap();
