@@ -7,227 +7,266 @@
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
 
 @main("Create Donation") {
-<!-- Main body
+    <!-- Main body
 ================== -->
-<div class="wrapper">
-    <div class="section-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Remove the .animated class if you don't want things to move -->
-                    <h1 class="animated slideInLeft"><span>Create Donation</span></h1>
+    <div class="wrapper" xmlns="http://www.w3.org/1999/html">
+        <div class="section-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                            <!-- Remove the .animated class if you don't want things to move -->
+                        <h1 class="animated slideInLeft"><span>Create Donation</span></h1>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <!-- Contact us form -->
-            <div class="col-sm-8">
-                @if(pfp == null) {
-                <h2 class="hl top-zero">Donating to @event.name</h2>
-                } else {
-                <h2 class="hl top-zero">Donating to @pfp.name</h2>
-                <h3>@event.name</h3>
-                }
-                <hr>
-                @general.alerts()
-                @if(donationForm.hasErrors) {
-                <div class="alert alert-dismissable alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    @Messages("form.has.errors")<br/>
-                    @for(key <- donationForm.errors().keySet()){
-                    @for(error <- donationForm.errors().get(key)){
-                    <br/>@Messages(error.message())
+        <div class="container">
+            <div class="row">
+                    <!-- Contact us form -->
+                <div class="col-sm-8">
+                    @if(pfp == null) {
+                        <h2 class="hl top-zero">Donating to @event.name</h2>
+                    } else {
+                        <h2 class="hl top-zero">Donating to @pfp.name</h2>
+                        <h3>@event.name</h3>
                     }
+                    <hr>
+                    @general.alerts()
+                    @if(donationForm.hasErrors ) {
+                        <div class="alert alert-dismissable alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            @Messages("form.has.errors")<br/>
+                            @for(key <- donationForm.errors().keySet()){
+                                @for(error <- donationForm.errors().get(key)){
+                                    <br/>@Messages(error.message())
+                                }
+                            }
+                        </div>
                     }
-                </div>
-                }
-                @form(controllers.routes.DonationMgmt.save(event), 'id -> "donateForm") {
-                <input type="hidden" id="event_name" name="event.name" value="@event.name"/>
-                @if(pfp.pfpType == Pfp.PfpType.GENERAL) {
-                @select(
-                donationForm("pfp.id"),
-                options(Pfp.findByEventIdMap(event)),
-                '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
-                '_default -> "-- Select Participant --",
-                '_showConstraints -> false, 'class -> "form-control"
-                )
-                } else {
-                <input type="hidden" name="pfp.id" value="@pfp.id"/>
-                }
-                <div id="well" class="well">
-                    <center><legend class="legend_hightlight">Choose an amount OR Enter your own amount below.</legend></center>
-                    <table class="table table-no-border">
-                        <tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="500">  $500</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="250"> $250</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="150"> $150</button></td></tr>
-                        <tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="100"> $100</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="50"> $50</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="25">$25</button></td></tr>
-                    </table>
+                    @form(controllers.routes.DonationMgmt.save(event), 'id -> "donateForm") {
+                        <input type="hidden" id="event_name" name="event.name" value="@event.name"/>
+                        @if(pfp.pfpType == Pfp.PfpType.GENERAL) {
+                            @select(
+                                donationForm("pfp.id"),
+                                options(Pfp.findByEventIdMap(event)),
+                                '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
+                                '_default -> "-- Select Participant --",
+                                '_showConstraints -> false, 'class -> "form-control"
+                            )
+                        } else {
+                            <input type="hidden" name="pfp.id" value="@pfp.id"/>
+                        }
+                        <div id="well" class="well">
+                            <center><legend class="legend_hightlight">Choose an amount OR Enter your own amount below.</legend></center>
+                            <table class="table table-no-border">
+                                <tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="500">  $500</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="250"> $250</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="150"> $150</button></td></tr>
+                                <tr><td><button type="button" class="btn btn-block btn-green donationAmount" value="100"> $100</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="50"> $50</button></td><td><button type="button" class="btn btn-block btn-green donationAmount" value="25">$25</button></td></tr>
+                            </table>
 
-                   @* @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $1.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")*@
+                            @* @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $1.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control", 'placeholder -> "Donation amount", '_addon -> "$")*@
 
-                    @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $5.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control",  'id -> "amountValue" , 'placeholder -> "Donation amount", '_addon -> "$")
-                    <input type="text"  id = "centValue" value=".00" readonly>
+                            @helper.inputText(donationForm("amount"), '_label -> "Amount(Min. donation is $5.00. Please enter whole dollar amounts NO cents)", 'class -> "form-control",  'id -> "amountValue" , 'placeholder -> "Donation amount", '_addon -> "$")
+                            <input type="text"  id = "centValue" value=".00" readonly>
 
 
-                    <!--@checkbox(donationForm("agreeToPolicy"), '_label -> "Give this amount monthly for the duration of this event", '_labelSide -> "right")-->
-                </div>
-                <br/>
-                <div id="well" class="well">
-                    <center><legend class="legend_hightlight">Donor Information</legend></center>
+                                <!--@checkbox(donationForm("agreeToPolicy"), '_label -> "Give this amount monthly for the duration of this event", '_labelSide -> "right")-->
+                        </div>
+                        <br/>
+                        <div id="well" class="well">
+                            <center><legend class="legend_hightlight">Donor Information</legend></center>
+                            @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
+                            @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
+                            @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
+
+                            @******phno format*************01.09.2015***************start*****@
+
+                            <div style="display:none;">
+                            @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                            </div>
+                            <div><b>Enter Phone Number( Required )</b></div>
+
+
+
+
+
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td>
+                                        @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+
+                                        </td>
+                                        <td> - </td>
+                                        <td>
+                                        @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                        </td>
+                                        <td> - </td>
+                                        <td>
+                                        @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                                @******phno format*************01.09.2015***************end*****@
+
+                            @* *@@*@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@*
+                            @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
+                        </div>
+                        <br/>
+                        <div id="well" class="well">
+                            <center><legend class="legend_hightlight">Message to Participant</legend></center>
+                                <!----------new addition of checkbox-----14.08.2015----start-->
+                            @checkbox(donationForm("agreeToPolicy"), '_label -> "Make my donation Anonymous", '_labelSide -> "right",'id -> "anonymous")
+                            @helper.inputText(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control",'id -> "donorname")
+                            @helper.inputText(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
+                        </div>
+                        <br/>
+                        <button type="button" class="btn btn-primary" id="payByCreditCard">Pay By Credit Card</button>&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" id="payByCheck">Pay By Check</button>
+                        @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+                                ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+                                ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+                        ) {
+                                <!--&nbsp;&nbsp;<button type="button" class="btn btn-primary" id="payByCash">Pay By Cash</button>-->
+                        }
+                        <br/><br/><br/>
+                        <div id="payByCheckDiv">
+                            <div id="well" class="well">
+                                <legend>Check- Payment Information</legend>
+                                @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+                                        ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+                                        ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+                                ) {
+                                    @helper.inputText(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
+                                } else {
+                                    <h5>PLEASE NOTE: Payment by credit card is our preferred method of payment.</h5>
+                                    <p>
+                                        Before you pay by check, please consider the following:
+                                <ul>
+                                    <li>Credit card payments cost us less to process, so more of your money goes to your event.</li>
+                                    <li>Credit card payments are immediately applied to your participant's fundraising total.</br>
+                                        Checks can take 1-2 weeks to receive, process, and credit to your participant's total.</li>
+                                    <li>When you pay by credit card your participant receives immediate notification of your support and you immediately receive a receipt for your donation.</li>
+                                </ul>
+                                    <button type="button" class="btn btn-primary" id="payByCreditCardInstead">Pay By Credit Card</button>
+                                    </p>
+                                }
+                                <button type="submit" class="btn btn-green" id="payByCheckButton">Pay Donation by Check</button>&nbsp;&nbsp;
+                                @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
+                                        ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+                                        ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+                                ) {
+                                    <a href="@routes.Application.profileSearchDonations()" class="btn btn-default" type="button">Cancel</a>
+                                } else {
+                                    <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
+                                }
+                            </div>
+                        </div>
+                        <br/>
+                        <input type="hidden" name="payByCheck" value="false"/>
+                        <input type="hidden" name="paymentType" value="CREDIT"/>
+
+                        @*  Added by Gourav 23.02.2016 *@
+                        <div id="creditCradPaymentDiv" style="display: none">
+                            <div id="well" class="well">
+                                <center><legend class="legend_hightlight">Credit Card Payment Information</legend></center>
+                                @helper.inputText(donationForm("ccNum"), '_label -> "Card Number", 'class
+                                        ->"form-control")
+                                @*<div id="ccNum_div" style="display: none"></div> <span style="color:red;">Mandatory
+                                Field</span></div>*@
+                                @helper.inputText(donationForm("expDate"), '_label -> "Expiration Date", 'class ->
+                                        "form-control", 'maxlength -> 4)
+                                @*<div id="expDate_div" style="display: none"><span  style="color:red; display: none"></span></div>*@
+                                @helper.inputText(donationForm("ccCvvCode"), '_label -> "CVV Code", 'class ->
+                                        "form-control",'maxlength -> 3)
+                                @*<div id="expDate_div" style="display: none"><span id="expDate_div" style="color:red; display: none"></span></div>*@
+
+                                <br/>
+                                <button type="button" class="btn btn-green" id="payByCreditCardButton">Pay</button>&nbsp;&nbsp;
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+            }
+
+
+
+
+
+                    <!-------- 23.02.2016 start---->
+                    @*  <div id="creditCard">
+
                     @helper.inputText(donationForm("firstName"), '_label -> "First Name", 'class -> "form-control")
                     @helper.inputText(donationForm("lastName"), '_label -> "Last Name", 'class -> "form-control")
                     @helper.inputText(donationForm("email"), '_label -> "Email", 'class -> "form-control")
 
-                    @******phno format*************01.09.2015***************start*****@
-
-                    <div style="display:none;">
-                        @helper.inputText(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
-
-                    </div>
-                    <div><b>Enter Phone Number( Required )</b></div>
+                    </div>*@
 
 
-
-
-
-                    <div>
-                        <table>
-                            <tr>
-                                <td>
-                                    @helper.inputText(donationForm("phPart1"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'areaCode','phonePre')",'maxlength -> "3", 'size -> "3", 'id -> "areaCode", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
-
-                                </td>
-                                <td> - </td>
-                                <td>
-                                    @helper.inputText(donationForm("phPart2"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "autoFormAdvance(3,'phonePre','phoneSuf')",'maxlength -> "3", 'size -> "3", 'id -> "phonePre", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
-                                </td>
-                                <td> - </td>
-                                <td>
-                                    @helper.inputText(donationForm("phPart3"), '_label -> "nolabel",'_type -> "hidden",'onkeyup -> "mergeTotalPhNo()",'onchange -> "mergeTotalPhNo()",'maxlength -> "4", 'size -> "4", 'id -> "phoneSuf", 'class -> "form-control",   'title -> "please fill Enter Phone Number field.10 digits and numeric only  and the format will be like example(ex.123-345-5678)")
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    @******phno format*************01.09.2015***************end*****@
-
-                    @* *@@*@@*text(donationForm("phone"), '_label -> "Phone", 'class -> "form-control", 'title -> "10 digits (numeric only)")*@@*
-                    @text(donationForm("phone"), '_label -> "Phone", 'id -> "phNo", 'class -> "form-control", '_addon -> "glyphicon-earphone", 'placeholder -> "Phone: 555-555-1212 (only numbers)", 'title -> "10 digits and numeric only  and the format will be like example(ex.123-345-5678)")*@
-                </div>
-                <br/>
-                <div id="well" class="well">
-                    <center><legend class="legend_hightlight">Message to Participant</legend></center>
-                    <!----------new addition of checkbox-----14.08.2015----start-->
-                    @checkbox(donationForm("agreeToPolicy"), '_label -> "Make my donation Anonymous", '_labelSide -> "right",'id -> "anonymous")
-                    @helper.inputText(donationForm("donorName"), '_label -> "Donor Name to appear on fundraiser page", 'class -> "form-control",'id -> "donorname")
-                    @helper.inputText(donationForm("donorMessage"), '_label -> "Donor Message to appear on fundraiser page", 'class -> "form-control")
-                </div>
-                <br/>
-                <button type="button" class="btn btn-primary" id="payByCreditCard">Pay By Credit Card</button>&nbsp;&nbsp;
-                <button type="button" class="btn btn-primary" id="payByCheck">Pay By Check</button>
+                    <!-------- 23.02.2016 end---->
+                    <!-- Right column -->
                 @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
-                ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
-                ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
+                        ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
+                        ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
                 ) {
-                <!--&nbsp;&nbsp;<button type="button" class="btn btn-primary" id="payByCash">Pay By Cash</button>-->
-                }
-                <br/><br/><br/>
-                <div id="payByCheckDiv">
-                    <div id="well" class="well">
-                        <legend>Check- Payment Information</legend>
-                        @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
-                        ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
-                        ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
-                        ) {
-                        @helper.inputText(donationForm("checkNum"), '_label -> "Check Num", 'class -> "form-control")
-                        } else {
-                        <h5>PLEASE NOTE: Payment by credit card is our preferred method of payment.</h5>
-                        <p>
-                            Before you pay by check, please consider the following:
-                        <ul>
-                            <li>Credit card payments cost us less to process, so more of your money goes to your event.</li>
-                            <li>Credit card payments are immediately applied to your participant's fundraising total.</br>
-                                Checks can take 1-2 weeks to receive, process, and credit to your participant's total.</li>
-                            <li>When you pay by credit card your participant receives immediate notification of your support and you immediately receive a receipt for your donation.</li>
-                        </ul>
-                        <button type="button" class="btn btn-primary" id="payByCreditCardInstead">Pay By Credit Card</button>
-                        </p>
-                        }
-                        <button type="submit" class="btn btn-green" id="payByCheckButton">Pay Donation by Check</button>&nbsp;&nbsp;
-                        @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
-                        ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
-                        ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
-                        ) {
-                        <a href="@routes.Application.profileSearchDonations()" class="btn btn-default" type="button">Cancel</a>
-                        } else {
-                        <a href="@routes.EventMgmt.get(event)" class="btn btn-default" type="button">Cancel</a>
-                        }
+                    @* <div class="col-sm-4">
+                    <h4>Donation Help</h4>
+                    <hr>
+                    <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
+                    Question #1
+                    </a>
+                    </h4>
                     </div>
-                </div>
-                <br/>
-                <input type="hidden" name="payByCheck" value="false"/>
-                <input type="hidden" name="paymentType" value="CREDIT"/>
+                    <div id="helpOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                    </div>
+                    </div>
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
+                    Question #2
+                    </a>
+                    </h4>
+                    </div>
+                    <div id="helpTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                    </div>
+                    </div>
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
+                    Question #3
+                    </a>
+                    </h4>
+                    </div>
+                    <div id="helpThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>*@
                 }
             </div>
-
-            <!-- Right column -->
-            @if(ControllerUtil.isUserInRole(models.security.SecurityRole.EVENT_ADMIN) ||
-            ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN) ||
-            ControllerUtil.isUserInRole(models.security.SecurityRole.SYS_ADMIN)
-            ) {
-           @* <div class="col-sm-4">
-                <h4>Donation Help</h4>
-                <hr>
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#helpOne">
-                                    Question #1
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="helpOne" class="panel-collapse collapse in">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#helpTwo">
-                                    Question #2
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="helpTwo" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#helpThree">
-                                    Question #3
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="helpThree" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>*@
-            }
         </div>
     </div>
-</div>
-<script>
+    <script>
   $( document ).ready(function() {
 
 //alert("document.ready")	 ;
@@ -245,26 +284,115 @@
                // alert("before paybycreditcard click");
              //   $("#payByCreditCard").click();
 	     }
+
+
+
+
+	     /*$('#expDate').on('keyup focusout',function() {
+                    $('#expDate').attr('style', 'border-color: #CCC');
+                    //alert($(this).val().length);
+                    this.value = this.value.replace(/[^0-9]/g,'');
+                    expr=/[0-9][0-9][0-9][0-9]$/
+
+                    if($(this).val()==''){
+                    $('#expDate').attr('style', 'border-color: red');
+                    }
+                    if($(this).val().length==4){
+                    $('#expDate').attr('style', 'border-color: #CCC');
+
+                    }else{
+                    $('#expDate').attr('style', 'border-color: red');
+                    }
+
+
+                    if(expr.test(this.value)==false){
+                    $('#expDate').attr('style', 'border-color: red');
+                    }
+                    else{
+                    $('#expDate').attr('style', 'border-color: #CCC');
+                    }
+            });
+
+
+	     $('#ccCvvCode').on('keyup focusout',function() {
+                    $('#ccCvvCode').attr('style', 'border-color: #CCC');
+                    //alert($(this).val().length);
+                    this.value = this.value.replace(/[^0-9]/g,'');
+
+
+                    if($(this).val()==''){
+                    $('#ccCvvCode').attr('style', 'border-color: red');
+                    }
+                    if($(this).val().length==3){
+                    $('#ccCvvCode').attr('style', 'border-color: #CCC');
+
+                    }else{
+                    $('#ccCvvCode').attr('style', 'border-color: red');
+                    }
+
+            });
+
+
+             $('#ccNum').on('keyup focusout',function() {
+                    $('#ccNum').attr('style', 'border-color: #CCC');
+                    //alert($(this).val().length);
+                    this.value = this.value.replace(/[^0-9]/g,'');
+                    expr=/[^0-9]/g;
+
+                    if($(this).val()==''){
+                    $('#ccNum').attr('style', 'border-color: red');
+                    }
+
+            });
+*/
+
+
+
+
+
 	   });
+
+
 	   $("#payByCreditCard").click(function(){
-             //alert("within paybycreditcard click..");
-            // $('#payByCreditCardDiv').hide();
-               $('form#donateForm').submit();
+
+              $('#payByCheckDiv').hide();
+              $('#creditCradPaymentDiv').show();
+
+              $('html, body').animate({
+                scrollTop: $("#creditCradPaymentDiv").offset().top
+            }, 3000);
+
            });
+
+             $("#payByCheck").click(function(){
+
+              $('#payByCheckDiv').show();
+              $('#creditCradPaymentDiv').hide();
+
+           });
+
+
+           $("#payByCreditCardButton").click(function(){
+
+
+                $('form#donateForm').submit();
+
+
+           });
+
 	   $('form#donateForm').submit(function(){
-           //  $('#payByCreditCardDiv').hide();
-                //alert("within submit...");
+
 	   		$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
 		    $('#payByCreditCardButton').attr('disabled', 'disabled');
 		    $('#payByCheckButton').attr('disabled', 'disabled');
 		    $('#payByCashButton').attr('disabled', 'disabled');
 		});
   </script>
-<script src="@ControllerUtil.getResourceRoute("scDonationsView.min.js")"></script>
+    <script src="@ControllerUtil.getResourceRoute("scDonationsView.min.js")"></script>
 
 
 
-	<script>
+    <script>
 
 //=========new add
 
@@ -453,7 +581,7 @@ else{
 
 
 
-<script>
+    <script>
         //============================phno partition validation ====================================24.08.2015==========start========================================//
 $(document).ready(function(){
 
@@ -513,7 +641,7 @@ $("#phNo").val(totalPhValue);
         //============================phno partition validation ====================================24.08.2015==========end========================================//
     </script>
 
-<script>
+    <script>
     function patternMatchForPhone(id){
 
     var phPattern = /^([0-9])+$/;

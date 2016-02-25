@@ -1,11 +1,9 @@
 package controllers;
 
 
-
-
+import base.utils.AuthorisedNetPaymentUtil;
 import base.utils.PaymentGatewayUtil;
 import base.utils.PaymentUtils;
-import base.utils.WorldPayUtils;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -17,6 +15,7 @@ import models.Pfp.PfpType;
 import models.aws.S3File;
 import models.security.SecurityRole;
 import models.security.User;
+import net.authorize.api.contract.v1.CreateTransactionResponse;
 import net.authorize.sim.Fingerprint;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,17 +30,10 @@ import play.mvc.Http;
 import play.mvc.Result;
 import views.html.donations.*;
 import views.html.index;
+import views.html.profile.profileDonationsCreate;
 import views.html.profile.profileDonationsReconcile;
 import views.html.profile.profileMain;
-import views.html.profile.profileDonationsCreate;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -58,8 +50,8 @@ public class DonationMgmt extends Controller {
 	/*******************   08.01.2016  start ***********************/
 //	private static final String API_LOGIN_ID ="5Cdy5N57";//my cred test mode account credential
 //	 private static final String TRANSACTION_KEY = "726SBegW3a42w4p8";//my test mode account credential
-	private static final String API_LOGIN_ID ="43f5zNUB";//scholastic cred test mode account credential
-	private static final String TRANSACTION_KEY = "9L9H43Kny8s347z4";//scholastic mode account credential
+	private static final String API_LOGIN_ID ="347HgbCTh5";//scholastic cred test mode account credential
+	private static final String TRANSACTION_KEY = "8q8a44YT4PUG4j7k";//scholastic mode account credential
 	/*private String getPaymentFormFields(String paymentGatewayamountAmount,String digitalWalletAmount,String serviceTax)throws Exception {
 		String url="";
 		try {
@@ -550,7 +542,7 @@ public class DonationMgmt extends Controller {
 		final User localUser = ControllerUtil.getLocalUser(session());
 		//Sponsors sponsors = Sponsors.findbyspon
 		List<Event> events = new ArrayList<Event>();
-		if (ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)) {
+		if (ControllerUtil.isUserInRole(SecurityRole.ROOT_ADMIN)) {
 			events = Event.findAllEvents();
 		} else if (ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)) {
 			events = Event.findAllByUserId(localUser.id);
@@ -615,7 +607,7 @@ public class DonationMgmt extends Controller {
 							donationList =  new ArrayList<Donation>();
 							final Form<Donation> donationForm2 = form(Donation.class);
 							flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been submitted successfully. ");
-							return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm2, donations, donationList));
+							return ok(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm2, donations, donationList));
 
 						}else{
 							System.out.println("form has values ...");
@@ -624,12 +616,12 @@ public class DonationMgmt extends Controller {
 
 
 
-								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+								return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 								// return badRequest(createForm.render(event, event.generalFund, donationForm));
 							}
 							if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 								donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
-								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+								return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 							}
 							/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 								System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
@@ -649,7 +641,7 @@ public class DonationMgmt extends Controller {
 							else {
 								System.out.println("within baad req.");
 								//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
-								return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+								return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 							}
 						}
 					}else{
@@ -659,12 +651,12 @@ public class DonationMgmt extends Controller {
 
 
 
-							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 							// return badRequest(createForm.render(event, event.generalFund, donationForm));
 						}
 						if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 							donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
-							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						}
 						/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 							System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
@@ -684,7 +676,7 @@ public class DonationMgmt extends Controller {
 						else {
 							System.out.println("within baad req.");
 							//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
-							return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+							return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						}
 					}
 				}else if(donationList!=null && donationList.size() == 0){
@@ -694,12 +686,12 @@ public class DonationMgmt extends Controller {
 
 
 
-						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 						// return badRequest(createForm.render(event, event.generalFund, donationForm));
 					}
 					if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 						donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
-						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 					}
 					/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 						System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
@@ -719,7 +711,7 @@ public class DonationMgmt extends Controller {
 					else {
 						System.out.println("within baad req11.");
 						//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
-						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 					}
 				}
 			}else if(donationForm.data().get("statusOfBulkCashDonation").equals("0")){
@@ -730,12 +722,12 @@ public class DonationMgmt extends Controller {
 
 
 
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 					// return badRequest(createForm.render(event, event.generalFund, donationForm));
 				}
 				else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 					donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 				}
 				/*else if(StringUtils.isEmpty(donationForm.data().get("collectionTypes")) || donationForm.data().get("collectionTypes").equalsIgnoreCase("select")){
 					System.out.println("CollectionTypes :: "+donationForm.data().get("collectionTypes"));
@@ -750,7 +742,7 @@ public class DonationMgmt extends Controller {
 					donationForm.reject("email", "Please enter the valid Email Id.");
 
 						Logger.debug("Has errors {}", donationForm.errorsAsJson());
-						return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+						return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 
 				}
 				else if(StringUtils.isEmpty(donationForm.data().get("phone"))){
@@ -758,7 +750,7 @@ public class DonationMgmt extends Controller {
 					donationForm.reject("phone", "Please enter the valid Email Id.");
 
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 
 				}
 				else if(StringUtils.isEmpty(donationForm.data().get("phPart1"))){
@@ -766,7 +758,7 @@ public class DonationMgmt extends Controller {
 					donationForm.reject("phone", "Please enter the valid Email Id.");
 
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 
 				}
 				else if(StringUtils.isEmpty(donationForm.data().get("phPart2"))){
@@ -774,7 +766,7 @@ public class DonationMgmt extends Controller {
 					donationForm.reject("phone", "Please enter the valid Email Id.");
 
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 
 				}
 				else if(StringUtils.isEmpty(donationForm.data().get("phPart3"))){
@@ -782,14 +774,14 @@ public class DonationMgmt extends Controller {
 					donationForm.reject("phone", "Please enter the valid Email Id.");
 
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 
 				}
 
 				else {
 					System.out.println("within baad req.");
 					//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
-					return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+					return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 				}
 			}
 
@@ -829,14 +821,14 @@ public class DonationMgmt extends Controller {
 			donationForm.reject("pfp.id", "Please select the Participant that you would like to donate to.  The General Fund donations are made to the Event only and not an individual Participant.");
 			if (donationForm.hasErrors()) {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
-				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+				return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 			}
 		}
 		if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 			donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
 			if (donationForm.hasErrors()) {
 				Logger.debug("Has errors {}", donationForm.errorsAsJson());
-				return badRequest(views.html.donations.ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
+				return badRequest(ProfileCashDonations.render(localUser, events, eventFromId, pfps, donationForm, donations, donationList));
 			}
 		}
 
@@ -1025,7 +1017,7 @@ public class DonationMgmt extends Controller {
 			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Bulk Cash donations has been saved and added successfully. ");
 		}
 		//donationList = Donation.findAllCashDonationsByEventIdAndCleared(eventForPfp.id);
-		return ok(views.html.donations.ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
+		return ok(ProfileCashDonations.render(localUser, events, eventForPfp, pfps, donationForm1, donations, donationList));
 	}
 
 	//=====================validate donation by cash===================end==============02.10.2015=======================//
@@ -1057,7 +1049,32 @@ public class DonationMgmt extends Controller {
 			else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 				donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			}else
+			}
+			/*******rimi**********25.02.2016****************************start************************************/
+			else if(StringUtils.isEmpty(donationForm.data().get("ccNum"))){
+				System.out.println("*************the ccnum is blank11**************");
+				donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please " +
+						"click on  'Pay " +
+						"By Credit Card' button to proceed.");
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+			else if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
+				System.out.println("*************the expDate is blank11**************");
+				donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  " +
+						"'Pay " +
+						"By Credit Card' button to proceed.");
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+			else if(StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))){
+				System.out.println("*************the ccCvvCode is blank11**************");
+				donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, please click on  " +
+						"'Pay " +
+						"By Credit Card' button to proceed.");
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+			/*******rimi**********25.02.2016*****************************end*************************************/
+
+			else
 			{
 				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
@@ -1079,6 +1096,30 @@ public class DonationMgmt extends Controller {
 			donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
 			return badRequest(createForm.render(event, event.generalFund, donationForm));
 		}
+
+
+		/*******rimi**********25.02.2016****************************start************************************/
+		if(StringUtils.isEmpty(donationForm.data().get("ccNum"))){
+			System.out.println("*************the ccnum is blank**************");
+			donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please click on" +
+					"  'Pay " +
+					"By Credit Card' button to proceed.");
+			return badRequest(createForm.render(event, event.generalFund, donationForm));
+		}
+		if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
+			System.out.println("*************the expDate is blank11**************");
+			donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  'Pay " +
+					"By Credit Card' button to proceed.");
+			return badRequest(createForm.render(event, event.generalFund, donationForm));
+		}
+		if(StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))){
+			System.out.println("*************the ccCvvCode is blank11**************");
+			donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, please click on  'Pay " +
+					"By Credit Card' button to proceed.");
+			return badRequest(createForm.render(event, event.generalFund, donationForm));
+		}
+		/*******rimi**********25.02.2016*****************************end*************************************/
+
 		Donation donation = donationForm.get(); // donation form in donation variable fdatsuv
 		donation.dateCreated = new Date();
 		if(event.id != Pfp.findEventIdByPfpId(donation.pfp.id)) {
@@ -1087,6 +1128,9 @@ public class DonationMgmt extends Controller {
 		} else {
 			donation.event = event;
 		}
+
+
+
 
 
 		/****************25.01.2016*************************start**************************************************************/
@@ -1147,6 +1191,7 @@ public class DonationMgmt extends Controller {
 			/*donation.status = PaymentStatus.APPROVED;*/
 			donation.status = PaymentStatus.INITIATED;
 			donation.transactionNumber = UUID.randomUUID().toString();
+			donation.ccDigits=null;
 			/*********************start*********************comment out******************************25.01.2016***********************************************/
 			/*Random randomGenerator1 = new Random();
 			int randomSequence1 = randomGenerator1.nextInt(1000);
@@ -1155,7 +1200,11 @@ public class DonationMgmt extends Controller {
 			PAYMENT_LOGGER.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
 					donation.ccDigits, donation.transactionNumber, donation.amount);
 			try {
-				donation.save();  // main donation table saved
+
+
+				//donation.save();  // main donation table saved
+
+
 				PAYMENT_LOGGER.warn("payment type is credit11");
 				System.out.println("payment type is credit11");
 				} catch (Exception e) {
@@ -1211,7 +1260,59 @@ public class DonationMgmt extends Controller {
 				int randomSequence1 = randomGenerator1.nextInt(1000);*/
 				final User user = ControllerUtil.getLocalUser(session());
 
-				if(user == null){
+
+				/********* 23.02.2016 start **********/
+
+
+				/*Donation donationDetails = donationForm.get();*/
+				String userId="none";
+				if(user != null){
+					userId=user.id+"";
+				}
+				/********* 23.02.2016 end **********/
+
+				String msg=AuthorisedNetPaymentUtil.makeCreditCardPayment(donation,userId);
+
+
+                System.out.println("Response From Authorised net gateway =====>"+msg);
+             /*******rimi***********start***********25.02.2016******************************start*********/
+               if(msg.equals("The credit card number is invalid."))
+			   {
+				   donationForm.reject("ccNum", "Credit card number is Invalid, please click on  'Pay " +
+						   "By Credit Card' to proceed.");
+				   return badRequest(createForm.render(event, event.generalFund, donationForm));
+			   }
+				if(msg.equals("The credit card has expired.")){
+
+						System.out.println("*************the expDate is blank11222**************");
+						donationForm.reject("expDate", "Credit card already expired, please click on  'Pay " +
+								"By Credit Card' button to proceed.");
+						return badRequest(createForm.render(event, event.generalFund, donationForm));
+					}
+				if(msg.equals("cvv missmatches.") ){
+
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please click on  'Pay By Credit Card' " +
+							"button" +
+							" to " +
+							"proceed.");
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+				if(msg.endsWith(" and cvv not matches.")){
+
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please click on  'Pay By Credit Card' button to" +
+							" " +
+							"proceed.");
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+
+
+           /*******rimi***********start***********25.02.2016******************************end*********/
+
+
+
+				/*if(user == null){
 					System.out.println("*********************event id tooo  11*********************" + event.id);
 					//Long eventId = Long.parseLong(result.getResponseMap().get( "&x_event_id"));
 					//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
@@ -1276,13 +1377,15 @@ public class DonationMgmt extends Controller {
 							"&x_user_id=" + user.id +
 							"&x_event_id=" + event.id;
 				}
-				System.out.println("url"+url);
+				System.out.println("url"+url);*/
 				//return redirect(url);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			System.out.println("within validateAndSendCreditInfo now Authorize URLEEEEEEEEEEEEEEEEEEEEEEEEEE =>>>>>>>>>>>>>>>"+url);
-			return redirect(url);
+
+
+			//return redirect(url);
 			/**********end********authorize.net**********************************************08.01.2016******************/
 			//return redirect("https://trans.worldpay.us/cgi-bin/WebPay.cgi?formid=574301A941C9A095E474EF84D558739DC1AD0EE09278E5E321CB1E4970121245&sessionid=62A6DC8C9A988EA9");
 		//}
@@ -1302,7 +1405,7 @@ public class DonationMgmt extends Controller {
 			donation.save();
 			PAYMENT_LOGGER.info("A Cash Donation [{}] was made for PFP ID [{}] in the amount of [{}] by [{} {}]", donation.id, donation.pfp.id, donation.amount, donation.firstName, donation.lastName);
 		}
-		
+		System.out.println("========donation.id==="+donation.id);
 		Donation updatedDonation = Donation.findById(donation.id);
 		System.out.println("after save :: "+donation.status);
 		final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
@@ -1740,7 +1843,7 @@ public class DonationMgmt extends Controller {
 		System.out.println("eventId within participantDetailsForParticularEvent :: "+id);
 
 		List<Event> events = new ArrayList<Event>();
-		if(ControllerUtil.isUserInRole(models.security.SecurityRole.ROOT_ADMIN)){
+		if(ControllerUtil.isUserInRole(SecurityRole.ROOT_ADMIN)){
 			events = Event.findAllEvents();
 		}else if(ControllerUtil.isUserInRole(SecurityRole.EVENT_ADMIN)){
 			events = Event.findAllByUserId(localUser.id);
@@ -1758,7 +1861,7 @@ public class DonationMgmt extends Controller {
 		donations = new ArrayList<Donation>();
 		donationList = new ArrayList<Donation>();
 		//donationList = Donation.findAllCashDonationsByEventIdAndCleared(eventId);
-		return ok(views.html.donations.ProfileCashDonations.render(localUser, events, event, pfps, donationForm, donations, donationList));
+		return ok(ProfileCashDonations.render(localUser, events, event, pfps, donationForm, donations, donationList));
 		//return ok(test.render(localUser,events, event, pfps, donationForm, donations));
 
 	}
@@ -1792,7 +1895,7 @@ public class DonationMgmt extends Controller {
 
 		//System.out.println("donationForm :: "+donationForm.get());
 		if (donationForm.hasErrors()) {
-			return badRequest(views.html.donations.editForm.render(event, pfp, donationId, donationForm));
+			return badRequest(editForm.render(event, pfp, donationId, donationForm));
 		}
 
 
@@ -1972,7 +2075,8 @@ public class DonationMgmt extends Controller {
 
 
 
-	/**** --------------------Start Code Authorize.net-------11.01.2016- start---------------------*****/
+	/**** --------------------Start Code Authorize.net-------11.01.2016- start---------------------
+	 * @param response*****/
 	/*public static Result getResponseFromAuthorize(){
 		System.out.println("Enter getResponseFromAuthorizeeee");
 
@@ -2074,7 +2178,8 @@ public class DonationMgmt extends Controller {
 
 
 
-	public static Result getResponseFromAuthorize(){
+	public static Result getResponseFromAuthorize(CreateTransactionResponse response, Donation donationDetails,
+												  String userid){
 		System.out.println("Enter getResponseFromAuthorizeeee");
 		PAYMENT_LOGGER.info("***************Enter getResponseFromAuthorize*************************");
 		String paymentStatus="Failed";
@@ -2087,13 +2192,13 @@ public class DonationMgmt extends Controller {
 	2—Declined
 	3—Error
 	4—Held for Review*/
-		System.out.println("result.getResponseMap().get(x_response_code)"+result.getResponseMap().get("x_response_code"));
-		System.out.println("result.getResponseMap().get(x_trans_id)"+result.getResponseMap().get("x_trans_id"));
-		System.out.println("result.getResponseMap().get(x_account_number)" + result.getResponseMap().get("x_account_number"));
-		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + result.getResponseMap().get("x_donation_transaction_number"));
-		System.out.println("result.getResponseMap().get(x_invoice_num)" + result.getResponseMap().get("x_invoice_num"));
-		System.out.println("result.getResponseMap().get(x_email_id)" + result.getResponseMap().get("x_email_id"));
-		System.out.println("result.getResponseMap().get(x_donation_type)" + result.getResponseMap().get("x_donation_type"));
+		System.out.println("result.getResponseMap().get(x_response_code)"+response.getTransactionResponse().getResponseCode());//result.getResponseMap().get("x_response_code"));
+		System.out.println("result.getResponseMap().get(x_trans_id)" + response.getTransactionResponse().getTransId());//result.getResponseMap().get("x_trans_id"));
+		System.out.println("result.getResponseMap().get(x_account_number)" +response.getTransactionResponse().getAccountNumber());//result.getResponseMap().get("x_account_number"));
+		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + donationDetails.transactionNumber);//result.getResponseMap().get("x_donation_transaction_number"));
+		System.out.println("result.getResponseMap().get(x_invoice_num)" +donationDetails.invoiceNumber);// result.getResponseMap().get("x_invoice_num"));
+		System.out.println("result.getResponseMap().get(x_email_id)" +donationDetails.email);// result.getResponseMap().get("x_email_id"));
+		System.out.println("result.getResponseMap().get(x_donation_type)" +donationDetails.donationType);// result.getResponseMap().get("x_donation_type"));
             /****new add***start**/
        /* String transactionNo = result.getResponseMap().get("x_donation_transaction_number");
 		String responseTransId = result.getResponseMap().get("x_trans_id");
@@ -2128,39 +2233,54 @@ public class DonationMgmt extends Controller {
 
 		 }*/
 		/****new add***end**/
+
 		String reasonForFailure = " ";
 		final Form<Donation> donationForm = form(Donation.class);
-		Donation donation=Donation.findByTransactionNumber(result.getResponseMap().get("x_donation_transaction_number"));
+		Donation donation=Donation.findByTransactionNumber(donationDetails.transactionNumber);//result.getResponseMap().get("x_donation_transaction_number")
 		System.out.println("donationId ::: "+donation.id);
-		if(result.getResponseMap().get("x_response_code").equals("1")){
+		if(response.getTransactionResponse().getResponseCode().equals("1")){
 			donation.status=PaymentStatus.CLEARED;
 			paymentStatus="Payment Done successfully";
-		}
-		if(result.getResponseMap().get("x_response_code").equals("2")){
+		}else if(response.getTransactionResponse().getResponseCode().equals("4")){
+			donation.status=PaymentStatus.PENDING;
+			paymentStatus="Payment Pending";
+		}else{
 			donation.status=PaymentStatus.FAILED;
-			reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
+			if(response.getTransactionResponse().getErrors()!=null) {
+				Integer extremeErrorIndx = response.getTransactionResponse().getErrors().getError().size() - 1;
+				if (!response.getTransactionResponse().getCvvResultCode().equals("M") && !response.getTransactionResponse().getCvvResultCode().isEmpty())
+					reasonForFailure = response.getTransactionResponse().getErrors().getError().get(extremeErrorIndx).getErrorText() + " and cvv not matches.";
+				else
+					reasonForFailure = response.getTransactionResponse().getErrors().getError().get(extremeErrorIndx).getErrorText();
+			}else{
+				reasonForFailure="cvv missmatches.";
+			}
+			//reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
 			paymentStatus="Payment Failed";
+		}
+		/*if(response.getTransactionResponse().getResponseCode().equals("2")){
+
 
 		}
 		if(result.getResponseMap().get("x_response_code").equals("3")){
 			donation.status=PaymentStatus.FAILED;
 			reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
 			paymentStatus="Payment Failed";
-		}
-		if(result.getResponseMap().get("x_response_code").equals("4")){
-			donation.status=PaymentStatus.PENDING;
-			paymentStatus="Payment Pending";
-		}
-		donation.ccNum=result.getResponseMap().get("x_account_number");
-		donation.invoiceNumber = result.getResponseMap().get("x_invoice_num");
-		System.out.println("-----donationType1111----- :: "+donation.donationType);
-		System.out.println("----donation type2222-------- :: " + result.getResponseMap().get("x_donation_type"));
-		System.out.println( "-----amount-----"+result.getResponseMap().get("x_amount"));
-		System.out.println("---------sponsor item id -----------"+result.getResponseMap().get("x_sponsorItem_Id"));
+		}*/
+
+		donation.ccNum=response.getTransactionResponse().getAccountNumber();//result.getResponseMap().get("x_account_number");
+		donation.invoiceNumber = donationDetails.invoiceNumber;//result.getResponseMap().get("x_invoice_num");
+		donation.ccDigits=null;
+		System.out.println("-----donationType1111----- :: " + donation.donationType);
+		System.out.println("----donation type2222-------- :: " + donationDetails.donationType);//result.getResponseMap().get("x_donation_type"));
+		System.out.println( "-----amount-----"+donationDetails.amount);//result.getResponseMap().get("x_amount"));
+		//System.out.println("---------sponsor item id -----------" + donationDetails.sponsorItem.id);//result
+		// .getResponseMap().get
+		// ("x_sponsorItem_Id"));
 		//donation.amount = Integer.parseInt(result.getResponseMap().get("x_amount"));
 		donation.update();
 		if(donation.donationType == DonationType.SPONSOR){
-			Long sponsorItemId = Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
+			Long sponsorItemId =donationDetails.sponsorItem.id;// Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
 
 			SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
 			/*donation =*/
@@ -2178,12 +2298,12 @@ public class DonationMgmt extends Controller {
 		try{
 			Transaction transaction = Transaction.class.newInstance() ;
 	/*Transaction transaction = Transaction.findByDonationTranId();*/
-			transaction.accountNumber = result.getResponseMap().get("x_account_number");
-			transaction.donationTranId=result.getResponseMap().get("x_donation_transaction_number");
-			transaction.email=result.getResponseMap().get("x_email_id");
+			transaction.accountNumber = response.getTransactionResponse().getAccountNumber();//result.getResponseMap().get("x_account_number");
+			transaction.donationTranId=donationDetails.transactionNumber;//result.getResponseMap().get("x_donation_transaction_number");
+			transaction.email=donationDetails.email;//result.getResponseMap().get("x_email_id");
 			transaction.mailSent=false;
-			transaction.reason=result.getResponseMap().get("x_response_code");
-			transaction.transid=result.getResponseMap().get("x_trans_id");
+			transaction.reason=response.getTransactionResponse().getResponseCode();//result.getResponseMap().get("x_response_code");
+			transaction.transid=response.getTransactionResponse().getTransId();//result.getResponseMap().get("x_trans_id");
 			transaction.ccname="lll";
 			//transaction.rcode="";
 			transaction.rcode = reasonForFailure;
@@ -2211,7 +2331,7 @@ public class DonationMgmt extends Controller {
 
 			/*********new add***********************21.01.2016**************************/
 
-			if (donation.status == Donation.PaymentStatus.CLEARED) {
+			if (donation.status == PaymentStatus.CLEARED) {
 
 				//MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
 
@@ -2221,7 +2341,7 @@ public class DonationMgmt extends Controller {
 					creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
 					System.out.println("creditCardNumber :: " + creditCardNumber);
 					donation.ccNum = creditCardNumber;
-					donation.ccDigits = creditCardNumber;
+					donation.ccDigits = null;
 
 
 				}
@@ -2239,7 +2359,8 @@ public class DonationMgmt extends Controller {
 
 
 
-					Long sponsorItemId = Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
+					Long sponsorItemId = donationDetails.sponsorItem.id;//Long.parseLong(result.getResponseMap().get
+					// ("x_sponsorItem_Id"));
 
 					SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
 			/*donation =*/
@@ -2273,13 +2394,12 @@ public class DonationMgmt extends Controller {
 			ex.printStackTrace();
 		}
 
-		System.out.println("*********************event id*********************"+result.getResponseMap().get( "x_event_id"));
-		Long eventId = Long.parseLong(result.getResponseMap().get( "x_event_id"));
+		System.out.println("*********************event id*********************" + donationDetails.event.id);//result.getResponseMap().get("x_event_id"));
+		Long eventId = donationDetails.event.id;//Long.parseLong(result.getResponseMap().get( "x_event_id"));
 		//Long userId = Long.parseLong(result.getResponseMap().get( "&x_user_id"));
-		System.out.println("*********************user id*********************"+result.getResponseMap().get
-				("x_user_id"));
-		String userId = result.getResponseMap().get("x_user_id");
-     Event event =Event.findById(eventId);
+		System.out.println("*********************user id*********************" + userid);//result.getResponseMap().get("x_user_id"));
+		String userId = userid;//result.getResponseMap().get("x_user_id");
+     	Event event =Event.findById(eventId);
 		//final User user = User.findByUserId(userId);
 
 		System.out.println("Transaction Table saved");
