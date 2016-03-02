@@ -2661,7 +2661,8 @@ public class DonationMgmt extends Controller {
 			transaction.email=donationDetails.email;//result.getResponseMap().get("x_email_id");
 			transaction.mailSent=false;
 
-			transaction.ccname="lll";
+			//transaction.ccname="lll";
+			transaction.ccname=donation.firstName+" "+donation.lastName;
 			//transaction.rcode="";
 			transaction.rcode = reasonForFailure;
 			transaction.authcode="";
