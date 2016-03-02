@@ -1049,32 +1049,7 @@ public class DonationMgmt extends Controller {
 			else if(Integer.parseInt(donationForm.data().get("amount"))<5) {
 				donationForm.reject("amount", "The minimum donation is $5.00, please make the correction to proceed.");
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			}
-			/*******rimi**********25.02.2016****************************start************************************/
-			else if(StringUtils.isEmpty(donationForm.data().get("ccNum"))){
-				System.out.println("*************the ccnum is blank11**************");
-				donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please " +
-						"click on  'Pay " +
-						"By Credit Card' button to proceed.");
-				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			}
-			else if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
-				System.out.println("*************the expDate is blank11**************");
-				donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  " +
-						"'Pay " +
-						"By Credit Card' button to proceed.");
-				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			}
-			else if(StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))){
-				System.out.println("*************the ccCvvCode is blank11**************");
-				donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, please click on  " +
-						"'Pay " +
-						"By Credit Card' button to proceed.");
-				return badRequest(createForm.render(event, event.generalFund, donationForm));
-			}
-			/*******rimi**********25.02.2016*****************************end*************************************/
-
-			else
+			}else
 			{
 				//return badRequest(createForm.render(event, donationForm.get().pfp, donationForm)); //30.07.2015
 				return badRequest(createForm.render(event, event.generalFund, donationForm));
@@ -1098,27 +1073,7 @@ public class DonationMgmt extends Controller {
 		}
 
 
-		/*******rimi**********25.02.2016****************************start************************************/
-		if(StringUtils.isEmpty(donationForm.data().get("ccNum"))){
-			System.out.println("*************the ccnum is blank**************");
-			donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please click on" +
-					"  'Pay " +
-					"By Credit Card' button to proceed.");
-			return badRequest(createForm.render(event, event.generalFund, donationForm));
-		}
-		if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
-			System.out.println("*************the expDate is blank11**************");
-			donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  'Pay " +
-					"By Credit Card' button to proceed.");
-			return badRequest(createForm.render(event, event.generalFund, donationForm));
-		}
-		if(StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))){
-			System.out.println("*************the ccCvvCode is blank11**************");
-			donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, please click on  'Pay " +
-					"By Credit Card' button to proceed.");
-			return badRequest(createForm.render(event, event.generalFund, donationForm));
-		}
-		/*******rimi**********25.02.2016*****************************end*************************************/
+
 
 		Donation donation = donationForm.get(); // donation form in donation variable fdatsuv
 		donation.dateCreated = new Date();
@@ -1175,10 +1130,10 @@ public class DonationMgmt extends Controller {
 			PAYMENT_LOGGER.warn("payment type is credit");
 			System.out.println("payment type is credit");
 			PAYMENT_LOGGER.info("donation.paymentType is credit " + donation.paymentType);
-		if (event.isIdOnly()) {
+			if (event.isIdOnly()) {
 				event = Event.findByIdWithMinAndGeneralFund(event.id);
 			}
-			System.out.println("within save......donation.pfp.id "+donation.pfp.id);
+			System.out.println("within save......donation.pfp.id " + donation.pfp.id);
 			System.out.println("before calling findDuplicateDonationToSameDonor.. ");
 			/*boolean isDuplicationOfDonation = donation.findDuplicateDonationToSameDonor( donation.pfp.id, donation.donorName, event.id);
 			System.out.println("isDuplicationOfDonation :: "+isDuplicationOfDonation);
@@ -1189,9 +1144,62 @@ public class DonationMgmt extends Controller {
 			}
 			else{*/
 			/*donation.status = PaymentStatus.APPROVED;*/
+
+
+
+
+			/*******rimi**********25.02.2016****************************start************************************/
+
+				if (StringUtils.isEmpty(donationForm.data().get("ccNum"))) {
+					System.out.println("*************the ccnum is blank**************");
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please make" +
+							" the correction to proceed.");
+
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+			/*if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
+				System.out.println("*************the expDate is blank11**************");
+				donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  'Pay " +
+						"By Credit Card' button to proceed.");
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}*/
+
+
+				if (StringUtils.isEmpty(donationForm.data().get("month")) || donationForm.data().get
+						("month").equals("-Month-")) {
+					System.out.println("*************month**************" + StringUtils.isEmpty(donationForm.data().get
+							("month")));
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("month", "Please select Month, please make the correction to proceed. ");
+
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+				if (StringUtils.isEmpty(donationForm.data().get("year")) || donationForm.data().get
+						("year").equals("-Year-")) {
+					System.out.println("*************year**************" + StringUtils.isEmpty(donationForm.data().get
+							("year")));
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("month", "Please select Year,please make the correction to proceed. ");
+
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+
+				if (StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))) {
+					System.out.println("*************the ccCvvCode is blank11**************");
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, Please make the " +
+							"correction to proceed.");
+
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+
+			/*******rimi**********25.02.2016*****************************end*************************************/
+
+
 			donation.status = PaymentStatus.INITIATED;
 			donation.transactionNumber = UUID.randomUUID().toString();
-			donation.ccDigits=null;
+			donation.ccDigits = null;
 			/*********************start*********************comment out******************************25.01.2016***********************************************/
 			/*Random randomGenerator1 = new Random();
 			int randomSequence1 = randomGenerator1.nextInt(1000);
@@ -1202,12 +1210,15 @@ public class DonationMgmt extends Controller {
 			try {
 
 
-				//donation.save();  // main donation table saved
+				donation.save();  // main donation table saved
 
+				Donation donation1 = Donation.findByTransactionNumber(donation.transactionNumber);
+				System.out.println("***********************donation id=======>" + donation1.id);
+				System.out.println("*************Status=========>" + donation.status);
 
 				PAYMENT_LOGGER.warn("payment type is credit11");
 				System.out.println("payment type is credit11");
-				} catch (Exception e) {
+			} catch (Exception e) {
 				//PAYMENT_LOGGER.error("An error occurred saving the Donation so it will be refunded " + ToStringBuilder.reflectionToString(donation));
 				PAYMENT_LOGGER.error("The error that caused the db failure [{}]", e.getMessage());
 				//Map<String, String> response = new HashMap<String, String>();
@@ -1225,12 +1236,107 @@ public class DonationMgmt extends Controller {
 					Logger.debug("Has errors {}", donationForm.errorsAsJson());
 					PAYMENT_LOGGER.warn("payment type is credit22");
 					System.out.println("payment type is credit22");
-					return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
+
+					/*******rimi**********25.02.2016****************************start************************************/
+					if (StringUtils.isEmpty(donationForm.data().get("ccNum"))) {
+						System.out.println("*************the ccnum is blank11**************");
+						donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+
+						donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, " +
+								"please make the correction and click on 'Pay' button to proceed.");
+						return badRequest(createForm.render(event, event.generalFund, donationForm));
+					}
+					/*else if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
+						System.out.println("*************the expDate is blank11**************");
+						donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  " +
+								"'Pay " +
+								"By Credit Card' button to proceed.");
+						return badRequest(createForm.render(event, event.generalFund, donationForm));
+					}*/
+					else if (StringUtils.isEmpty(donationForm.data().get("month")) || donationForm.data().get
+							("month").equals("-Month-")) {
+						donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+						donationForm.reject("month", "Please select the Month.please make the correction and click on 'Pay' button to proceed.");
+						if (donationForm.hasErrors()) {
+							Logger.debug("Has errors {}", donationForm.errorsAsJson());
+							return badRequest(createForm.render(event, event.generalFund, donationForm));
+						}
+					} else if (StringUtils.isEmpty(donationForm.data().get("year")) || donationForm.data().get
+							("year").equals("-Year-")) {
+						donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+						donationForm.reject("month", "Please select the Year.please make the correction and click on 'Pay' button to proceed.");
+						if (donationForm.hasErrors()) {
+							Logger.debug("Has errors {}", donationForm.errorsAsJson());
+							return badRequest(createForm.render(event, event.generalFund, donationForm));
+						}
+					} else if (StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))) {
+						System.out.println("*************the ccCvvCode is blank11**************");
+						donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+						donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, please " +
+								"make the correction to proceed. ");
+
+						return badRequest(createForm.render(event, event.generalFund, donationForm));
+					} else {
+						/*******rimi**********25.02.2016*****************************end*************************************/
+						return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
+					}
+
 				}
 				return badRequest(createForm.render(event, donationForm.get().pfp, donationForm));
 			}
 			PAYMENT_LOGGER.warn("payment type is credit33");
 			System.out.println("payment type is credit33");
+
+
+			/*******rimi**********25.02.2016****************************start************************************/
+		/*if(donation.paymentType == PaymentType.CREDIT)	{
+			if (StringUtils.isEmpty(donationForm.data().get("ccNum"))) {
+				System.out.println("*************the ccnum is blank**************");
+				donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+				donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please make" +
+						" the correction to proceed.");
+
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+			*//*if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
+				System.out.println("*************the expDate is blank11**************");
+				donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  'Pay " +
+						"By Credit Card' button to proceed.");
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}*//*
+
+
+			if (StringUtils.isEmpty(donationForm.data().get("month")) || donationForm.data().get
+					("month").equals("-Month-")) {
+				System.out.println("*************month**************" + StringUtils.isEmpty(donationForm.data().get
+						("month")));
+				donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+				donationForm.reject("year", "Please select Month, please make the correction to proceed. ");
+
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+			if (StringUtils.isEmpty(donationForm.data().get("year")) || donationForm.data().get
+					("year").equals("-Year-")) {
+				System.out.println("*************year**************" + StringUtils.isEmpty(donationForm.data().get
+						("year")));
+				donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+				donationForm.reject("year", "Please select Year,please make the correction to proceed. ");
+
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+
+			if (StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))) {
+				System.out.println("*************the ccCvvCode is blank11**************");
+				donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+				donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, Please make the " +
+						"correction to proceed.");
+
+				return badRequest(createForm.render(event, event.generalFund, donationForm));
+			}
+		}*/
+			/*******rimi**********25.02.2016*****************************end*************************************/
+
+
 			//return ok(creditForm.render(event, donationForm.get().pfp, donationForm));
 	   /* String WorldPlayUrl=null;
 		try {
@@ -1278,33 +1384,36 @@ public class DonationMgmt extends Controller {
              /*******rimi***********start***********25.02.2016******************************start*********/
                if(msg.equals("The credit card number is invalid."))
 			   {
-				   donationForm.reject("ccNum", "Credit card number is Invalid, please click on  'Pay " +
-						   "By Credit Card' to proceed.");
+				   donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+				   donationForm.reject("ccNum", "Credit card number is Invalid, please make the correction to proceed" +
+						   ". ");
+
 				   return badRequest(createForm.render(event, event.generalFund, donationForm));
 			   }
 				if(msg.equals("The credit card has expired.")){
-
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
 						System.out.println("*************the expDate is blank11222**************");
-						donationForm.reject("expDate", "Credit card already expired, please click on  'Pay " +
-								"By Credit Card' button to proceed.");
+						donationForm.reject("month", "Credit card already expired, please make the correction to proceed. " );
 						return badRequest(createForm.render(event, event.generalFund, donationForm));
 					}
 				if(msg.equals("cvv missmatches.") ){
-
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
 					System.out.println("*************the expDate is blank11222**************");
-					donationForm.reject("ccCvvCode", "cvv code not matches, please click on  'Pay By Credit Card' " +
-							"button" +
-							" to " +
-							"proceed.");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please make the correction to proceed." );
 					return badRequest(createForm.render(event, event.generalFund, donationForm));
 				}
 				if(msg.endsWith(" and cvv not matches.")){
-
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
 					System.out.println("*************the expDate is blank11222**************");
-					donationForm.reject("ccCvvCode", "cvv code not matches, please click on  'Pay By Credit Card' button to" +
-							" " +
-							"proceed.");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please make the correction to proceed.");
 					return badRequest(createForm.render(event, event.generalFund, donationForm));
+				}
+				if(msg.equals("Internal Server Error.") ){
+					//donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("payByCreditCard", "Internal server error please make another payment");
+					return badRequest(createForm.render(event, event.generalFund, donationForm));
+
 				}
 
 
@@ -1392,6 +1501,11 @@ public class DonationMgmt extends Controller {
 
 		} else if (donation.paymentType == PaymentType.CHECK) {
 			System.out.println("PaymentType.CHECK 111:"+donation.paymentType);
+            if(StringUtils.isEmpty(donationForm.data().get("checkNum"))){
+                System.out.println("*************the ccnum is blank**************");
+                donationForm.reject("checkNum", "Please provide the check number,click on  'Pay By Check' button to proceed.");
+                return badRequest(createForm.render(event, event.generalFund, donationForm));
+            }
 			donation.transactionNumber = UUID.randomUUID().toString();
 			donation.status = PaymentStatus.PENDING;
 			donation.save();
@@ -1407,7 +1521,7 @@ public class DonationMgmt extends Controller {
 		}
 		System.out.println("========donation.id==="+donation.id);
 		Donation updatedDonation = Donation.findById(donation.id);
-		System.out.println("after save :: "+donation.status);
+		System.out.println("after save :: "+updatedDonation.status);
 		final Pfp pfp = Pfp.findById(donationForm.get().pfp.id);
 		if (pfp.pfpType == PfpType.PFP && updatedDonation.paymentType != PaymentType.CHECK) {
 			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
@@ -1442,7 +1556,7 @@ public class DonationMgmt extends Controller {
 		}
 		SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
 		final Form<Donation> donationForm = form(Donation.class).bindFromRequest();
-
+		System.out.println(("********donationForm.hasErrors()*****************"+donationForm.hasErrors()));
 		if (donationForm.hasErrors()) {
 			Logger.debug("Has errors {}", donationForm.errorsAsJson());
 			return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
@@ -1547,14 +1661,76 @@ public class DonationMgmt extends Controller {
 					.amount);
 			donation.status = PaymentStatus.INITIATED;
 			donation.paymentType = PaymentType.CREDIT;
+			System.out.println("************before transactionNumber****************");
 			donation.transactionNumber =UUID.randomUUID().toString();
 			//ccProps.get("ssl_txn_id");
-			if (StringUtils.isEmpty(donation.transactionNumber)) {
+
+			/*if (StringUtils.isEmpty(donation.transactionNumber)) {
 //				Logger.error("There is no transaction number for the ccNum {} and props {}.", donationForm.get().ccNum,
 //								ToStringBuilder.reflectionToString(ccProps));
-			}
+			}*/
+			System.out.println("************after transactionNumber****************");
+			System.out.println(("*************donation.paymentType*************"+donation.paymentType));
+			System.out.println(("********donationForm.hasErrors()1*****************"+donationForm.hasErrors()));
+			/*if (donationForm.hasErrors()) {*/
+				System.out.println("************donationForm.hasErrors()****************");
+				Logger.debug("Has errors {}", donationForm.errorsAsJson());
+				PAYMENT_LOGGER.warn("payment type is credit22");
+				System.out.println("payment type is credit22");
+
+				/*******rimi**********25.02.2016****************************start************************************/
+				if(StringUtils.isEmpty(donationForm.data().get("ccNum"))){
+					System.out.println("*************the ccnum is blank11**************");
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+
+					donationForm.reject("ccNum", "Please provide the credit card number,which is only digits, please make the correction to proceed.");
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+					/*else if(StringUtils.isEmpty(donationForm.data().get("expDate"))){
+						System.out.println("*************the expDate is blank11**************");
+						donationForm.reject("expDate", "Please provide the Expiration Date(Format is MMYY), please click on  " +
+								"'Pay " +
+								"By Credit Card' button to proceed.");
+						return badRequest(createForm.render(event, event.generalFund, donationForm));
+					}*/
+				else if(StringUtils.isEmpty(donationForm.data().get("month")) || donationForm.data().get
+						("month").equals("-Month-")) {
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("month", "Please select the Month.please make the correction to proceed.");
+					/*if (donationForm.hasErrors()) {*/
+						Logger.debug("Has errors {}", donationForm.errorsAsJson());
+						return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+								donationForm));
+					/*}*/
+				}else if(StringUtils.isEmpty(donationForm.data().get("year"))  || donationForm.data().get
+						("year").equals("-Year-")) {
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("month", "Please select the Year.please make the correction to proceed.");
+					/*if (donationForm.hasErrors()) {*/
+						Logger.debug("Has errors {}", donationForm.errorsAsJson());
+						return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+								donationForm));
+					/*}*/
+				}else if(StringUtils.isEmpty(donationForm.data().get("ccCvvCode"))){
+					System.out.println("*************the ccCvvCode is blank11**************");
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("ccCvvCode", "Please provide the cvv code,which is only digits, please " +
+							"make the correction to proceed. ");
+
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+					/*******rimi**********25.02.2016*****************************end*************************************/
+
+
+
+			/*}*/
+
 			//donation.ccDigits = donation.ccNum.substring(Math.max(0, donation.ccNum.length() - 4));
 		} else {
+
+			System.out.println("within else***********");
 			donation.status = PaymentStatus.PENDING;
 			donation.paymentType = PaymentType.CHECK;
 			donation.transactionNumber = UUID.randomUUID().toString();
@@ -1610,12 +1786,13 @@ public class DonationMgmt extends Controller {
 /**************upload image*******************20.08.2015****************end****************/
 
 		donation.save();
-		Logger.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
+		/*Logger.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}]
+		in the amount of [{}]",
 						donation.ccDigits, donation.transactionNumber, donation.amount);
 		sponsorItem.donation = donation;
 		sponsorItem.update();
 		Donation updatedDonation = Donation.findById(donationForm.get().id);
-		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
+		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");*/
 		/*ReceiptMgmt.sendSponsoredMsg(updatedDonation);*/
 		/*if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			String WorldPlayUrl=null;
@@ -1640,16 +1817,147 @@ public class DonationMgmt extends Controller {
 			//return redirect(routes.ReceiptMgmt.getAndSendCCReceipt(event, updatedDonation));
 			return redirect(WorldPlayUrl);
 		}*/
+		Donation updatedDonation = Donation.findById(donationForm.get().id);
+		System.out.println("***********updated donation id************"+updatedDonation.id);
+		System.out.println("***********updatedDonation.paymentType************"+updatedDonation.paymentType);
 		if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			/**********start********authorize.net**********************************************08.01.2016******************/
 			System.out.println("********************donation amount for sponsor credit2211*******************"+donation
 					.amount);
 			try {
+
+
+
+
+				final User user = ControllerUtil.getLocalUser(session());
+
+
+				/********* 23.02.2016 start **********/
+
+
+				/*Donation donationDetails = donationForm.get();*/
+				String userId="none";
+				if(user != null){
+					userId=user.id+"";
+				}
+				/********* 23.02.2016 end **********/
+
+				String msg=AuthorisedNetPaymentUtil.makeCreditCardPayment(donation,userId);
+
+
+				System.out.println("Response From Authorised net gateway =====>"+msg);
+				/*******rimi***********start***********25.02.2016******************************start*********/
+				if(msg.equals("The credit card number is invalid."))
+				{
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("ccNum", "Credit card number is Invalid, please make the correction to proceed" +
+							". ");
+
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				else if(msg.equals("The credit card has expired.")){
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("month", "Credit card already expired, please make the correction to proceed. " );
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				else if(msg.equals("cvv missmatches.") ){
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please make the correction to proceed." );
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				else if(msg.endsWith(" and cvv not matches.")){
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please make the correction to proceed.");
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				else if(msg.equals("Internal Server Error.") ){
+					//donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("payByCreditCard", "Internal server error please make another payment");
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+
+				}else if(msg.indexOf("Successful Credit Card Transaction your Transaction Id is")>-1){
+					System.out.println("**********after donation save donation id**********"+donation.id);
+					System.out.println("**********after donation save donation type**********"+donation.paymentType);
+					System.out.println("**********after donation save donation status**********"+donation.status);
+					System.out.println("**********after donation save donation type**********"+donation.donationType);
+					flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
+				}
+
+
+				/*******rimi***********start***********25.02.2016******************************end*********/
+
 				//	WorldPlayUrl=WorldPayUtils.checkout(String.valueOf(donation.amount+".00"),donation.transactionNumber,donation.email,"events/"+event.slug);
 				/*Random randomGenerator1 = new Random();
 				int randomSequence1 = randomGenerator1.nextInt(1000);*/
-				final User user = ControllerUtil.getLocalUser(session());
-				if(user == null){
+				/*final User user = ControllerUtil.getLocalUser(session());
+
+
+				*//********* 23.02.2016 start **********//*
+
+
+				*//*Donation donationDetails = donationForm.get();*//*
+				String userId="none";
+				if(user != null){
+					userId=user.id+"";
+				}
+				*//********* 23.02.2016 end **********//*
+
+				String msg=AuthorisedNetPaymentUtil.makeCreditCardPayment(donation,userId);
+
+
+				System.out.println("Response From Authorised net gateway =====>"+msg);
+				*//*******rimi***********start***********25.02.2016******************************start*********//*
+				if(msg.equals("The credit card number is invalid."))
+				{
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					donationForm.reject("ccNum", "Credit card number is Invalid, please make the correction to proceed" +
+							". ");
+
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				if(msg.equals("The credit card has expired.")){
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("month", "Credit card already expired, please make the correction to proceed. " );
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				if(msg.equals("cvv missmatches.") ){
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please make the correction to proceed." );
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				if(msg.endsWith(" and cvv not matches.")){
+					donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("ccCvvCode", "cvv code not matches, please make the correction to proceed.");
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+				}
+				if(msg.equals("Internal Server Error.") ){
+					//donationForm.reject("Please click on  'Pay By Credit Card' button to proceed.");
+					System.out.println("*************the expDate is blank11222**************");
+					donationForm.reject("payByCreditCard", "Internal server error please make another payment");
+					return badRequest(views.html.sponsors.createDonationForm.render(event, pfp, sponsorItem,
+							donationForm));
+
+				}
+
+
+				/*******rimi***********start***********25.02.2016******************************end*********/
+				/*if(user == null){
 					Random randomGenerator = new Random();
 					int randomSequence = randomGenerator.nextInt(1000);
 					Fingerprint fingerprint = Fingerprint.createFingerprint(API_LOGIN_ID, TRANSACTION_KEY, randomSequence, String.valueOf(donation.amount));
@@ -1710,14 +2018,28 @@ public class DonationMgmt extends Controller {
 							"&x_event_id=" + event.id;
 				}
 				System.out.println("url"+url);
-				//return redirect(url);
+				//return redirect(url);*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			System.out.println("within validateAndSendCreditInfo now Authorize URLEEEEEEEEEEEEEEEEEEEEEEEEEE1111111111 =>>>>>>>>>>>>>>>"+url);
-			return redirect(url);
+			//return redirect(url);
+			updatedDonation = Donation.findById(donationForm.get().id);
+			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
+			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+			System.out.println("before calling getAndSendCheckReceipt..");
+			return redirect(routes.ReceiptMgmt.getAndSendCCReceipt(event, updatedDonation));
+			//return ok(index.render());
 			/**********end********authorize.net**********************************************08.01.2016******************/
 		}else {
+
+			donation.save();
+			Logger.info("Successfully submitted transaction to Virtual Merchant for CCNum [{}] and Transaction ID [{}] in the amount of [{}]",
+					donation.ccDigits, donation.transactionNumber, donation.amount);
+			sponsorItem.donation = donation;
+			sponsorItem.update();
+			 updatedDonation = Donation.findById(donationForm.get().id);
+			flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
 			ReceiptMgmt.sendSponsoredMsg(updatedDonation);
 			System.out.println("before calling getAndSendCheckReceipt..");
 			return redirect(routes.ReceiptMgmt.getAndSendCheckReceipt(event, updatedDonation));
@@ -2179,10 +2501,10 @@ public class DonationMgmt extends Controller {
 
 
 	public static Result getResponseFromAuthorize(CreateTransactionResponse response, Donation donationDetails,
-												  String userid){
+												  String userid) {
 		System.out.println("Enter getResponseFromAuthorizeeee");
 		PAYMENT_LOGGER.info("***************Enter getResponseFromAuthorize*************************");
-		String paymentStatus="Failed";
+		String paymentStatus = "Failed";
 		//Map<String,String[]> valForDecrypt=request().queryString();
 		//System.out.println("valForDecrypt"+valForDecrypt.toString());
 		net.authorize.sim.Result result = net.authorize.sim.Result.createResult(API_LOGIN_ID, API_LOGIN_ID, request().queryString());
@@ -2192,14 +2514,19 @@ public class DonationMgmt extends Controller {
 	2—Declined
 	3—Error
 	4—Held for Review*/
-		System.out.println("result.getResponseMap().get(x_response_code)"+response.getTransactionResponse().getResponseCode());//result.getResponseMap().get("x_response_code"));
-		System.out.println("result.getResponseMap().get(x_trans_id)" + response.getTransactionResponse().getTransId());//result.getResponseMap().get("x_trans_id"));
-		System.out.println("result.getResponseMap().get(x_account_number)" +response.getTransactionResponse().getAccountNumber());//result.getResponseMap().get("x_account_number"));
+		if (response != null) {
+			System.out.println("result.getResponseMap().get(x_response_code)" + response.getTransactionResponse().getResponseCode());//result.getResponseMap().get("x_response_code"));
+			System.out.println("result.getResponseMap().get(x_trans_id)" + response.getTransactionResponse().getTransId());//result.getResponseMap().get("x_trans_id"));
+			System.out.println("result.getResponseMap().get(x_account_number)" + response.getTransactionResponse().getAccountNumber());//result.getResponseMap().get("x_account_number"));
+
+		}
+
+
 		System.out.println("result.getResponseMap().get(x_donation_transaction_number)" + donationDetails.transactionNumber);//result.getResponseMap().get("x_donation_transaction_number"));
-		System.out.println("result.getResponseMap().get(x_invoice_num)" +donationDetails.invoiceNumber);// result.getResponseMap().get("x_invoice_num"));
-		System.out.println("result.getResponseMap().get(x_email_id)" +donationDetails.email);// result.getResponseMap().get("x_email_id"));
-		System.out.println("result.getResponseMap().get(x_donation_type)" +donationDetails.donationType);// result.getResponseMap().get("x_donation_type"));
-            /****new add***start**/
+		System.out.println("result.getResponseMap().get(x_invoice_num)" + donationDetails.invoiceNumber);// result.getResponseMap().get("x_invoice_num"));
+		System.out.println("result.getResponseMap().get(x_email_id)" + donationDetails.email);// result.getResponseMap().get("x_email_id"));
+		System.out.println("result.getResponseMap().get(x_donation_type)" + donationDetails.donationType);// result.getResponseMap().get("x_donation_type"));
+		/****new add***start**/
        /* String transactionNo = result.getResponseMap().get("x_donation_transaction_number");
 		String responseTransId = result.getResponseMap().get("x_trans_id");
 
@@ -2236,28 +2563,40 @@ public class DonationMgmt extends Controller {
 
 		String reasonForFailure = " ";
 		final Form<Donation> donationForm = form(Donation.class);
-		Donation donation=Donation.findByTransactionNumber(donationDetails.transactionNumber);//result.getResponseMap().get("x_donation_transaction_number")
-		System.out.println("donationId ::: "+donation.id);
-		if(response.getTransactionResponse().getResponseCode().equals("1")){
-			donation.status=PaymentStatus.CLEARED;
-			paymentStatus="Payment Done successfully";
-		}else if(response.getTransactionResponse().getResponseCode().equals("4")){
-			donation.status=PaymentStatus.PENDING;
-			paymentStatus="Payment Pending";
-		}else{
-			donation.status=PaymentStatus.FAILED;
-			if(response.getTransactionResponse().getErrors()!=null) {
-				Integer extremeErrorIndx = response.getTransactionResponse().getErrors().getError().size() - 1;
-				if (!response.getTransactionResponse().getCvvResultCode().equals("M") && !response.getTransactionResponse().getCvvResultCode().isEmpty())
-					reasonForFailure = response.getTransactionResponse().getErrors().getError().get(extremeErrorIndx).getErrorText() + " and cvv not matches.";
-				else
-					reasonForFailure = response.getTransactionResponse().getErrors().getError().get(extremeErrorIndx).getErrorText();
-			}else{
-				reasonForFailure="cvv missmatches.";
+		Donation donation = Donation.findByTransactionNumber(donationDetails.transactionNumber);//result.getResponseMap().get("x_donation_transaction_number")
+		System.out.println("donationId ::: " + donation.id);
+
+		if (response != null) {
+			if (response.getTransactionResponse().getResponseCode().equals("1")) {
+				System.out.println("within reason code 1");
+				donation.status = PaymentStatus.CLEARED;
+				paymentStatus = "Payment Done successfully";
+			} else if (response.getTransactionResponse().getResponseCode().equals("4")) {
+				System.out.println("**********within pending**************");
+				donation.status = PaymentStatus.PENDING;
+				paymentStatus = "Payment Pending";
+			} else {
+				donation.status = PaymentStatus.FAILED;
+				if (response.getTransactionResponse().getErrors() != null) {
+					System.out.println("within reason code else");
+					Integer extremeErrorIndx = response.getTransactionResponse().getErrors().getError().size() - 1;
+					if (!response.getTransactionResponse().getCvvResultCode().equals("M") && !response.getTransactionResponse().getCvvResultCode().isEmpty())
+						reasonForFailure = response.getTransactionResponse().getErrors().getError().get(extremeErrorIndx).getErrorText() + " and cvv not matches.";
+					else
+						reasonForFailure = response.getTransactionResponse().getErrors().getError().get(extremeErrorIndx).getErrorText();
+				} else {
+					System.out.println("within reason code else1111");
+					reasonForFailure = "cvv missmatches.";
+				}
+				//reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
+				paymentStatus = "Payment Failed";
 			}
-			//reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
-			paymentStatus="Payment Failed";
+		} else {
+			donation.status = PaymentStatus.INITIATED;
+			paymentStatus = "No respose from Authorize Net";
+			reasonForFailure = "No respose from Authorize Net";
 		}
+
 		/*if(response.getTransactionResponse().getResponseCode().equals("2")){
 
 
@@ -2267,43 +2606,61 @@ public class DonationMgmt extends Controller {
 			reasonForFailure = result.getResponseMap().get("x_response_ reason_text");
 			paymentStatus="Payment Failed";
 		}*/
+		if (response != null) {
+			donation.ccNum = response.getTransactionResponse().getAccountNumber();//result.getResponseMap().get("x_account_number");
+		} else {
+			donation.ccNum = "";
+		}
 
-		donation.ccNum=response.getTransactionResponse().getAccountNumber();//result.getResponseMap().get("x_account_number");
 		donation.invoiceNumber = donationDetails.invoiceNumber;//result.getResponseMap().get("x_invoice_num");
-		donation.ccDigits=null;
+		//donation.ccDigits=null;
 		System.out.println("-----donationType1111----- :: " + donation.donationType);
 		System.out.println("----donation type2222-------- :: " + donationDetails.donationType);//result.getResponseMap().get("x_donation_type"));
-		System.out.println( "-----amount-----"+donationDetails.amount);//result.getResponseMap().get("x_amount"));
+		System.out.println("-----amount-----" + donationDetails.amount);//result.getResponseMap().get("x_amount"));
 		//System.out.println("---------sponsor item id -----------" + donationDetails.sponsorItem.id);//result
 		// .getResponseMap().get
 		// ("x_sponsorItem_Id"));
 		//donation.amount = Integer.parseInt(result.getResponseMap().get("x_amount"));
 		donation.update();
-		if(donation.donationType == DonationType.SPONSOR){
-			Long sponsorItemId =donationDetails.sponsorItem.id;// Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
+		System.out.println("*********before sponsor response*************"+response);
+		/*if (response != null && donation.status == PaymentStatus.CLEARED){*/
+			if (donation.donationType == DonationType.SPONSOR) {
+				Long sponsorItemId = donationDetails.sponsorItem.id;// Long.parseLong(result.getResponseMap().get("x_sponsorItem_Id"));
 
-			SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
+				SponsorItem sponsorItem = SponsorItem.findById(sponsorItemId);
 			/*donation =*/
-			donation.amount = sponsorItem.amount;
-			donation.update();
-			System.out.println("-------------sponsor amount------------"+donation.amount);
-			sponsorItem.donation = donation;
-			sponsorItem.update();
-			//Donation updatedDonation = Donation.findById(donationForm.get().id);
-			//flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
-			//ReceiptMgmt.sendSponsoredMsg(updatedDonation);
-		}
+				donation.amount = sponsorItem.amount;
+				donation.update();
+				System.out.println("-------------sponsor amount------------" + donation.amount);
+				sponsorItem.donation = donation;
+				sponsorItem.update();
+				//Donation updatedDonation = Donation.findById(donationForm.get().id);
+				//flash(ControllerUtil.FLASH_SUCCESS_KEY, "Sponsorship has been submitted");
+				//ReceiptMgmt.sendSponsoredMsg(updatedDonation);
+			}
+	/*}*/
 		System.out.println("Donation table saved");
 
 		try{
+			System.out.println("********within try**********");
 			Transaction transaction = Transaction.class.newInstance() ;
-	/*Transaction transaction = Transaction.findByDonationTranId();*/
-			transaction.accountNumber = response.getTransactionResponse().getAccountNumber();//result.getResponseMap().get("x_account_number");
+			/*Transaction transaction = Transaction.findByDonationTranId();*/
+			if(response!=null){
+				transaction.accountNumber = response.getTransactionResponse().getAccountNumber();//result.getResponseMap().get("x_account_number");
+				transaction.reason=response.getTransactionResponse().getResponseCode();//result.getResponseMap().get("x_response_code");
+				transaction.transid=response.getTransactionResponse().getTransId();//result.getResponseMap().get("x_trans_id");
+			}else{
+				transaction.accountNumber = "";//result.getResponseMap().get("x_account_number");
+				transaction.reason="";//result.getResponseMap().get("x_response_code");
+				transaction.transid="";//result.getResponseMap().get("x_trans_id");
+			}
+
+
+
 			transaction.donationTranId=donationDetails.transactionNumber;//result.getResponseMap().get("x_donation_transaction_number");
 			transaction.email=donationDetails.email;//result.getResponseMap().get("x_email_id");
 			transaction.mailSent=false;
-			transaction.reason=response.getTransactionResponse().getResponseCode();//result.getResponseMap().get("x_response_code");
-			transaction.transid=response.getTransactionResponse().getTransId();//result.getResponseMap().get("x_trans_id");
+
 			transaction.ccname="lll";
 			//transaction.rcode="";
 			transaction.rcode = reasonForFailure;
@@ -2330,18 +2687,19 @@ public class DonationMgmt extends Controller {
 
 
 			/*********new add***********************21.01.2016**************************/
+			System.out.println("***************payment status before donation.status == PaymentStatus" +
+					".CLEARED************"+donation.status);
 
-			if (donation.status == PaymentStatus.CLEARED) {
 
 				//MAIL_LOGGER.info("*** Donation.PaymentStatus.CLEARED ***");
 
 				String creditCardNumber = transaction.accountNumber;
 				System.out.println("-----------------donation.ccDigits1------------------------"+creditCardNumber);
-				if (creditCardNumber != null) {
+				if (creditCardNumber != null && creditCardNumber.trim().length()>0) {
 					creditCardNumber = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
 					System.out.println("creditCardNumber :: " + creditCardNumber);
 					donation.ccNum = creditCardNumber;
-					donation.ccDigits = null;
+					donation.ccDigits = creditCardNumber;
 
 
 				}
@@ -2349,6 +2707,9 @@ public class DonationMgmt extends Controller {
 				donation.ccName = transaction.ccname;
 				System.out.println("-----------------donation.ccDigits------------------------"+donation.ccDigits);
 				donation.update();
+
+
+			if (donation.status == PaymentStatus.CLEARED) {
 
 				ReceiptMgmt receiptMgmt = new ReceiptMgmt();
 
@@ -2370,7 +2731,7 @@ public class DonationMgmt extends Controller {
 					sponsorItem.donation = donation;
 					sponsorItem.update();
 
-					ReceiptMgmt.sendSponsoredMsg(donation);
+					//ReceiptMgmt.sendSponsoredMsg(donation);
 				}else {
 					System.out.println("");
 					receiptMgmt.sendCCReceiptForCron(donation);
@@ -2400,8 +2761,9 @@ public class DonationMgmt extends Controller {
 		System.out.println("*********************user id*********************" + userid);//result.getResponseMap().get("x_user_id"));
 		String userId = userid;//result.getResponseMap().get("x_user_id");
      	Event event =Event.findById(eventId);
-		//final User user = User.findByUserId(userId);
-
+		//final User user = User.findByUserId(userId)
+		System.out.println("**************Final donationId********************"+donation.id);
+		System.out.println("**************Final donation.ccDigits***********************"+donation.ccDigits);
 		System.out.println("Transaction Table saved");
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, paymentStatus);
 		//return ok(profileDonationsCreate.render(User.findByUserId(userId), event));

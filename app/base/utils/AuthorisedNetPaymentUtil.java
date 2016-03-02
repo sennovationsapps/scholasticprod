@@ -19,7 +19,7 @@ public class AuthorisedNetPaymentUtil {
     public static String makeCreditCardPayment(Donation donation,String userId) {
 
 
-//Common code to set for all requests
+        //Common code to set for all requests
         ApiOperationBase.setEnvironment(Environment.SANDBOX);
 
         MerchantAuthenticationType merchantAuthenticationType  = new MerchantAuthenticationType() ;
@@ -30,20 +30,61 @@ public class AuthorisedNetPaymentUtil {
         // Populate the payment data
         PaymentType paymentType = new PaymentType();
 
+        String expDate=donation.month.trim()+donation.year.trim();
+        System.out.println("=========Exp Date=============>"+expDate);
+        System.out.println("=========CVV=============>"+donation.ccCvvCode);
+
+
+
         CreditCardType creditCard = new CreditCardType();
         creditCard.setCardNumber(donation.ccNum);///4242424242424242
-        creditCard.setExpirationDate(donation.expDate);//0822
+        creditCard.setExpirationDate(expDate.trim());//0822
         creditCard.setCardCode(donation.ccCvvCode);
 
 
         paymentType.setCreditCard(creditCard);
 
+
+
+        /********************26.02.2016*******************starts**********************/
+        //PaymentTransaction paymentTransaction = PaymentTransaction.createPaymentTransaction();
+        OrderType orderType=new OrderType();
+        //orderType.setDescription("Test charge");
+
+        orderType.setInvoiceNumber(donation.invoiceNumber);
+
+        /*Order order = Order.createOrder();
+        order.setTotalAmount(new BigDecimal(9.99));
+        order.setDescription("Test charge");
+        order.setInvoiceNumber("TR123");*/
+
+
+
+        //paymentTransaction.setOrder(order);
+
+
+
+
+        /********************26.02.2016*******************ends**********************/
+
+
+
+
         // Create the payment transaction request
         TransactionRequestType txnRequest = new TransactionRequestType();
         txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
         txnRequest.setPayment(paymentType);
+        txnRequest.setOrder(orderType);
         //txnRequest.setCardholderAuthentication(value);
         txnRequest.setAmount(new BigDecimal(Double.parseDouble(donation.amount+"")).setScale(2, RoundingMode.CEILING));
+
+
+        /********************26.02.2016*******************starts**********************/
+        //txnRequest.setOrder(orderType);
+
+        /********************26.02.2016*******************ends**********************/
+
+
 
         // Make the API Request
         CreateTransactionRequest apiRequest = new CreateTransactionRequest();
@@ -53,12 +94,51 @@ public class AuthorisedNetPaymentUtil {
 
 
         CreateTransactionResponse response = controller.getApiResponse();
+        System.out.println("response==========>"+response);
+        //response=null;
+
+
+        /********************26.02.2016*******************starts**********************/
+        /*System.out.println("TransID===>" + response.getTransactionResponse().getTransId());
+       System.out.println("refTransID===>"+response.getTransactionResponse().getRefTransID());
+        System.out.println("TransID===>" + response.getTransactionResponse().getTransId());
+        System.out.println("transHash===>" + response.getTransactionResponse().getTransHash());
+        System.out.println("refId===>" + response.getRefId());
+        GetTransactionDetailsRequest getRequest = new GetTransactionDetailsRequest();
+        getRequest.setMerchantAuthentication(merchantAuthenticationType);
+        getRequest.setTransId(response.getTransactionResponse().getTransId());
+
+        System.out.println();
+        GetTransactionDetailsController controllerTransDetails = new GetTransactionDetailsController(getRequest);
+        controllerTransDetails.execute();
+        GetTransactionDetailsResponse getResponse = controllerTransDetails.getApiResponse();
+
+        if (getResponse!=null) {
+
+            String invoiceNumber=getResponse.getTransaction().getOrder().getInvoiceNumber();
+            System.out.println("***************invoiceNumber=======>"+invoiceNumber);
+
+            if (getResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {
+
+                System.out.println(getResponse.getMessages().getMessage().get(0).getCode());
+                System.out.println(getResponse.getMessages().getMessage().get(0).getText());
+            }
+            else
+            {
+                System.out.println("Failed to get transaction details:  " + getResponse.getMessages().getResultCode());
+            }
+        }*/
+
+
+        /********************26.02.2016*******************ends**********************/
+
         String msg="";
         String errorCode="";
         Integer code=0;
         if (response!=null) {
             //response.getTransactionResponse().getMessages().getMessage().get(0).getDescription();//correct successful
             response.getTransactionResponse().getResponseCode();
+
 
             /** response.getTransactionResponse().getErrors() null for correct
              * else list of errors*/
@@ -78,6 +158,7 @@ public class AuthorisedNetPaymentUtil {
                     msg="Successful Credit Card Transaction your Transaction Id is "+result.getTransId();
                     System.out.println("Authentication Id: "+result.getAuthCode());
                     System.out.println("Transaction Id: "+result.getTransId());
+
                 }
                 else
                 {
@@ -128,13 +209,14 @@ public class AuthorisedNetPaymentUtil {
 
 
         }else{
-            msg="Internal Server Error. ";
+            msg="Internal Server Error.";
         }
-        if(code!=6 && code!=8 && !msg.equals("cvv missmatches.") && !msg.endsWith(" and cvv not matches.")){
+        /*if(code!=6 && code!=8 && !msg.equals("cvv missmatches.") && !msg.endsWith(" and cvv not matches.")){
             System.out.println("==================Saving Donation========code=="+code);
             donation.save();
             DonationMgmt.getResponseFromAuthorize(response,donation, userId);
-        }
+        }*/
+        DonationMgmt.getResponseFromAuthorize(response, donation, userId);
 
         return msg;
     }

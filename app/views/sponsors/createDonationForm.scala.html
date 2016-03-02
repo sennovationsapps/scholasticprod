@@ -153,7 +153,7 @@
             </div>
             <br/>
             <!--<button type="button" class="btn btn-primary" id="payByCreditCard">Pay By Credit Card</button>&nbsp;&nbsp;-->
-            <button type="submit" class="btn btn-primary" id="payByCreditCardButton">Pay by Credit Card</button>
+            <button type="button" class="btn btn-primary" id="payByCreditCardButton">Pay by Credit Card</button>
 			<button type="button" class="btn btn-primary" id="payByCheck">Pay By Check</button>
 			<br/>
 			<br/>
@@ -246,6 +246,76 @@
             <br/>
             <input type="hidden" name="payByCheck" value="false"/>
             <input type="hidden" name="paymentType" value="CREDIT"/>
+
+
+        @*  Added by Gourav 23.02.2016 *@
+        <div id="creditCradPaymentDivSponsor" style="display: none">
+            @*<div id="well" class="well">*@
+            <legend>Credit Card - Payment Information</legend>
+            @helper.inputText(donationForm("ccNum"), '_label -> "Card Number", 'class
+                    ->"form-control",'maxlength ->16)
+            @*<div id="ccNum_div" style="display: none"></div> <span style="color:red;">Mandatory
+            Field</span></div>*@
+
+
+
+            @**********01.03.16******************Starts***************************************@
+            @*  <strong>Expiration Date</strong>
+            <br/>
+            <br/>*@
+            @*Month
+            @select(
+            donationForm("pfp.id"),
+            options(Seq(("01","one"),("",""))),
+            '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
+            '_default -> "-- Select Participant --",
+
+            )*@
+            <div id="monthDivSponsor">
+
+            @select(
+                donationForm("month"),
+                options(Pfp.findMonth()),
+                '_label -> "Expiration Month/Year",
+                '_default -> "-Month-",
+
+                '_showConstraints -> false, 'class -> "dropdown_month"
+
+            )
+            </div>
+            <div id = "divisionDivSponsor">
+                @* /*@
+            </div>
+            <div id = "yearDivSponsor">
+            @select(
+                donationForm("year"),
+                options(Pfp.findYear()),
+                '_label -> "",
+                '_default -> "-Year-",
+                '_showConstraints -> false, 'class -> "dropdown_year"
+            )
+            </div>
+
+
+            @* @helper.inputText(donationForm("expDate"), '_label -> "Expiration Date", 'class ->
+            "form-control", 'maxlength -> 4)*@
+            @*<div id="expDate_div" style="display: none"><span  style="color:red; display: none"></span></div>*@
+
+            @*01.03.16***************************Ends*****************************************@
+
+
+
+
+            @helper.inputPassword(donationForm("ccCvvCode"), '_label -> "CVV Code", 'class ->
+                    "form-control",'maxlength -> 3)
+            @*<div id="expDate_div" style="display: none"><span id="expDate_div" style="color:red; display: none"></span></div>*@
+
+            <br/>
+            <button type="submit" class="btn btn-green" id="payByCreditCardButton">Pay</button>&nbsp;&nbsp;
+
+            @*</div>*@
+
+        </div>
     }
     </div>
 <!-- Right column -->
@@ -307,15 +377,15 @@
   </div>
   <script>
   $( document ).ready(function() {
-        alert("1");
+        //alert("1");
 	 	$('#ccExpDate').val($('#expMM').val()+'/'+$('#expYY').val());
 	     $('#payByCreditCardDiv').hide();
 	     $('#payByCheckDiv').hide();
-	     @if(donationForm.hasErrors) {
+	    /* @if(donationForm.hasErrors) {
 	     	//$('#payByCreditCardDiv').show();
 			$('input[name=payByCheck]').val('false');
 			$('input[name=paymentType]').val('CREDIT');	
-	     }
+	     }*/
 
 
 
@@ -327,6 +397,24 @@
 		    $('#payByCheckButton').attr('disabled', 'disabled');
 		});
 	  </script>
+    <script>
+        $('#payByCreditCardButton').click(function(){
+        $('#payByCheckDiv').hide();
+        $("#creditCradPaymentDivSponsor").show();
+         /*Added on 25.02.16*/
+              $('html, body').animate({
+                //payByCreditCard creditCradPaymentDiv
+                scrollTop: $("#email").offset().top
+            }, 3000);
+             /*Added on 25.02.16*/
+        });
+        $('#payByCheck').click(function(){
+
+ $("#creditCradPaymentDivSponsor").hide();
+         $('#payByCheckDiv').show();
+
+        });
+    </script>
 <script src="@ControllerUtil.getResourceRoute("scSponsorsView.min.js")"></script>
 
 
@@ -453,7 +541,7 @@ else{
         //============================phno partition validation ====================================24.08.2015==========start========================================//
 $(document).ready(function(){
 
-alert("2");
+//alert("2");
 /*$("#phNo").hide();*/
 var phNoValue = $("#phNo").val();
 var phNoValuePart1;

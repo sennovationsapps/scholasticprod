@@ -208,6 +208,58 @@ public class Pfp extends Model implements PathBindable<Pfp>, Comparable {
 		return SortUtils.sortDonationsByName(pfpMap);
 	}
 
+	public static Map<String, String> findMonth() {
+
+		Map<String, String> pfpMap = new HashMap<String, String>();
+		pfpMap.put("01", "01");
+		pfpMap.put("02", "02");
+		pfpMap.put("03", "03");
+		pfpMap.put("04", "04");
+		pfpMap.put("05", "05");
+		pfpMap.put("06", "06");
+		pfpMap.put("07", "07");
+		pfpMap.put("08", "08");
+		pfpMap.put("09", "09");
+		pfpMap.put("10", "10");
+		pfpMap.put("11", "11");
+		pfpMap.put("12", "12");
+
+
+
+
+		return SortUtils.sortDonationsByName(pfpMap);
+	}
+
+
+	public static Map<String, String> findYear() {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+
+		Map<String, String> pfpMap = new HashMap<String, String>();
+		pfpMap.put(String.valueOf(year).substring(2, 4), String.valueOf(year).substring(2,4));
+		for(int i=1; i<=12;i++){
+			pfpMap.put(String.valueOf(year+i).substring(2,4), String.valueOf(year + i).substring(2,4));
+			System.out.println("drop value======>"+pfpMap.get(String.valueOf(year+i).substring(2,4)));
+		}
+		/*pfpMap.put("01", "01");
+		pfpMap.put("02", "02");
+		pfpMap.put("03", "03");
+		pfpMap.put("04", "04");
+		pfpMap.put("05", "05");
+		pfpMap.put("06", "06");
+		pfpMap.put("07", "07");
+		pfpMap.put("08", "08");
+		pfpMap.put("09", "09");
+		pfpMap.put("10", "10");
+		pfpMap.put("11", "11");
+		pfpMap.put("12", "12");
+*/
+
+
+
+		return SortUtils.sortDonationsByName(pfpMap);
+	}
+
+
 	public static Map<String, String> findByEventIdMapWithPrivate(Event event) {
 		List<Pfp> pfps = Pfp.findByEventExceptSponsor(event);
 		Map<String, String> pfpMap = new HashMap<String, String>();

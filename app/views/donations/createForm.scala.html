@@ -170,23 +170,70 @@
 
                         @*  Added by Gourav 23.02.2016 *@
                         <div id="creditCradPaymentDiv" style="display: none">
-                            <div id="well" class="well">
+                            @*<div id="well" class="well">*@
                                 <center><legend class="legend_hightlight">Credit Card Payment Information</legend></center>
                                 @helper.inputText(donationForm("ccNum"), '_label -> "Card Number", 'class
-                                        ->"form-control")
+                                        ->"form-control",'maxlength ->16)
                                 @*<div id="ccNum_div" style="display: none"></div> <span style="color:red;">Mandatory
                                 Field</span></div>*@
-                                @helper.inputText(donationForm("expDate"), '_label -> "Expiration Date", 'class ->
-                                        "form-control", 'maxlength -> 4)
+
+
+
+                                @**********01.03.16******************Starts***************************************@
+                              @*  <strong>Expiration Date</strong>
+                                <br/>
+                                <br/>*@
+                                @*Month
+                                @select(
+                                    donationForm("pfp.id"),
+                                    options(Seq(("01","one"),("",""))),
+                                    '_label -> "Select the Participant for Your Donation (General Fund donations are made to the Event only)",
+                                    '_default -> "-- Select Participant --",
+
+                                )*@
+                                <div id="monthDiv">
+
+                                @select(
+                                    donationForm("month"),
+                                    options(Pfp.findMonth()),
+                                    '_label -> "Expiration Month/Year",
+                                    '_default -> "-Month-",
+
+                                    '_showConstraints -> false, 'class -> "dropdown_month"
+
+                                )
+                                </div>
+                            <div id = "divisionDiv">
+                               @* /*@
+                                </div>
+                            <div id = "yearDiv">
+                                @select(
+                                    donationForm("year"),
+                                    options(Pfp.findYear()),
+                                    '_label -> "",
+                                    '_default -> "-Year-",
+                                    '_showConstraints -> false, 'class -> "dropdown_year"
+                                )
+                                </div>
+
+
+                               @* @helper.inputText(donationForm("expDate"), '_label -> "Expiration Date", 'class ->
+                                        "form-control", 'maxlength -> 4)*@
                                 @*<div id="expDate_div" style="display: none"><span  style="color:red; display: none"></span></div>*@
-                                @helper.inputText(donationForm("ccCvvCode"), '_label -> "CVV Code", 'class ->
+
+                                @*01.03.16***************************Ends*****************************************@
+
+
+
+
+                                @helper.inputPassword(donationForm("ccCvvCode"), '_label -> "CVV Code", 'class ->
                                         "form-control",'maxlength -> 3)
                                 @*<div id="expDate_div" style="display: none"><span id="expDate_div" style="color:red; display: none"></span></div>*@
 
                                 <br/>
                                 <button type="button" class="btn btn-green" id="payByCreditCardButton">Pay</button>&nbsp;&nbsp;
 
-                            </div>
+                            @*</div>*@
 
                         </div>
                     </div>
@@ -288,6 +335,8 @@
 
 
 
+
+
 	     /*$('#expDate').on('keyup focusout',function() {
                     $('#expDate').attr('style', 'border-color: #CCC');
                     //alert($(this).val().length);
@@ -346,7 +395,10 @@
             });
 */
 
+       /**************Added on 25/02/2016 start********************/
+        // alert($('.alert.alert-dismissable.alert-danger').text());
 
+       /**************Added on 25/02/2016 start********************/
 
 
 
@@ -358,9 +410,12 @@
               $('#payByCheckDiv').hide();
               $('#creditCradPaymentDiv').show();
 
+              /*Added on 25.02.16*/
               $('html, body').animate({
-                scrollTop: $("#creditCradPaymentDiv").offset().top
+                //payByCreditCard creditCradPaymentDiv
+                scrollTop: $("#donorMessage").offset().top
             }, 3000);
+             /*Added on 25.02.16*/
 
            });
 
@@ -368,6 +423,13 @@
 
               $('#payByCheckDiv').show();
               $('#creditCradPaymentDiv').hide();
+
+               /*Added on 25.02.16*/
+              $('html, body').animate({
+                //payByCreditCard creditCradPaymentDiv
+                scrollTop: $("#donorMessage").offset().top
+            }, 3000);
+             /*Added on 25.02.16*/
 
            });
 

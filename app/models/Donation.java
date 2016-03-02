@@ -52,18 +52,39 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 	public int				amount;
 	
-	@Pattern(value = "^[0-9]{3,4}$", message = "Please provide numbers only.")
+	@Pattern(value = "^[0-9]{3,4}$", message = "CVV code should be numbers only.Please click on 'Pay By Credit Card' " +
+			"button to make correction. After making correction please click on 'Pay' button to proceed.")
 	@Transient
 	public String			ccCvvCode;
 	
 	@Formats.DateTime(pattern = "MM/yyyy")
 	@Transient
 	public Date				ccExpDate;
-	@Pattern(value = "^[0-9]{3,4}$", message = "Format is MMYY.")
+
+
+
+	/******************01.03.2016**************Starts******************/
+	@Pattern(value = "^[0-9]{3,4}$", message = "Expiration date format should be MMYY. Please click on 'Pay By Credit" +
+			" Card' button to make correction. After making correction please click on 'Pay' button to proceed.")
 	@Transient
 	public String 				expDate;
 
-	@Pattern(value = "^[0-9]{13,19}$", message = "Please provide numbers only and length is 13-19 digits.")
+
+	@Transient
+	public String 				month;
+
+	@Transient
+	public String 				year;
+
+
+
+	/******************01.03.2016**************Ends******************/
+
+
+
+
+	@Pattern(value = "^[0-9]{13,19}$", message = "Card number should be 13-19 digits only. Please click on 'Pay By " +
+			"Credit Card' button to make correction. After making correction please click on 'Pay' button to proceed.")
 	@Transient
 	public String			ccNum;
 	

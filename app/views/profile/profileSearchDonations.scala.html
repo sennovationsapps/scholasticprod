@@ -1,3 +1,5 @@
+
+
 @(currentPage: com.avaje.ebean.Page[Donation], currentSortBy: String, currentOrder: String, currentFilter: String, filterType: String, currentFilter1: String=null, filterType1: String=null)
 
 @import models.security._
@@ -264,6 +266,8 @@
 										<option value="PENDING" @if(donation.status == Donation.PaymentStatus.PENDING){ selected}>Pending</option>
 										<option value="CLEARED" @if(donation.status == Donation.PaymentStatus.CLEARED){ selected}>Cleared</option>
 										<option value="REFUNDED" @if(donation.status == Donation.PaymentStatus.REFUNDED){ selected}>Refunded</option>
+                                        <option value="FAILED" @if(donation.status == Donation.PaymentStatus.FAILED){selected}>Failed</option>
+
 										</select>
 									</td>
 									<td><input type="text" id="amount" name="amount" value="@donation.amount" class="form-control" @if(donation.paymentType == Donation.PaymentType.CREDIT) {disabled="disabled"}></td>
