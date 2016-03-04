@@ -6295,6 +6295,7 @@ public class ReportMgmt extends Controller {
 
 	/********start**********01.02.2016*****************************************/
 	private static List<String[]> payoutToStringArrayForMonth3(List<Donation> donations, Event eventy){
+		System.out.println("*************eventId within payoutToStringArrayForMonth3**************"+eventy.id);
 		List<String[]> records = new ArrayList<String[]>();
 		Date currDate = new Date();
 		long daysBetweenStartAndCurrDate = currDate.getTime()-eventy.fundraisingStart.getTime();
@@ -6488,6 +6489,12 @@ public class ReportMgmt extends Controller {
 				Date eachMonthLastDay = cal.getTime();
 				System.out.println("---eachMonthLastDay9---" + eachMonthLastDay);
 
+				//****new **********04.03.2016***********start*********/
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+				Date eachMonthLastDayLastTime = cal.getTime();
+				/*eachMonthLastDay = eachMonthLastDay+1;*/
+				/****new**********04.03.2016************end***********/
 
 				//current day
 				Date currdate = new Date();
@@ -6516,16 +6523,20 @@ public class ReportMgmt extends Controller {
 
 					for (Donation donation : donations) {
 						if(donation !=null){
-							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+							/*if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {*/
 								//total donations calculation for i where i
+							if (donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) {
+								if(donation.dateCreated.before(eachMonthLastDayLastTime)){
 								if (donation.donationType != Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNo = totalCreditAccNo + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
-
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNo = totalCreditAccNo + 1;
+											/*System.out.println("**********totalCreditAccNo1************"+totalCreditAccNo);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
 										totalCheckAmountNo = totalCheckAmountNo + donation.amount;
@@ -6537,11 +6548,15 @@ public class ReportMgmt extends Controller {
 								}
 								if (donation.donationType == Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+
+										/*System.out.println("**********totalCreditAccNoForSponsor1************"+totalCreditAccNoForSponsor);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -6552,6 +6567,7 @@ public class ReportMgmt extends Controller {
 
 									}
 								}
+							}
 
 
 							}
@@ -6968,6 +6984,12 @@ public class ReportMgmt extends Controller {
 				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 				Date eachMonthLastDay = currDate;
 				System.out.println("---eachMonthLastDay10---" + eachMonthLastDay);
+				//****new **********04.03.2016***********start*********/
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+				Date eachMonthLastDayLastTime = cal.getTime();
+				/*eachMonthLastDay = eachMonthLastDay+1;*/
+				/****new**********04.03.2016************end***********/
 
 
 				if (donations != null && donations.size() > 0) {
@@ -6975,16 +6997,21 @@ public class ReportMgmt extends Controller {
 
 					for (Donation donation : donations) {
 						if(donation !=null){
-							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+							/*if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {*/
 								//total donations calculation for i where i
+							if (donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) {
+								if(donation.dateCreated.before(eachMonthLastDayLastTime)){
 								if (donation.donationType != Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNo = totalCreditAccNo + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
-
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNo = totalCreditAccNo + 1;
+											/*System.out.println
+													("**********totalCreditAccNo2************"+totalCreditAccNo);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
 										//totalCheckAmountNo = totalCheckAmountNo + donation.amount;
@@ -6996,11 +7023,15 @@ public class ReportMgmt extends Controller {
 								}
 								if (donation.donationType == Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+											/*System.out.println
+													("**********totalCreditAccNoForSponsor2************"+totalCreditAccNoForSponsor);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7011,6 +7042,7 @@ public class ReportMgmt extends Controller {
 
 									}
 								}
+							}
 
 
 							}
@@ -7089,6 +7121,12 @@ public class ReportMgmt extends Controller {
 				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 				Date eachMonthLastDay = currDate;
 				System.out.println("---eachMonthLastDay11---" + eachMonthLastDay);
+				//****new **********04.03.2016***********start*********/
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+				Date eachMonthLastDayLastTime = cal.getTime();
+				/*eachMonthLastDay = eachMonthLastDay+1;*/
+				/****new**********04.03.2016************end***********/
 
 
 				if (donations != null && donations.size() > 0) {
@@ -7096,15 +7134,21 @@ public class ReportMgmt extends Controller {
 
 					for (Donation donation : donations) {
 						if(donation !=null){
-							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+							/*if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {*/
 								//total donations calculation for i where i
+							if (donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) {
+								if(donation.dateCreated.before(eachMonthLastDayLastTime)){
 								if (donation.donationType != Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNo = totalCreditAccNo + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNo = totalCreditAccNo + 1;
+											/*System.out.println
+													("**********totalCreditAccNo3************"+totalCreditAccNo);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7117,11 +7161,15 @@ public class ReportMgmt extends Controller {
 								}
 								if (donation.donationType == Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+											/*System.out.println
+													("**********totalCreditAccNoForSponsor3************"+totalCreditAccNoForSponsor);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7132,6 +7180,7 @@ public class ReportMgmt extends Controller {
 
 									}
 								}
+							}
 
 
 							}
@@ -7192,6 +7241,7 @@ public class ReportMgmt extends Controller {
 		else{
 			System.out.println("diffMonthBetweenStartAndEndFundraising :: "+diffMonthBetweenStartAndEndFundraising);
 			for( i = 0 ;i<diffMonthBetweenStartAndEndFundraising;i++) {
+			//for( i = 2 ;i<3;i++) {
 
 				System.out.println("--------------------------------------i---------------------" + i);
 
@@ -7220,6 +7270,13 @@ public class ReportMgmt extends Controller {
 				Date eachMonthLastDay = cal.getTime();
 				System.out.println("---eachMonthLastDay12---" + eachMonthLastDay);
 
+				//****new **********04.03.2016***********start*********/
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+				Date eachMonthLastDayLastTime = cal.getTime();
+				/*eachMonthLastDay = eachMonthLastDay+1;*/
+				/****new**********04.03.2016************end***********/
+
 
 				//current day
 				Date currdate = new Date();
@@ -7244,19 +7301,47 @@ public class ReportMgmt extends Controller {
 
 
 				if (donations != null && donations.size() > 0) {
+					System.out.println("*******donations.size()***********"+donations.size()
+					+"***eachMonthFirstDay***"+eachMonthFirstDay+"*eachMonthLastDay**"+eachMonthLastDay
+							+"***eachMonthLastDayLastTime*"+eachMonthLastDayLastTime);
+					/*System.out.println("*****************eachMonthFirstDay within payoutToStringArrayForMonth3*************"+eachMonthFirstDay);
+					System.out.println("*****************eachMonthLastDay within payoutToStringArrayForMonth3**************"+eachMonthLastDay);*/
+
 
 
 					for (Donation donation : donations) {
 						if(donation !=null){
-							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+							/*if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {*/
+							/*System.out.println("*************donation.dateCreated***********"+donation.dateCreated);*/
+							/*System.out.println("*************donation.dateCreated.equals(eachMonthFirstDay)***********"+donation.dateCreated.equals(eachMonthFirstDay));
+							System.out.println("*************donation.dateCreated.after(eachMonthFirstDay)***********"+donation.dateCreated.after(eachMonthFirstDay));*/
+							if (donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) {
+
+								/*System.out.println("****donation.dateCreated*****"+donation.dateCreated+"**before " +
+										"last day**"+donation.dateCreated.before(eachMonthLastDay)+"***equals last day***"+donation.dateCreated.equals(eachMonthLastDay));*/
+								/*System.out.println("*************donation.dateCreated.before(eachMonthLastDay)***********"+donation.dateCreated.before(eachMonthLastDay));
+								System.out.println("*************donation.dateCreated.equals(eachMonthLastDay)***********"+donation.dateCreated.equals(eachMonthLastDay));*/
+								/*if(donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay)){*/
+								/*if(donation.dateCreated.before(eachMonthLastDay) && donation.dateCreated.equals(eachMonthLastDay)){*/
+
+								if(donation.dateCreated.before(eachMonthLastDayLastTime)){
+
+									//System.out.println("**********within last date of month***********");
+								/*System.out.println("*****************donation.dateCreated within " +
+										"payoutToStringArrayForMonth3**************"+donation.dateCreated);*/
 								//total donations calculation for i where i
+								//System.out.println("***********donation.dateCreated.equals(eachMonthFirstDay)*****");
 								if (donation.donationType != Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNo = totalCreditAccNo + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNo = totalCreditAccNo + 1;
+
+											/*System.out.println("**********totalCreditAccNo4************"+totalCreditAccNo);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7269,11 +7354,15 @@ public class ReportMgmt extends Controller {
 								}
 								if (donation.donationType == Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+
+											/*System.out.println("**********totalCreditAccNoForSponsor4************"+totalCreditAccNoForSponsor);*/
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7284,11 +7373,25 @@ public class ReportMgmt extends Controller {
 
 									}
 								}
-
-
+								/*System.out.println("**********totalCreditAccNo4************"+totalCreditAccNo);
+								System.out.println("**********totalCreditAccNoForSponsor4************"+totalCreditAccNoForSponsor);
+*/
+							}else{
+									/*System.out.println("********else donation.dateCreated.before(eachMonthLastDay)" +
+											"*********donation id**"+donation.id+"*********donation" +
+											".datecreated************"+donation
+											.dateCreated);*/
+								}
+							}else{
+								/*System.out.println("********else donation.dateCreated.equals(eachMonthFirstDay)" +
+										"*********donation id**"+donation.id+"*********donation" +
+										".datecreated************"+donation
+										.dateCreated);*/
 							}
 						}
 					}
+
+
 
 				}
 
@@ -7298,6 +7401,8 @@ public class ReportMgmt extends Controller {
 				System.out.println("----totalDonationsAmount---"+totalDonationsAmount);
 				totalDonationsAccNo = totalCreditAccNo+totalCheckAccNo;
 				System.out.println("----totalDonationsAccNo---"+totalDonationsAccNo);
+				double totalDonationsAccNoNew = totalCreditAccNo+totalCreditAccNoForSponsor;
+				System.out.println("----totalDonationsAccNoNew---"+totalDonationsAccNoNew);
 				double totalCreditDonationsPerct = (totalCreditAmountNo/totalDonationsAmount)*100;
 				double totalCheckDonationsPerct = (totalCheckAmountNo/totalDonationsAmount)*100;
 				double totalCreditDonationsAccNoPerct = (totalCreditAccNo/totalDonationsAccNo)*100;
@@ -7798,6 +7903,12 @@ public class ReportMgmt extends Controller {
 				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 				Date eachMonthLastDay = eventy.fundraisingEnd;
 				System.out.println("---eachMonthLastDay1---" + eachMonthLastDay);
+				//****new **********04.03.2016***********start*********/
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+				Date eachMonthLastDayLastTime = cal.getTime();
+				/*eachMonthLastDay = eachMonthLastDay+1;*/
+				/****new**********04.03.2016************end***********/
 
 
 				if (donations != null && donations.size() > 0) {
@@ -7805,32 +7916,42 @@ public class ReportMgmt extends Controller {
 
 					for (Donation donation : donations) {
 						if(donation !=null){
-							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+							/*if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {*/
 								//total donations calculation for i where i
+							if (donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) {
+								if(donation.dateCreated.before(eachMonthLastDayLastTime)){
 								if (donation.donationType != Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNo = totalCreditAccNo + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNo = totalCreditAccNo + 1;
+											/*System.out.println
+													("**********totalCreditAccNo5************"+totalCreditAccNo);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
 										//totalCheckAmountNo = totalCheckAmountNo + donation.amount;
 										//totalCheckAmount = String.valueOf(totalCheckAmountNo);
-									//	totalCheckAccNo = totalCheckAccNo + 1;
+										//	totalCheckAccNo = totalCheckAccNo + 1;
 										//totalCheckAcc = String.valueOf(totalCheckAccNo);
 
 									}
 								}
 								if (donation.donationType == Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+											/*System.out.println
+													("**********totalCreditAccNoForSponsor5************"+totalCreditAccNoForSponsor);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7841,6 +7962,7 @@ public class ReportMgmt extends Controller {
 
 									}
 								}
+							}
 
 
 							}
@@ -7924,22 +8046,34 @@ public class ReportMgmt extends Controller {
 				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 				Date eachMonthLastDay = eventy.fundraisingEnd;
 				System.out.println("---eachMonthLastDay2---" + eachMonthLastDay);
+				//****new **********04.03.2016***********start*********/
+
+				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+				Date eachMonthLastDayLastTime = cal.getTime();
+				/*eachMonthLastDay = eachMonthLastDay+1;*/
+				/****new**********04.03.2016************end***********/
 
 
 				if (donations != null && donations.size() > 0) {
 
 
 					for (Donation donation : donations) {
-						if(donation !=null){
-							if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {
+						if(donation !=null) {
+							/*if ((donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) && (donation.dateCreated.before(eachMonthLastDay) || donation.dateCreated.equals(eachMonthLastDay))) {*/
 								//total donations calculation for i where i
+								if (donation.dateCreated.equals(eachMonthFirstDay) || donation.dateCreated.after(eachMonthFirstDay)) {
+								if(donation.dateCreated.before(eachMonthLastDayLastTime)){
 								if (donation.donationType != Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNo = totalCreditAmountNo + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNo = totalCreditAccNo + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNo = totalCreditAmountNo + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNo = totalCreditAccNo + 1;
+											/*System.out.println
+													("**********totalCreditAccNo6************"+totalCreditAccNo);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7952,11 +8086,15 @@ public class ReportMgmt extends Controller {
 								}
 								if (donation.donationType == Donation.DonationType.SPONSOR) {
 									if (donation.paymentType == Donation.PaymentType.CREDIT) {
-										//rowHeadervalue = "Paid By Credit Card";
-										totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
-										//totalCreditAmount = String.valueOf(totalCreditAmountNo);
-										totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
-										//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										if (donation.status == Donation.PaymentStatus.CLEARED) {
+											//rowHeadervalue = "Paid By Credit Card";
+											totalCreditAmountNoForSponsor = totalCreditAmountNoForSponsor + donation.amount;
+											//totalCreditAmount = String.valueOf(totalCreditAmountNo);
+											totalCreditAccNoForSponsor = totalCreditAccNoForSponsor + 1;
+											/*System.out.println
+													("**********totalCreditAccNoForSponsor6************"+totalCreditAccNoForSponsor);*/
+											//totalCreditAcc = String.valueOf(totalCreditAccNo);
+										}
 
 									} else if (donation.paymentType == Donation.PaymentType.CHECK) {
 										//rowHeadervalue = "Paid By Credit Card";
@@ -7967,9 +8105,10 @@ public class ReportMgmt extends Controller {
 
 									}
 								}
-
-
 							}
+
+
+						}
 						}
 					}
 
@@ -8047,13 +8186,40 @@ public class ReportMgmt extends Controller {
 
 		//diff between month of current date and fundraising start month
 
-
+       //for testing
+		//List<Donation> donationsFortEsting = testDonationAmount(eventy);
+		//end testing
 		///int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
 		return records;
 	}
 
 
 	/********end***********01.02.2016******************************************/
+
+	/****************test********************04.03.2016******************start****************************/
+
+
+	/*public static List<Donation> testDonationAmount(Event event){
+		List<Donation> donations= new ArrayList<Donation>();
+		donations = Donation.findAllByOnlyOptionsFortestDonationAmount(event);
+		int totalNoOfAmount = 0;
+		double totalAmount= 0.0;
+		for(Donation donation:donations){
+			if(donation.paymentType== Donation.PaymentType.CREDIT){
+				if(donation.status == Donation.PaymentStatus.CLEARED){
+					totalAmount = totalNoOfAmount+donation.amount;
+					totalNoOfAmount = totalNoOfAmount+1;
+				}
+			}
+		}
+		System.out.println("***************totalNoOfAmount within testDonationAmount***********"+totalNoOfAmount);
+		System.out.println("***************totalAmount within testDonationAmount***********"+totalAmount);
+		return donations;
+	}*/
+
+
+
+	/****************test********************04.03.2016******************end****************************/
 	/**
 	 * Participant  report (added Suvadeep Datta).
 	 *
@@ -8425,7 +8591,8 @@ public class ReportMgmt extends Controller {
 
 			}
 		}*/
- List<Donation> donations = Donation.findByEventId(eventy.id);
+ /*List<Donation> donations = Donation.findByEventId(eventy.id);*/
+		List<Donation> donations = Donation.findByEventId1(eventy.id);
 
 
 		final File file = new File("yourfile.csv");

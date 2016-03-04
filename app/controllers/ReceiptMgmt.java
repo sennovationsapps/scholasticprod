@@ -66,6 +66,8 @@ public class ReceiptMgmt extends Controller {
 	}
 
 	public static void sendCCReceipt(Donation donation) {
+		donation.ccName = donation.firstName+" "+donation.lastName;
+		System.out.println("*********donation.ccName within sendCCReceipt********"+donation.ccName);
 		String message = views.txt.donations.email_cc_receipt
 				.render(donation).toString();
 		ReceiptMgmt.generateEmailReceipt(ReceiptMgmt.getGeneralSubject(donation), message, donation.email);
@@ -107,6 +109,8 @@ public class ReceiptMgmt extends Controller {
 
 
 	public static Result getCCReceipt(Event event, Donation donation) {
+		donation.ccName = donation.firstName+" "+donation.lastName;
+		System.out.println("************donation.ccName within getCCReceipt********"+donation.ccName);
 		String message = views.html.donations.email_cc_receipt
 				.render(donation).toString();
 		response().setHeader("Cache-Control", "no-cache");
@@ -120,7 +124,13 @@ public class ReceiptMgmt extends Controller {
 	}
 
 	public static Result getAndSendCCReceipt(Event event, Donation donation) {
+		System.out.println("********donation.ccName within getAndSendCCReceipt*******"+donation.ccName);
+		donation.ccName = donation.firstName+" "+donation.lastName;
+		System.out.println("********donation.ccName before sendCCReceipt*******"+donation.ccName);
 		ReceiptMgmt.sendCCReceipt(donation);
+		System.out.println("********donation.ccName after sendCCReceipt*******" + donation.ccName);
+		donation.ccName = donation.firstName+" "+donation.lastName;
+		System.out.println("********donation.ccName before getCCReceipt*******"+donation.ccName);
 		return ReceiptMgmt.getCCReceipt(event, donation);
 	}
 	

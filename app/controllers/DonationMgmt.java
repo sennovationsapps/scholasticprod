@@ -1529,6 +1529,8 @@ public class DonationMgmt extends Controller {
 		flash(ControllerUtil.FLASH_SUCCESS_KEY, "Donation has been submitted");
 		if (updatedDonation.paymentType == PaymentType.CREDIT) {
 			updatedDonation.ccName = updatedDonation.firstName+" "+updatedDonation.lastName;
+			//updatedDonation.update();
+			System.out.println("********updatedDonation.ccName before calling getAndSendCCReceipt***********"+updatedDonation.ccName);
 			return redirect(routes.ReceiptMgmt.getAndSendCCReceipt(event, updatedDonation));
 		} else if (updatedDonation.paymentType == PaymentType.CHECK) {
 			return redirect(routes.ReceiptMgmt.getAndSendCheckReceipt(event, updatedDonation));

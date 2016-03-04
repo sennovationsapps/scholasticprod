@@ -571,6 +571,29 @@ public class Donation extends Model implements PathBindable<Donation> {
 
 
 
+/*
+	public static List<Donation> findAllByOnlyOptionsFortestDonationAmount(Event event) {
+		System.out.println("within findAllByOnlyOptionsForReconcile...");
+		// List<Donation> donationList = null;
+
+
+
+		final ExpressionList<Donation> donations = find.where().gt("dateCreated", event.fundraisingStart).lt
+				("dateCreated",  event.fundraisingEnd);
+
+		if (donations != null) {
+			return donations.findList();
+		}
+
+
+		return new ArrayList<Donation>();
+		//return new ArrayList<Donation>();
+	}*/
+
+
+
+
+
 	/********************start*****************************28.01.2016*********************************/
 	public static List<Donation> findAllByOnlyOptionsForReconcile(Map<String, String> options) {
 		System.out.println("within findAllByOnlyOptionsForReconcile...");
@@ -676,6 +699,20 @@ public class Donation extends Model implements PathBindable<Donation> {
 		}
 		return new ArrayList<Donation>();
 	}
+	/***********************new ***************04.03.2016*************start**************/
+	public static List<Donation> findByEventId1(Long id) {
+		System.out.println("***********within findByEventId1***********");
+		final ExpressionList<Donation> donations = find.where().eq("event.id", id).eq("paymentType","1").eq("status",
+				"2");
+
+		if (donations != null) {
+			System.out.println(("*************donation.size within findByEventId1*****************"+donations.findList().size()));
+			return donations.findList();
+		}
+		return new ArrayList<Donation>();
+	}
+
+	/***********************new ***************04.03.2016*************end****************/
 	
 	public static List<Donation> findByEventExceptSponsor(Event event) {
 		final ExpressionList<Donation> donations = find.where().eq("event.id", event.id)

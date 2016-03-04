@@ -29,7 +29,7 @@ Participant: @donation.pfp.name (ID: @donation.pfp.id)
 }
 
 Donation Amount: $@donation.amount
-Card Number: @donation.ccNum
+Card Number: @donation.ccDigits
 Transaction ID: @donation.transactionNumber
  @if(donation.dateCreated!=null){
 Time Submitted: @donation.dateCreated.format("MM/dd/yyyy HH:mm:ss")
